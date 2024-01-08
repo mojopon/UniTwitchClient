@@ -22,8 +22,9 @@ namespace UniTwitchClient.Chat.Models
 
         public string UserNickname { get; }
         public string UserHost { get; }
-
-        public string Command { get; }
+        
+        public TwitchIrcCommand Command { get; }
+        public string CommandRaw { get; }
         public string Channel { get; }
         public string BotCommand { get; }
         public string BotCommandParams { get; }
@@ -66,11 +67,13 @@ namespace UniTwitchClient.Chat.Models
             CapRequestEnabled = capRequestEnabled;
             UserNickname = userNickname;
             UserHost = userHost;
-            Command = command;
+            CommandRaw = command;
             Channel = channel;
             BotCommand = botCommand;
             BotCommandParams = botCommandParams;
             Message = message;
+
+            Command = TwitchIrcCommandConverter.CommandStringToCommandEnum(command);
         }
     }
 }

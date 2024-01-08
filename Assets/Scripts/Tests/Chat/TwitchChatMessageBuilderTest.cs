@@ -181,7 +181,7 @@ namespace UniTwitchClient.Tests.Chat.Models
             builder.WithCommand("PRIVMSG");
             var result = builder.Build();
 
-            Assert.AreEqual("PRIVMSG", result.Command);
+            Assert.AreEqual("PRIVMSG", result.CommandRaw);
         }
 
         [Test]

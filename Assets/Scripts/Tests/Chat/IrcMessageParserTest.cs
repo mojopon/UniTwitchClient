@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UniTwitchClient.Chat;
+using UniTwitchClient.Chat.Models;
 
 namespace UniTwitchClient.Tests.Chat.Models
 {
@@ -10,6 +11,7 @@ namespace UniTwitchClient.Tests.Chat.Models
         private readonly string messageWithDuplicatedEmotes = "@badge-info=;badges=;color=;display-name=mojomojopon;emotes=86:0-9,34-43/425618:11-13;first-msg=0;flags=;id=c51cce13-08c0-4a6d-8bb7-4243b4356225;mod=0;returning-chatter=0;room-id=186693621;subscriber=0;tmi-sent-ts=1704433200401;turbo=0;user-id=992276336;user-type= :mojomojopon!mojomojopon@mojomojopon.tmi.twitch.tv PRIVMSG #anomaloris :BibleThump LUL message with emote BibleThump";
         private readonly string messageWithBotCommand = ":lovingt3s!lovingt3s@lovingt3s.tmi.twitch.tv PRIVMSG #lovingt3s :!dilly";
         private readonly string messageWithBotCommandWithParams = ":lovingt3s!lovingt3s@lovingt3s.tmi.twitch.tv PRIVMSG #lovingt3s :!botcommand params";
+        private readonly string messageWithPing = "PING :tmi.twitch.tv";
 
         [Test]
         public void ParseMessageTest()
@@ -24,6 +26,8 @@ namespace UniTwitchClient.Tests.Chat.Models
 
             Assert.AreEqual("petsgomoo", result.UserNickname);
             Assert.AreEqual("petsgomoo@petsgomoo.tmi.twitch.tv", result.UserHost);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
         }
 
         [Test]
@@ -45,6 +49,8 @@ namespace UniTwitchClient.Tests.Chat.Models
             Assert.AreEqual("25", result.Emotes[2].Id);
             Assert.AreEqual(21, result.Emotes[2].StartIndex);
             Assert.AreEqual(25, result.Emotes[2].EndIndex);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
         }
 
         [Test]
@@ -66,6 +72,8 @@ namespace UniTwitchClient.Tests.Chat.Models
             Assert.AreEqual("425618", result.Emotes[2].Id);
             Assert.AreEqual(11, result.Emotes[2].StartIndex);
             Assert.AreEqual(13, result.Emotes[2].EndIndex);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
         }
 
         [Test]
@@ -73,6 +81,8 @@ namespace UniTwitchClient.Tests.Chat.Models
         {
             var result = IrcMessageParser.ParseMessage(messageWithBotCommand);
             Assert.AreEqual("dilly", result.BotCommand);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
         }
 
         [Test]
@@ -81,6 +91,17 @@ namespace UniTwitchClient.Tests.Chat.Models
             var result = IrcMessageParser.ParseMessage(messageWithBotCommandWithParams);
             Assert.AreEqual("botcommand", result.BotCommand);
             Assert.AreEqual("params", result.BotCommandParams);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
+        }
+
+        [Test]
+        public void ParseMessageWithPingTest() 
+        {
+            var result = IrcMessageParser.ParseMessage(messageWithPing);
+
+            Assert.AreEqual(TwitchIrcCommand.Ping, result.Command);
+            Assert.AreEqual("PING", result.CommandRaw);
         }
     }
 }
