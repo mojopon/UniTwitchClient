@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniRx;
 using UniTwitchClient.Chat.Models;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Networking.PlayerConnection;
 
@@ -15,18 +16,27 @@ namespace UniTwitchClient.Chat
 {
     public class TwitchChatClient : IDisposable
     {
+        public IObservable<TwitchChatMessage> TwitchChatMessageAsObservable => _onTwitchChatMessageSubject.AsObservable();
+        public IObservable<string> MessageRawAsObservable => _onMessageRawSubject.AsObservable();
+
         private ITwitchIrcClient _client;
         private IrcCredentials _ircCredentials;
 
-        private CompositeDisposable _disposables;
+        private CompositeDisposable _disposables = new CompositeDisposable();
 
         private Subject<TwitchChatMessage> _onTwitchChatMessageSubject = new Subject<TwitchChatMessage>();
         private Subject<string> _onMessageRawSubject = new Subject<string>();
 
-        public TwitchChatClient(ConnectionCredentials credentials)
+        public TwitchChatClient(ConnectionCredentials credentials) : this(credentials, null) { }
+
+        public TwitchChatClient(ConnectionCredentials credentials, ITwitchIrcClient client = null)
         {
             _ircCredentials = credentials.ToIrcCredentials();
-            InitializeIrcClient();
+
+            _disposables.Add(_onTwitchChatMessageSubject);
+            _disposables.Add(_onMessageRawSubject);
+
+            InitializeIrcClient(client);
         }
 
         public void Connect(string channelName) 
@@ -34,16 +44,14 @@ namespace UniTwitchClient.Chat
             _client.Connect(channelName);
         }
 
-        private void InitializeIrcClient() 
+        private void InitializeIrcClient(ITwitchIrcClient ircClient = null) 
         {
-            if (_client != null) 
+            if (ircClient == null) 
             {
-                _disposables.Dispose();
-                _client = null;
+                ircClient = new TwitchIrcClient(_ircCredentials);
             }
 
-            _disposables = new CompositeDisposable();
-            _client = new TwitchIrcClient(_ircCredentials);
+            _client = ircClient;
             _disposables.Add(_client);
             _client.OnMessageAsObservable.Subscribe(x => HandleMessage(x),ex => HandleError(ex),() => HandleComplete()).AddTo(_disposables);
         }
