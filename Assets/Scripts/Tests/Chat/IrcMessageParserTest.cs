@@ -19,6 +19,9 @@ namespace UniTwitchClient.Tests.Chat.Models
             Assert.AreEqual("1", result.Badge.Turbo);
 
             Assert.AreEqual("PetsgomOO", result.DisplayName);
+
+            Assert.AreEqual("petsgomoo", result.UserNickname);
+            Assert.AreEqual("petsgomoo@petsgomoo.tmi.twitch.tv", result.UserHost);
         }
 
         [Test]

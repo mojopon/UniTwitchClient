@@ -63,6 +63,7 @@ namespace UniTwitchClient.Chat
                     ParseTags(builder, rawTagsComponent, rawParametersComponent);
                 }
 
+                ParseSource(builder, rawSourceComponent);
             }
 
 
@@ -219,8 +220,8 @@ namespace UniTwitchClient.Chat
                 var sourceParts = rawSourceComponent.Split('!');
                 if (sourceParts.Length == 2) 
                 {
-                    //builder.WithUserNickName(sourceParts[0]);
-                    //builder.WithUserHost(sourceParts[1]);
+                    builder.WithUserNickName(sourceParts[0]);
+                    builder.WithUserHost(sourceParts[1]);
                 }
             }
         }
