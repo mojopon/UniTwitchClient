@@ -62,6 +62,7 @@ namespace UniTwitchClient.Chat
                 {
                     ParseTags(builder, rawTagsComponent, rawParametersComponent);
                 }
+
             }
 
 
@@ -195,6 +196,31 @@ namespace UniTwitchClient.Chat
                             }
                             break;
                         }
+                    case "display-name":
+                        {
+                            if (!string.IsNullOrEmpty(tagValue))
+                            {
+                                builder.WithDisplayName(tagValue);
+                            }
+                            break;
+                        }
+                }
+            }
+        }
+
+        private static void ParseSource(TwitchChatMessageBuilder builder, string rawSourceComponent) 
+        {
+            if (string.IsNullOrEmpty(rawSourceComponent))
+            {
+                return;
+            }
+            else 
+            {
+                var sourceParts = rawSourceComponent.Split('!');
+                if (sourceParts.Length == 2) 
+                {
+                    //builder.WithUserNickName(sourceParts[0]);
+                    //builder.WithUserHost(sourceParts[1]);
                 }
             }
         }

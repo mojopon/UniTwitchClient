@@ -17,6 +17,8 @@ namespace UniTwitchClient.Tests.Chat.Models
             Assert.AreEqual("1", result.Badge.Staff);
             Assert.AreEqual("1", result.Badge.Broadcaster);
             Assert.AreEqual("1", result.Badge.Turbo);
+
+            Assert.AreEqual("PetsgomOO", result.DisplayName);
         }
 
         [Test]
