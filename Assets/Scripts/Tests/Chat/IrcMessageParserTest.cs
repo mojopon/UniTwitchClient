@@ -13,6 +13,10 @@ namespace UniTwitchClient.Tests.Chat.Models
         public void ParseMessageTest()
         {
             var result = IrcMessageParser.ParseMessage(message);
+
+            Assert.AreEqual("1", result.Badge.Staff);
+            Assert.AreEqual("1", result.Badge.Broadcaster);
+            Assert.AreEqual("1", result.Badge.Turbo);
         }
 
         [Test]
@@ -34,6 +38,27 @@ namespace UniTwitchClient.Tests.Chat.Models
             Assert.AreEqual("25", result.Emotes[2].Id);
             Assert.AreEqual(21, result.Emotes[2].StartIndex);
             Assert.AreEqual(25, result.Emotes[2].EndIndex);
+        }
+
+        [Test]
+        public void ParseMessageWithDuplicatedEmotesTest() 
+        {
+            var result = IrcMessageParser.ParseMessage(messageWithDuplicatedEmotes);
+
+            Assert.AreEqual("BibleThump", result.Emotes[0].Name);
+            Assert.AreEqual("86", result.Emotes[0].Id);
+            Assert.AreEqual(0, result.Emotes[0].StartIndex);
+            Assert.AreEqual(9, result.Emotes[0].EndIndex);
+
+            Assert.AreEqual("BibleThump", result.Emotes[1].Name);
+            Assert.AreEqual("86", result.Emotes[1].Id);
+            Assert.AreEqual(34, result.Emotes[1].StartIndex);
+            Assert.AreEqual(43, result.Emotes[1].EndIndex);
+
+            Assert.AreEqual("LUL", result.Emotes[2].Name);
+            Assert.AreEqual("425618", result.Emotes[2].Id);
+            Assert.AreEqual(11, result.Emotes[2].StartIndex);
+            Assert.AreEqual(13, result.Emotes[2].EndIndex);
         }
     }
 }
