@@ -195,6 +195,26 @@ namespace UniTwitchClient.Tests.Chat.Models
         }
 
         [Test]
+        public void WithBotCommandTest() 
+        {
+            var builder = new TwitchChatMessageBuilder();
+            builder.WithBotCommand("dilly");
+            var result = builder.Build();
+
+            Assert.AreEqual("dilly", result.BotCommand);
+        }
+
+        [Test]
+        public void WithBotCommandParamsTest()
+        {
+            var builder = new TwitchChatMessageBuilder();
+            builder.WithBotCommandParams("bot command params");
+            var result = builder.Build();
+
+            Assert.AreEqual("bot command params", result.BotCommandParams);
+        }
+
+        [Test]
         public void WithMessageTest()
         {
             var builder = new TwitchChatMessageBuilder();

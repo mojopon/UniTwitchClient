@@ -25,6 +25,8 @@ namespace UniTwitchClient.Chat.Models
 
         public string Command { get; }
         public string Channel { get; }
+        public string BotCommand { get; }
+        public string BotCommandParams { get; }
 
         public string Message { get; }
 
@@ -45,6 +47,8 @@ namespace UniTwitchClient.Chat.Models
                                  string userHost,
                                  string command,
                                  string channel,
+                                 string botCommand,
+                                 string botCommandParams,
                                  string message)
         {
             Badge = badge;
@@ -64,6 +68,8 @@ namespace UniTwitchClient.Chat.Models
             UserHost = userHost;
             Command = command;
             Channel = channel;
+            BotCommand = botCommand;
+            BotCommandParams = botCommandParams;
             Message = message;
         }
     }

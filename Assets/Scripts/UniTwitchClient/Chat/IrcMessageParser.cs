@@ -64,6 +64,7 @@ namespace UniTwitchClient.Chat
                 }
 
                 ParseSource(builder, rawSourceComponent);
+                ParseParameters(builder, rawParametersComponent);
             }
 
 
@@ -222,6 +223,31 @@ namespace UniTwitchClient.Chat
                 {
                     builder.WithUserNickName(sourceParts[0]);
                     builder.WithUserHost(sourceParts[1]);
+                }
+            }
+        }
+
+        private static void ParseParameters(TwitchChatMessageBuilder builder, string rawParametersComponent) 
+        {
+            if (string.IsNullOrEmpty(rawParametersComponent)) 
+            {
+                return;
+            }
+
+            if (rawParametersComponent[0] == '!')
+            {
+                var idx = 0;
+                var commandParts = rawParametersComponent.Substring(idx + 1).Trim();
+                var paramsIdx = commandParts.IndexOf(' ');
+
+                if (paramsIdx == -1)
+                {
+                    builder.WithBotCommand(commandParts.Substring(0));
+                }
+                else 
+                {
+                    builder.WithBotCommand(commandParts.Substring(0, paramsIdx));
+                    builder.WithBotCommandParams(commandParts.Substring(paramsIdx).Trim());
                 }
             }
         }

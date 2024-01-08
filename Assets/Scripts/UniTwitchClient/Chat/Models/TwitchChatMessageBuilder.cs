@@ -25,6 +25,8 @@ namespace UniTwitchClient.Chat.Models
 
         private string _command;
         private string _channel;
+        private string _botCommand;
+        private string _botCommandParams;
 
         private string _message;
 
@@ -47,6 +49,8 @@ namespace UniTwitchClient.Chat.Models
                                          _userHost,
                                          _command,
                                          _channel,
+                                         _botCommand,
+                                         _botCommandParams,
                                          _message);
         }
 
@@ -150,6 +154,18 @@ namespace UniTwitchClient.Chat.Models
         public TwitchChatMessageBuilder WithChannel(string channel)
         {
             _channel = channel;
+            return this;
+        }
+
+        public TwitchChatMessageBuilder WithBotCommand(string botCommand) 
+        {
+            _botCommand = botCommand;
+            return this;
+        }
+
+        public TwitchChatMessageBuilder WithBotCommandParams(string botCommandParams)
+        {
+            _botCommandParams = botCommandParams;
             return this;
         }
 
