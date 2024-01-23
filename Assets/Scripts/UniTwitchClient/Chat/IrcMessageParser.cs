@@ -137,28 +137,28 @@ namespace UniTwitchClient.Chat
                 var parsedTag = tag.Split('=');
                 var tagValue = (string.IsNullOrEmpty(parsedTag[1])) ? null : parsedTag[1];
 
-                switch (parsedTag[0]) 
+                switch (parsedTag[0])
                 {
                     case "badges":
-                    case "badge-info": 
+                    case "badge-info":
                         {
-                            if (!string.IsNullOrEmpty(tagValue)) 
+                            if (!string.IsNullOrEmpty(tagValue))
                             {
                                 var badges = tagValue.Split(",");
                                 string staff = "";
                                 string broadcaster = "";
                                 string turbo = "";
-                                foreach (var badge in badges) 
+                                foreach (var badge in badges)
                                 {
                                     var badgeParts = badge.Split('/');
-                                    switch (badgeParts[0]) 
+                                    switch (badgeParts[0])
                                     {
-                                        case "staff": 
+                                        case "staff":
                                             {
                                                 staff = badgeParts[1];
                                                 break;
                                             }
-                                        case "broadcaster": 
+                                        case "broadcaster":
                                             {
                                                 broadcaster = badgeParts[1];
                                                 break;
@@ -181,12 +181,12 @@ namespace UniTwitchClient.Chat
                             {
 
                                 var emotes = tagValue.Split('/');
-                                foreach (var emote in emotes) 
+                                foreach (var emote in emotes)
                                 {
                                     var emoteParts = emote.Split(':');
                                     var emoteId = emoteParts[0];
                                     var positions = emoteParts[1].Split(',');
-                                    foreach (var position in positions) 
+                                    foreach (var position in positions)
                                     {
                                         var positionParts = position.Split('-');
                                         var startPosition = Int32.Parse(positionParts[0]);
@@ -198,12 +198,29 @@ namespace UniTwitchClient.Chat
                             }
                             break;
                         }
+                    case "emote-only":
+                        {
+                            builder.WithEmoteOnly(tagValue);
+                            break;
+                        }
                     case "display-name":
                         {
-                            if (!string.IsNullOrEmpty(tagValue))
-                            {
-                                builder.WithDisplayName(tagValue);
-                            }
+                            builder.WithDisplayName(tagValue);
+                            break;
+                        }
+                    case "color":
+                        {
+                            builder.WithColor(tagValue);
+                            break;
+                        }
+                    case "room-id":
+                        {
+                            builder.WithRoomId(tagValue);
+                            break;
+                        }
+                    case "user-id":
+                        {
+                            builder.WithUserId(tagValue);
                             break;
                         }
                 }
@@ -233,6 +250,8 @@ namespace UniTwitchClient.Chat
             {
                 return;
             }
+
+            builder.WithMessage(rawParametersComponent);
 
             if (rawParametersComponent[0] == '!')
             {

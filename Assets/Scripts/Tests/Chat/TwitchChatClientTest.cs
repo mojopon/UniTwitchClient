@@ -49,6 +49,23 @@ namespace UniTwitchClient.Tests.Chat
 
             Assert.AreEqual(message, resultRaw);
             Assert.IsNotNull(result);
+
+            Assert.AreEqual("1", result.Badge.Staff);
+            Assert.AreEqual("1", result.Badge.Broadcaster);
+            Assert.AreEqual("1", result.Badge.Turbo);
+
+            Assert.AreEqual("PetsgomOO", result.DisplayName);
+            Assert.AreEqual("petsgomoo", result.UserNickname);
+            Assert.AreEqual("#FF0000", result.Color);
+            Assert.AreEqual("81046256", result.RoomId);
+            Assert.AreEqual("81046256", result.UserId);
+
+            Assert.AreEqual("33", result.Emotes[0].Id);
+            Assert.AreEqual(0, result.Emotes[0].StartIndex);
+            Assert.AreEqual(7, result.Emotes[0].EndIndex);
+
+            Assert.AreEqual(TwitchIrcCommand.PrivMsg, result.Command);
+            Assert.AreEqual("DansGame", result.Message);
         }
     }
 }
