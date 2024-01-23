@@ -61,17 +61,31 @@ namespace UniTwitchClient.Chat
             _disposables?.Dispose();
         }
 
-        private void HandleMessage(string message) 
+        private void HandleMessage(string messageRaw) 
         {
-            Debug.Log($"[TwitchChatClient] message:{message}");
-            _onMessageRawSubject.OnNext(message);
+            _onMessageRawSubject.OnNext(messageRaw);
 
+            TwitchChatMessage message = null;
+            try 
+            {
+                message = IrcMessageParser.ParseMessage(messageRaw);
+            }
+            catch (Exception ex) 
+            {
+                HandleError(ex);
+                return;
+            }
+
+            if (message != null) 
+            {
+                _onTwitchChatMessageSubject.OnNext(message);
+            }
         }
 
         private void HandleError(Exception ex) 
         {
-            Debug.Log($"[TwitchChatClient] an error occured:{ex.Message}");
-
+            _onTwitchChatMessageSubject.OnError(ex);
+            _onTwitchChatMessageSubject = new Subject<TwitchChatMessage>();
         }
 
         private void HandleComplete()
