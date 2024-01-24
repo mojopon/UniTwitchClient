@@ -118,6 +118,22 @@ namespace UniTwitchClient.Chat
                         builder.WithCommand(commandParts[0]);
                         break;
                     }
+                case "001":
+                    {
+                        builder.WithCommand(commandParts[0]);
+                        break;
+                    }
+                case "002": 
+                case "003": 
+                case "004":
+                case "353":
+                case "366":
+                case "375":
+                case "372":
+                case "376":
+                    {
+                        break;
+                    }
                 default: 
                     {
                         Debug.Log($"Unexpected command : {commandParts[0]}");

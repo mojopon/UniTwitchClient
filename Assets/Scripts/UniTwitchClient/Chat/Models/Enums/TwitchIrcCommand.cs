@@ -19,5 +19,6 @@ namespace UniTwitchClient.Chat.Models
         UserState,
         RoomState,
         Reconnect,
+        Numeric001, // This means Logged in (successfully authenticated)
     }
 }

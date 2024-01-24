@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Runtime.InteropServices;
 using UniTwitchClient.Chat;
 using UniTwitchClient.Chat.Models;
 
@@ -12,6 +13,7 @@ namespace UniTwitchClient.Tests.Chat.Models
         private readonly string messageWithBotCommand = ":lovingt3s!lovingt3s@lovingt3s.tmi.twitch.tv PRIVMSG #lovingt3s :!dilly";
         private readonly string messageWithBotCommandWithParams = ":lovingt3s!lovingt3s@lovingt3s.tmi.twitch.tv PRIVMSG #lovingt3s :!botcommand params";
         private readonly string messageWithPing = "PING :tmi.twitch.tv";
+        private readonly string messageOnLogged = ":tmi.twitch.tv 001 testuser :Welcome, GLHF!";
 
         [Test]
         public void ParseMessageTest()
@@ -102,6 +104,15 @@ namespace UniTwitchClient.Tests.Chat.Models
 
             Assert.AreEqual(TwitchIrcCommand.Ping, result.Command);
             Assert.AreEqual("PING", result.CommandRaw);
+        }
+
+        [Test]
+        public void ParseMessageOnLogged() 
+        {
+            var result = IrcMessageParser.ParseMessage(messageOnLogged);
+
+            Assert.AreEqual(TwitchIrcCommand.Numeric001, result.Command);
+            Assert.AreEqual("001", result.CommandRaw);
         }
     }
 }

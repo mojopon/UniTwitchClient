@@ -35,6 +35,8 @@ namespace UniTwitchClient.Chat.Models
                     return TwitchIrcCommand.RoomState;
                 case "RECONNECT":
                     return TwitchIrcCommand.Reconnect;
+                case "001":
+                    return TwitchIrcCommand.Numeric001;
                 default:
                     return TwitchIrcCommand.Default;
             }
