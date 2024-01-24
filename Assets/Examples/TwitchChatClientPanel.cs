@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UniTwitchClient.Chat;
 using UnityEngine;
+using UniRx;
 using UnityEngine.UI;
 
 public class TwitchChatClientPanel : MonoBehaviour
@@ -33,6 +34,10 @@ public class TwitchChatClientPanel : MonoBehaviour
 
         var connectionCredentials = new ConnectionCredentials(userToken, username, "");
         _client = new TwitchChatClient(connectionCredentials);
+        _client.MessageRawAsObservable.Subscribe(x => 
+        {
+            Debug.Log(x);
+        });
 
         _client.Connect(channelName);
     }
