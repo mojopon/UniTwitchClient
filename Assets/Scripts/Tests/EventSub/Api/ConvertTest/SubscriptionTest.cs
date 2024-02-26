@@ -23,7 +23,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var subscription = new Subscription(SubscriptionType.ChannelFollow, condition);
             subscription.AddSessionId(session_id);
             var json = subscription.ToJson();
-            var rawModel = JsonConverter.ConvertFromJson<request_subscription_json>(json);
+            var rawModel = JsonWrapper.ConvertFromJson<request_subscription_json>(json);
 
             Assert.AreEqual(SubscriptionType.ChannelFollow, SubscriptionTypeConverter.ToSubscriptionType(rawModel.type));
             Assert.AreEqual("1", rawModel.version);

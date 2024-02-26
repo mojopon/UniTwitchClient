@@ -41,7 +41,7 @@ namespace UniTwitchClient.EventSub.Api.Models
                 to_broadcaster_user_id = Condition.ToBroadcasterUserId
             };
 
-            return JsonConverter.ConvertToJson(rawModel);
+            return JsonWrapper.ConvertToJson(rawModel);
         }
     }
 }

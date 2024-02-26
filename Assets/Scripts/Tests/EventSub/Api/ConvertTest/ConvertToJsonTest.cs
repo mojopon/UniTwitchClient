@@ -28,8 +28,8 @@ namespace UniTwitchClient.Tests.EventSub.Api
                 session_id = "AQoQILE98gtqShGmLD7AM6yJThAB",
             };
 
-            var data = JsonConverter.ConvertToJson(rawModel);
-            var convertedModel = JsonConverter.ConvertFromJson<request_subscription_json>(data);
+            var data = JsonWrapper.ConvertToJson(rawModel);
+            var convertedModel = JsonWrapper.ConvertFromJson<request_subscription_json>(data);
 
             Assert.AreEqual(rawModel.type, convertedModel.type);
             Assert.AreEqual(rawModel.condition.broadcaster_user_id, convertedModel.condition.broadcaster_user_id);

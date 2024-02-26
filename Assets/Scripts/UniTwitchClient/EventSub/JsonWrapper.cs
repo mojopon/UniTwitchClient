@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UniTwitchClient.EventSub
 {
-    public static class JsonConverter
+    public static class JsonWrapper
     {
         public static T ConvertFromJson<T>(string data) where T : class
         {

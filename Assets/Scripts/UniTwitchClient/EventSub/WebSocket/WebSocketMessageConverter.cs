@@ -9,22 +9,22 @@ public static class WebSocketMessageConverter
 {
     public static Welcome ConvertToWelcomeMessage(string data) 
     {
-        return JsonConverter.ConvertFromJson<welcome_raw>(data).ConvertRawToModel();
+        return JsonWrapper.ConvertFromJson<welcome_raw>(data).ConvertRawToModel();
     }
 
     public static KeepAlive ConvertToKeepAliveMessage(string data) 
     {
-        return JsonConverter.ConvertFromJson<keepalive_raw>(data).ConvertRawToModel();
+        return JsonWrapper.ConvertFromJson<keepalive_raw>(data).ConvertRawToModel();
     }
 
     public static Notification ConvertToNotification(string data) 
     {
-        return JsonConverter.ConvertFromJson<notification_raw>(data).ConvertRawToModel();
+        return JsonWrapper.ConvertFromJson<notification_raw>(data).ConvertRawToModel();
     }
 
     public static WebSocketMessageBase ConvertToMessageBase(string data) 
     {
-        return JsonConverter.ConvertFromJson<message_base>(data).ConvertRawToModel();
+        return JsonWrapper.ConvertFromJson<message_base>(data).ConvertRawToModel();
     }
 
     public static WebSocketMessageType GetMessageType(string data)
