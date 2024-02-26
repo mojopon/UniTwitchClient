@@ -39,12 +39,6 @@ namespace UniTwitchClient.Chat
 
         public void Connect(string channelName) 
         {
-            if (_connecting || _connected) 
-            {
-                return;
-            }
-
-            _connecting = true;
             _cts = new CancellationTokenSource();
             _ct = _cts.Token;
 
@@ -69,6 +63,13 @@ namespace UniTwitchClient.Chat
 
         public async UniTask ConnectAsync(string channelName)
         {
+            if (_connecting || _connected)
+            {
+                return;
+            }
+
+            _connecting = true;
+
             try
             {
                 await _tcpClient.ConnectAsync(TWITCH_IRC_URL, TWITCH_IRC_PORT);

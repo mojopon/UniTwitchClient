@@ -9,16 +9,18 @@ namespace UniTwitchClient.Chat.Mocks
     public class TwitchIrcClientMock : ITwitchIrcClient
     {
         public IObservable<string> OnMessageAsObservable => _messageSubject.AsObservable();
+        public bool Connected { get; private set; }
 
         private Subject<string> _messageSubject = new Subject<string>();
 
         public void Close()
         {
-
+            Connected = false;
         }
 
         public void Connect(string channelName)
         {
+            Connected = true;
         }
 
         public void Dispose()

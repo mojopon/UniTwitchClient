@@ -17,15 +17,25 @@ namespace UniTwitchClient.Chat
     public class TwitchChatClient : IDisposable
     {
         public IObservable<TwitchChatMessage> TwitchChatMessageAsObservable => _onTwitchChatMessageSubject.AsObservable();
+        private Subject<TwitchChatMessage> _onTwitchChatMessageSubject = new Subject<TwitchChatMessage>();
+
         public IObservable<string> MessageRawAsObservable => _onMessageRawSubject.AsObservable();
+        private Subject<string> _onMessageRawSubject = new Subject<string>();
+
+        public ConnectionState State 
+        {
+            get { return _state; }
+            private set 
+            {
+                _state = value;
+            }
+        }
+        private ConnectionState _state = ConnectionState.Idle;
 
         private ITwitchIrcClient _client;
         private IrcCredentials _ircCredentials;
 
         private CompositeDisposable _disposables = new CompositeDisposable();
-
-        private Subject<TwitchChatMessage> _onTwitchChatMessageSubject = new Subject<TwitchChatMessage>();
-        private Subject<string> _onMessageRawSubject = new Subject<string>();
 
         public TwitchChatClient(ConnectionCredentials credentials) : this(credentials, null) { }
 
@@ -41,7 +51,14 @@ namespace UniTwitchClient.Chat
 
         public void Connect(string channelName) 
         {
+            State = ConnectionState.Connecting;
             _client.Connect(channelName);
+        }
+
+        public void Close() 
+        {
+            _client.Close();
+            State = ConnectionState.Disconnected;
         }
 
         private void InitializeIrcClient(ITwitchIrcClient ircClient = null) 
@@ -76,16 +93,25 @@ namespace UniTwitchClient.Chat
                 return;
             }
 
+            if (message.Command == TwitchIrcCommand.Numeric001) 
+            {
+                HandleLoginSucceeded();
+            }
+
             if (message != null) 
             {
                 _onTwitchChatMessageSubject.OnNext(message);
             }
         }
 
+        private void HandleLoginSucceeded() 
+        {
+            State = ConnectionState.Connected;
+        }
+
         private void HandleError(Exception ex) 
         {
             _onTwitchChatMessageSubject.OnError(ex);
-            _onTwitchChatMessageSubject = new Subject<TwitchChatMessage>();
         }
 
         private void HandleComplete()
