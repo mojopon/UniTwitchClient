@@ -15,5 +15,15 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
 
             Assert.AreEqual("session_keepalive", model.MessageType);
         }
+
+        [Test]
+        public void ConvertToKeepAliveFromBlankDataTest() 
+        {
+            string data = "{}";
+            var rawModel = JsonWrapper.ConvertFromJson<keepalive_raw>(data);
+            var model = rawModel.ConvertRawToModel();
+
+            Assert.IsNotNull(model);
+        }
     }
 }

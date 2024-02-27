@@ -7,6 +7,16 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
     public class ConvertWebSocketMessageBaseTest
     {
         [Test]
+        public void ConvertWebSocketMessageBaseFromBlankDataTest() 
+        {
+            string data = "{}";
+            var rawModel = JsonWrapper.ConvertFromJson<message_base>(data);
+            var model = rawModel.ConvertRawToModel();
+
+            Assert.IsNotNull(model);
+        }
+
+        [Test]
         public void ConvertWelcomeMessageDataToWebSocketMessageBaseTest()
         {
             string data = "{\"metadata\":{\"message_id\":\"cee70190-9024-df2f-3623-83f5ac0813aa\",\"message_type\":\"session_welcome\",\"message_timestamp\":\"2023-12-06T04:13:19.1999374Z\"},\"payload\":{\"session\":{\"id\":\"a07f635d_7b043750\",\"status\":\"connected\",\"keepalive_timeout_seconds\":10,\"reconnect_url\":null,\"connected_at\":\"2023-12-06T04:13:19.1989356Z\"}}}";
