@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace UniTwitchClient.EventSub
 {
@@ -8,7 +9,7 @@ namespace UniTwitchClient.EventSub
     {
         public static T ConvertFromJson<T>(string data) where T : class
         {
-            return JsonUtility.FromJson<T>(data);
+            return JsonConvert.DeserializeObject<T>(data);
         }
 
         public static string ConvertToJson(object obj)
