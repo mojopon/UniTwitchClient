@@ -6,23 +6,35 @@ public static class RawToModelConverter
     public static Welcome ConvertRawToModel(this welcome_raw source)
     {
         Welcome welcomeMessage = new Welcome();
-        welcomeMessage.MessageType = source.metadata.message_type;
-        welcomeMessage.SessionId = source.payload.session.id;
-        welcomeMessage.KeepAliveTimeoutSeconds = source.payload.session.keepalive_timeout_seconds;
+        if (source.metadata != null)
+        {
+            welcomeMessage.MessageType = source.metadata.message_type;
+        }
+        if (source.payload != null && source.payload.session != null)
+        {
+            welcomeMessage.SessionId = source.payload.session.id;
+            welcomeMessage.KeepAliveTimeoutSeconds = source.payload.session.keepalive_timeout_seconds;
+        }
         return welcomeMessage;
     }
 
     public static WebSocketMessageBase ConvertRawToModel(this message_base source)
     {
         WebSocketMessageBase messageBase = new WebSocketMessageBase();
-        messageBase.MessageType = source.metadata.message_type;
+        if (source.metadata != null)
+        {
+            messageBase.MessageType = source.metadata.message_type;
+        }
         return messageBase;
     }
 
     public static KeepAlive ConvertRawToModel(this keepalive_raw source)
     {
         KeepAlive keepaliveMessage = new KeepAlive();
-        keepaliveMessage.MessageType = source.metadata.message_type;
+        if (source.metadata != null)
+        {
+            keepaliveMessage.MessageType = source.metadata.message_type;
+        }
         return keepaliveMessage;
     }
 
