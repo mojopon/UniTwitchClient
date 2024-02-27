@@ -14,7 +14,7 @@ namespace UniTwitchClient.EventSub
 
         public static string ConvertToJson(object obj)
         {
-            return JsonUtility.ToJson(obj);
+            return JsonConvert.SerializeObject(obj);
         }
     }
 }
