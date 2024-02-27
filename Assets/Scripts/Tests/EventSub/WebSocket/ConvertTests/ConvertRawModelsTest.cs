@@ -24,6 +24,20 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertConditionFromBlankDataTest() 
+        {
+            var data = "{}";
+            condition model = null;
+            model = JsonWrapper.ConvertFromJson<condition>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.broadcaster_user_id);
+            Assert.IsNull(model.user_id);
+            Assert.IsNull(model.moderator_user_id);
+            Assert.IsNull(model.reward_id);
+        }
+
+        [Test]
         public void ConvertEventTest() 
         {
             var data = "{\n  \"user_id\": \"12345\",\n  \"user_login\": \"testUser\",\n  \"user_name\": \"testUserName\",\n  \"broadcaster_user_id\": \"23456\",\n  \"broadcaster_user_login\": \"broadCaster\",\n  \"broadcaster_user_name\": \"broadCasterName\",\n  \"followed_at\": \"1234\",\n  \"reward\": {\n    \"id\": \"23456\",\n    \"title\": \"title\",\n    \"cost\": 123,\n    \"prompt\": \"prompt\"\n  },\n  \"tier\": \"11111\",\n  \"is_gift\": true\n}";
@@ -47,7 +61,27 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
 
             Assert.AreEqual("11111", model.tier);
             Assert.AreEqual(true, model.is_gift);
+        }
 
+        [Test]
+        public void ConvertEventFromBlankDataTest() 
+        {
+            var data = "{}";
+            @event model = null;
+            model = JsonWrapper.ConvertFromJson<@event>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.user_id);
+            Assert.IsNull(model.user_login);
+            Assert.IsNull(model.user_name);
+            Assert.IsNull(model.broadcaster_user_id);
+            Assert.IsNull(model.broadcaster_user_login);
+            Assert.IsNull(model.broadcaster_user_name);
+            Assert.IsNull(model.followed_at);
+            Assert.IsNull(model.tier);
+            Assert.IsFalse(model.is_gift);
+
+            Assert.IsNull(model.reward);
         }
 
         [Test]
@@ -66,6 +100,21 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertMetaDataFromBlankDataTest() 
+        {
+            var data = "{}";
+            metadata model = null;
+            model = JsonWrapper.ConvertFromJson<metadata>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.message_id);
+            Assert.IsNull(model.message_type);
+            Assert.IsNull(model.message_timestamp);
+            Assert.IsNull(model.subscription_type);
+            Assert.IsNull(model.subscription_version);
+        }
+
+        [Test]
         public void ConvertRewardTest() 
         {
             var data = "{\n  \"id\": \"12345\",\n  \"title\": \"title\",\n  \"cost\": 123,\n  \"prompt\": \"prompt\"\n}";
@@ -77,6 +126,20 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("title", model.title);
             Assert.AreEqual(123, model.cost);
             Assert.AreEqual("prompt", model.prompt);
+        }
+
+        [Test]
+        public void ConvertRewardFromBlankDataTest() 
+        {
+            var data = "{}";
+            reward model = null;
+            model = JsonWrapper.ConvertFromJson<reward>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.id);
+            Assert.IsNull(model.title);
+            Assert.AreEqual(0, model.cost);
+            Assert.IsNull(model.prompt);
         }
 
         [Test]
@@ -96,6 +159,21 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertSessionFromBlankDataTest() 
+        {
+            var data = "{}";
+            session model = null;
+            model = JsonWrapper.ConvertFromJson<session>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.id);
+            Assert.IsNull(model.status);
+            Assert.IsNull(model.connected_at);
+            Assert.AreEqual(0, model.keepalive_timeout_seconds);
+            Assert.IsNull(model.reconnect_url);
+        }
+
+        [Test]
         public void ConvertSubscriptionTest() 
         {
             var data = "{\n  \"id\": \"12345\",\n  \"status\": \"status\",\n  \"type\": \"type\",\n  \"version\": \"version\",\n  \"cost\": 123,\n  \"created_at\": \"20990101\"\n}";
@@ -112,6 +190,22 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertSubscriptionFromBlankDataTest() 
+        { 
+            var data = "{}";
+            subscription model = null;
+            model = JsonWrapper.ConvertFromJson<subscription>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.id);
+            Assert.IsNull(model.status);
+            Assert.IsNull(model.type);
+            Assert.IsNull(model.version);
+            Assert.AreEqual(0, model.cost);
+            Assert.IsNull(model.created_at);
+        }
+
+        [Test]
         public void ConvertTransportTest() 
         {
             var data = "{\n  \"method\": \"method\",\n  \"session_id\": \"123456\"\n}";
@@ -121,6 +215,18 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.IsNotNull(model);
             Assert.AreEqual("method", model.method);
             Assert.AreEqual("123456", model.session_id);
+        }
+
+        [Test]
+        public void ConvertTransportFromBlankDataTest() 
+        {
+            var data = "{}";
+            transport model = null;
+            model = JsonWrapper.ConvertFromJson<transport>(data);
+
+            Assert.IsNotNull(model);
+            Assert.IsNull(model.method);
+            Assert.IsNull(model.session_id);
         }
 
         [Test]
@@ -159,6 +265,20 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("title", model.@event.reward.title);
             Assert.AreEqual(123, model.@event.reward.cost);
             Assert.AreEqual("prompt", model.@event.reward.prompt);
+        }
+
+        [Test]
+        public void ConvertPayloadFromBlankDataTest() 
+        {
+            var data = "{}";
+            payload model = null;
+            model = JsonWrapper.ConvertFromJson<payload>(data);
+
+            Assert.IsNotNull(model);
+
+            Assert.IsNull(model.subscription);
+            Assert.IsNull(model.session);
+            Assert.IsNull(model.@event);
         }
     }
 }
