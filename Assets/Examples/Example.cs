@@ -1,6 +1,7 @@
 using UnityEngine;
 using UniRx;
 using UniTwitchClient.EventSub;
+using UniTwitchClient.EventSub.Api;
 
 public class Example : MonoBehaviour
 {
@@ -13,11 +14,15 @@ public class Example : MonoBehaviour
     void Start()
     {
         var connectionCredential = new ConnectionCredentials(userAccessToken, twitchUserName, clientId);
-        _twitchEventSubClient = new TwitchEventSubClient(connectionCredential);
-        _twitchEventSubClient.DebugMode = true;
+        var wsClient = new TwitchEventSubWebsocketClient();
+        wsClient.DebugMode = true;
+        var apiClient = new TwitchEventSubApiClient(connectionCredential.ToApiCredentials());
+        apiClient.DebugMode = true;
+        _twitchEventSubClient = new TwitchEventSubClient(connectionCredential, wsClient, apiClient);
 
         _twitchEventSubClient.SubscribeChannelFollow(broadcasterUserId);
         _twitchEventSubClient.SubscribeChannelSubscribe(broadcasterUserId);
+        _twitchEventSubClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
 
         _twitchEventSubClient.OnChannelFollowAsObservable.Subscribe(x => 
         {
