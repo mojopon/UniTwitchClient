@@ -8,5 +8,6 @@ namespace UniTwitchClient.EventSub
     {
         void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null);
         void SubscribeChannelSubscribe(string broadcasterUserId);
+        void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId);
     }
 }

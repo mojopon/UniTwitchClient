@@ -28,6 +28,13 @@ namespace UniTwitchClient.EventSub.Api
             _subscriptions.Add(subscription);
         }
 
+        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
+        {
+            var condition = CreateCondition(broadcasterUserId, "", "", "", "");
+            var subscription = new Subscription(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, condition);
+            _subscriptions.Add(subscription);
+        }
+
         public Subscription[] GetSubscriptionsWithSessionId(string sessionId)
         {
             foreach (var subscription in _subscriptions)

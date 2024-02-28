@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Notification = UniTwitchClient.EventSub.WebSocket.Notification;
 using UniTwitchClient.EventSub.WebSocket;
 
-public class TwitchEventSubWebsocketClient : IDisposable
+public class TwitchEventSubWebsocketClient : ITwitchEventSubWebsocketClient
 {
     public bool DebugMode 
     {

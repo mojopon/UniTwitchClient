@@ -9,7 +9,7 @@ using UniTwitchClient.EventSub.Api.Models;
 
 namespace UniTwitchClient.EventSub.Api
 {
-    public class TwitchEventSubApiClient : ISubscriptionManager
+    public class TwitchEventSubApiClient : ITwitchEventSubApiClient
     {
         public bool DebugMode
         {
@@ -41,7 +41,7 @@ namespace UniTwitchClient.EventSub.Api
             _ = CreateSubscriptionsAsync(sessionId);
         }
 
-        private async UniTask CreateSubscriptionsAsync(string sessionId)
+        public async UniTask CreateSubscriptionsAsync(string sessionId)
         {
             var subscriptions = _subscriptionBuilder.GetSubscriptionsWithSessionId(sessionId);
 
@@ -112,6 +112,11 @@ namespace UniTwitchClient.EventSub.Api
         public void SubscribeChannelSubscribe(string broadcasterUserId)
         {
             _subscriptionBuilder.SubscribeChannelSubscribe(broadcasterUserId);
+        }
+
+        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
+        {
+            _subscriptionBuilder.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
         }
     }
 }
