@@ -13,35 +13,31 @@ namespace UniTwitchClient.EventSub
         public IObservable<ChannelSubscribe> OnChannelSubscribeAsObservable { get; private set; }
 
         private CompositeDisposable _disposables = new CompositeDisposable();
-        private TwitchEventSubWebsocketClient _wsClient;
-        private TwitchEventSubApiClient _apiClient;
+        private ITwitchEventSubWebsocketClient _wsClient;
+        private ITwitchEventSubApiClient _apiClient;
 
         private Action<ChannelFollow> _onChannelFollowReceived;
         private Action<ChannelSubscribe> _onChannelSubscribeReceived;
 
         private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
 
-        #region DebugMode
-        public bool DebugMode
-        {
-            get
-            {
-                return _debugMode;
-            }
-            set
-            {
-                _debugMode = value;
-                _wsClient.DebugMode = _debugMode;
-                _apiClient.DebugMode = _debugMode;
-            }
-        }
-        private bool _debugMode = false;
-        #endregion
+        public TwitchEventSubClient(ConnectionCredentials connectionCredentials) : this(connectionCredentials, null, null) { }
 
-        public TwitchEventSubClient(ConnectionCredentials connectionCredentials)
+        public TwitchEventSubClient(ConnectionCredentials connectionCredentials, ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
         {
-            InitializeWebSocketClient();
-            InitializeApiClient(connectionCredentials);
+            if (wsClient == null) 
+            {
+                _wsClient = new TwitchEventSubWebsocketClient();
+            }
+            InitializeWebSocketClient(wsClient);
+
+            if (apiClient == null)
+            {
+                apiClient = new TwitchEventSubApiClient(connectionCredentials.ToApiCredentials());
+            }
+            InitializeApiClient(apiClient);
+
+
             InitializeHandlers();
             InitializeObservables();
         }
@@ -57,14 +53,15 @@ namespace UniTwitchClient.EventSub
             _disposables.Dispose();
         }
 
-        private void InitializeWebSocketClient()
+        private void InitializeWebSocketClient(ITwitchEventSubWebsocketClient wsClient)
         {
-            _wsClient = new TwitchEventSubWebsocketClient();
+            _wsClient = wsClient;
+
 
             _wsClient.OnWelcomeMessageAsObservable.Subscribe(x =>
             {
                 Debug.Log("[Example] Welcome");
-                _apiClient.CreateSubscriptions(x.SessionId);
+                _apiClient.CreateSubscriptionsAsync(x.SessionId);
             }).AddTo(_disposables);
 
             _wsClient.OnKeepAliveAsObservable.Subscribe(x =>
@@ -79,9 +76,9 @@ namespace UniTwitchClient.EventSub
             }).AddTo(_disposables);
         }
 
-        private void InitializeApiClient(ConnectionCredentials connectionCredentials)
+        private void InitializeApiClient(ITwitchEventSubApiClient apiClient)
         {
-            _apiClient = new TwitchEventSubApiClient(connectionCredentials.ToApiCredentials());
+            _apiClient = apiClient;
         }
 
         private void InitializeHandlers()
@@ -130,6 +127,11 @@ namespace UniTwitchClient.EventSub
         public void SubscribeChannelSubscribe(string broadcasterUserId)
         {
             _apiClient.SubscribeChannelSubscribe(broadcasterUserId);
+        }
+
+        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
+        {
+            _apiClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
         }
 
         #endregion
