@@ -21,23 +21,23 @@ namespace UniTwitchClient.EventSub
 
         private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
 
-        public TwitchEventSubClient(ConnectionCredentials connectionCredentials) : this(connectionCredentials, null, null) { }
-
-        public TwitchEventSubClient(ConnectionCredentials connectionCredentials, ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
+        public TwitchEventSubClient(ConnectionCredentials connectionCredentials) 
         {
-            if (wsClient == null) 
-            {
-                _wsClient = new TwitchEventSubWebsocketClient();
-            }
+            var wsClient = new TwitchEventSubWebsocketClient();
+            var apiClient = new TwitchEventSubApiClient(connectionCredentials.ToApiCredentials());
+
+            Initialize(wsClient, apiClient);
+        }
+
+        public TwitchEventSubClient(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
+        {
+            Initialize(wsClient, apiClient);
+        }
+
+        private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
+        {
             InitializeWebSocketClient(wsClient);
-
-            if (apiClient == null)
-            {
-                apiClient = new TwitchEventSubApiClient(connectionCredentials.ToApiCredentials());
-            }
             InitializeApiClient(apiClient);
-
-
             InitializeHandlers();
             InitializeObservables();
         }

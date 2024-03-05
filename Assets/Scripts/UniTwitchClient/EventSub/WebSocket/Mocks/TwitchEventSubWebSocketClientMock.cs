@@ -45,4 +45,9 @@ public class TwitchEventSubWebSocketClientMock : ITwitchEventSubWebsocketClient
     {
         disposables.Dispose();
     }
+
+    public void ReceiveWelcomeMessage(Welcome welcomeMessage) 
+    {
+        _welcomeSubject.OnNext(welcomeMessage);
+    }
 }
