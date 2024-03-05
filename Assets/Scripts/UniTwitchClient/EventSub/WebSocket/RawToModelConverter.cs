@@ -1,85 +1,88 @@
 using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
 
-public static class RawToModelConverter
+namespace UniTwitchClient.EventSub.WebSocket
 {
-    public static Welcome ConvertRawToModel(this welcome_raw source)
+    public static class RawToModelConverter
     {
-        Welcome welcomeMessage = new Welcome();
-        if (source.metadata != null)
+        public static Welcome ConvertRawToModel(this welcome_raw source)
         {
-            welcomeMessage.MessageType = source.metadata.message_type;
-        }
-        if (source.payload != null && source.payload.session != null)
-        {
-            welcomeMessage.SessionId = source.payload.session.id;
-            welcomeMessage.KeepAliveTimeoutSeconds = source.payload.session.keepalive_timeout_seconds;
-        }
-        return welcomeMessage;
-    }
-
-    public static WebSocketMessageBase ConvertRawToModel(this message_base source)
-    {
-        WebSocketMessageBase messageBase = new WebSocketMessageBase();
-        if (source.metadata != null)
-        {
-            messageBase.MessageType = source.metadata.message_type;
-        }
-        return messageBase;
-    }
-
-    public static KeepAlive ConvertRawToModel(this keepalive_raw source)
-    {
-        KeepAlive keepaliveMessage = new KeepAlive();
-        if (source.metadata != null)
-        {
-            keepaliveMessage.MessageType = source.metadata.message_type;
-        }
-        return keepaliveMessage;
-    }
-
-    public static Notification ConvertRawToModel(this notification_raw source)
-    {
-        Notification notification = new Notification();
-
-        if (source.metadata != null)
-        {
-            notification.MessageType = source.metadata.message_type;
-        }
-
-        if (source.payload != null)
-        {
-            notification.SubscriptionType = SubscriptionTypeConverter.ToSubscriptionType(source.payload.subscription.type);
-        }
-
-        @event eventSource = null;
-        if (source.payload != null)
-        {
-            eventSource = source.payload.@event;
-        }
-
-        if (eventSource != null)
-        {
-
-            notification.UserId = eventSource.user_id;
-            notification.UserName = eventSource.user_name;
-            notification.UserLogin = eventSource.user_login;
-            notification.BroadCasterUserId = eventSource.broadcaster_user_id;
-            notification.BroadCasterUserName = eventSource.broadcaster_user_name;
-            notification.BroadCasterUserLogin = eventSource.broadcaster_user_login;
-
-            if (eventSource.reward != null)
+            Welcome welcomeMessage = new Welcome();
+            if (source.metadata != null)
             {
-                notification.RewardId = eventSource.reward.id;
-                notification.RewardTitle = eventSource.reward.title;
-                notification.RewardPrompt = eventSource.reward.prompt;
-                notification.RewardCost = eventSource.reward.cost;
+                welcomeMessage.MessageType = source.metadata.message_type;
+            }
+            if (source.payload != null && source.payload.session != null)
+            {
+                welcomeMessage.SessionId = source.payload.session.id;
+                welcomeMessage.KeepAliveTimeoutSeconds = source.payload.session.keepalive_timeout_seconds;
+            }
+            return welcomeMessage;
+        }
+
+        public static WebSocketMessageBase ConvertRawToModel(this message_base source)
+        {
+            WebSocketMessageBase messageBase = new WebSocketMessageBase();
+            if (source.metadata != null)
+            {
+                messageBase.MessageType = source.metadata.message_type;
+            }
+            return messageBase;
+        }
+
+        public static KeepAlive ConvertRawToModel(this keepalive_raw source)
+        {
+            KeepAlive keepaliveMessage = new KeepAlive();
+            if (source.metadata != null)
+            {
+                keepaliveMessage.MessageType = source.metadata.message_type;
+            }
+            return keepaliveMessage;
+        }
+
+        public static Notification ConvertRawToModel(this notification_raw source)
+        {
+            Notification notification = new Notification();
+
+            if (source.metadata != null)
+            {
+                notification.MessageType = source.metadata.message_type;
             }
 
-            notification.IsGift = eventSource.is_gift;
-            notification.Tier = eventSource.tier;
-        }
+            if (source.payload != null)
+            {
+                notification.SubscriptionType = SubscriptionTypeConverter.ToSubscriptionType(source.payload.subscription.type);
+            }
 
-        return notification;
+            @event eventSource = null;
+            if (source.payload != null)
+            {
+                eventSource = source.payload.@event;
+            }
+
+            if (eventSource != null)
+            {
+
+                notification.UserId = eventSource.user_id;
+                notification.UserName = eventSource.user_name;
+                notification.UserLogin = eventSource.user_login;
+                notification.BroadCasterUserId = eventSource.broadcaster_user_id;
+                notification.BroadCasterUserName = eventSource.broadcaster_user_name;
+                notification.BroadCasterUserLogin = eventSource.broadcaster_user_login;
+
+                if (eventSource.reward != null)
+                {
+                    notification.RewardId = eventSource.reward.id;
+                    notification.RewardTitle = eventSource.reward.title;
+                    notification.RewardPrompt = eventSource.reward.prompt;
+                    notification.RewardCost = eventSource.reward.cost;
+                }
+
+                notification.IsGift = eventSource.is_gift;
+                notification.Tier = eventSource.tier;
+            }
+
+            return notification;
+        }
     }
 }

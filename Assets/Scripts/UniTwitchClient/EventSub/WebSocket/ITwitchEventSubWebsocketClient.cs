@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine;
 
-public interface ITwitchEventSubWebsocketClient : IDisposable
+namespace UniTwitchClient.EventSub.WebSocket
 {
-    void Connect();
-    void Disconnect();
+    public interface ITwitchEventSubWebsocketClient : IDisposable
+    {
+        void Connect();
+        void Disconnect();
 
-    IObservable<Welcome> OnWelcomeMessageAsObservable { get; }
-    IObservable<KeepAlive> OnKeepAliveAsObservable { get; }
-    IObservable<Notification> OnNotificationAsObservable { get; }
-    IObservable<Exception> OnErrorAsObservable { get; }
+        IObservable<Welcome> OnWelcomeMessageAsObservable { get; }
+        IObservable<KeepAlive> OnKeepAliveAsObservable { get; }
+        IObservable<Notification> OnNotificationAsObservable { get; }
+        IObservable<Exception> OnErrorAsObservable { get; }
+    }
 }

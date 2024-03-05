@@ -4,6 +4,7 @@ using UnityEngine;
 using UniRx;
 using System;
 using UniTwitchClient.EventSub.Api;
+using UniTwitchClient.EventSub.WebSocket;
 
 namespace UniTwitchClient.EventSub
 {

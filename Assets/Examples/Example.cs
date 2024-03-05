@@ -2,6 +2,7 @@ using UnityEngine;
 using UniRx;
 using UniTwitchClient.EventSub;
 using UniTwitchClient.EventSub.Api;
+using UniTwitchClient.EventSub.WebSocket;
 
 public class Example : MonoBehaviour
 {

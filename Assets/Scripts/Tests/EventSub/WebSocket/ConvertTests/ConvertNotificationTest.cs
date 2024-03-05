@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UniTwitchClient.EventSub;
+using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
 
 namespace UniTwitchClient.Tests.EventSub.WebSocket

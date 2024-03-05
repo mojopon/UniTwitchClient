@@ -6,48 +6,51 @@ using UniTwitchClient.EventSub.WebSocket;
 using Notification = UniTwitchClient.EventSub.WebSocket.Notification;
 using UnityEngine;
 
-public class TwitchEventSubWebSocketClientMock : ITwitchEventSubWebsocketClient
+namespace UniTwitchClient.EventSub.Mocks
 {
-    public IObservable<Welcome> OnWelcomeMessageAsObservable { get; private set; }
-    public IObservable<KeepAlive> OnKeepAliveAsObservable { get; private set; }
-    public IObservable<Notification> OnNotificationAsObservable { get; private set; }
-    public IObservable<Exception> OnErrorAsObservable { get; private set; }
-
-    private Subject<Welcome> _welcomeSubject = new Subject<Welcome>();
-    private Subject<KeepAlive> _keepAliveSubject = new Subject<KeepAlive>();
-    private Subject<Notification> _notificationSubject = new Subject<Notification>();
-    private Subject<Exception> _errorSubject = new Subject<Exception>();
-
-    private CompositeDisposable disposables = new CompositeDisposable();
-
-    public TwitchEventSubWebSocketClientMock() 
+    public class TwitchEventSubWebSocketClientMock : ITwitchEventSubWebsocketClient
     {
-        disposables.Add(_welcomeSubject);
-        disposables.Add(_keepAliveSubject);
-        disposables.Add(_notificationSubject);
-        disposables.Add(_errorSubject);
+        public IObservable<Welcome> OnWelcomeMessageAsObservable { get; private set; }
+        public IObservable<KeepAlive> OnKeepAliveAsObservable { get; private set; }
+        public IObservable<Notification> OnNotificationAsObservable { get; private set; }
+        public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
-        OnWelcomeMessageAsObservable = _welcomeSubject.AsObservable().ObserveOnMainThread().Share();
-        OnKeepAliveAsObservable = _keepAliveSubject.AsObservable().ObserveOnMainThread().Share();
-        OnNotificationAsObservable = _notificationSubject.AsObservable().ObserveOnMainThread().Share();
-        OnErrorAsObservable = _errorSubject.AsObservable().ObserveOnMainThread().Share();
-    }
+        private Subject<Welcome> _welcomeSubject = new Subject<Welcome>();
+        private Subject<KeepAlive> _keepAliveSubject = new Subject<KeepAlive>();
+        private Subject<Notification> _notificationSubject = new Subject<Notification>();
+        private Subject<Exception> _errorSubject = new Subject<Exception>();
 
-    public void Connect()
-    {
-    }
+        private CompositeDisposable disposables = new CompositeDisposable();
 
-    public void Disconnect()
-    {
-    }
+        public TwitchEventSubWebSocketClientMock()
+        {
+            disposables.Add(_welcomeSubject);
+            disposables.Add(_keepAliveSubject);
+            disposables.Add(_notificationSubject);
+            disposables.Add(_errorSubject);
 
-    public void Dispose()
-    {
-        disposables.Dispose();
-    }
+            OnWelcomeMessageAsObservable = _welcomeSubject.AsObservable().ObserveOnMainThread().Share();
+            OnKeepAliveAsObservable = _keepAliveSubject.AsObservable().ObserveOnMainThread().Share();
+            OnNotificationAsObservable = _notificationSubject.AsObservable().ObserveOnMainThread().Share();
+            OnErrorAsObservable = _errorSubject.AsObservable().ObserveOnMainThread().Share();
+        }
 
-    public void ReceiveWelcomeMessage(Welcome welcomeMessage) 
-    {
-        _welcomeSubject.OnNext(welcomeMessage);
+        public void Connect()
+        {
+        }
+
+        public void Disconnect()
+        {
+        }
+
+        public void Dispose()
+        {
+            disposables.Dispose();
+        }
+
+        public void ReceiveWelcomeMessage(Welcome welcomeMessage)
+        {
+            _welcomeSubject.OnNext(welcomeMessage);
+        }
     }
 }

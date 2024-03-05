@@ -3,25 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwitchEventSubApiClientMock : ITwitchEventSubApiClient
+namespace UniTwitchClient.EventSub.Api.Mocks
 {
-    public UniTask CreateSubscriptionsAsync(string sessionId)
+    public class TwitchEventSubApiClientMock : ITwitchEventSubApiClient
     {
-        throw new System.NotImplementedException();
-    }
+        public UniTask CreateSubscriptionsAsync(string sessionId)
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
-    {
-        throw new System.NotImplementedException();
-    }
+        public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
-    {
-        throw new System.NotImplementedException();
-    }
+        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
+        {
+            throw new System.NotImplementedException();
+        }
 
-    public void SubscribeChannelSubscribe(string broadcasterUserId)
-    {
-        throw new System.NotImplementedException();
+        public void SubscribeChannelSubscribe(string broadcasterUserId)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

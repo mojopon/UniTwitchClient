@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UniTwitchClient.EventSub;
 using UnityEngine;
 
-public interface ITwitchEventSubApiClient : ISubscriptionManager
+namespace UniTwitchClient.EventSub.Api
 {
-    UniTask CreateSubscriptionsAsync(string sessionId);
+    public interface ITwitchEventSubApiClient : ISubscriptionManager
+    {
+        UniTask CreateSubscriptionsAsync(string sessionId);
+    }
 }
