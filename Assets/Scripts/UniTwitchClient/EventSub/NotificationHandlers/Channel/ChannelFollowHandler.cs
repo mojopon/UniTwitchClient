@@ -14,7 +14,10 @@ namespace UniTwitchClient.EventSub
         {
             var channelFollow = new ChannelFollow(notification.UserId,
                                                   notification.UserName,
-                                                  notification.UserLogin);
+                                                  notification.UserLogin,
+                                                  notification.BroadCasterUserId,
+                                                  notification.BroadCasterUserName,
+                                                  notification.BroadCasterUserLogin);
 
             _onHandle(channelFollow);
         }
