@@ -5,6 +5,7 @@ using UniRx;
 using System;
 using UniTwitchClient.EventSub.Api;
 using UniTwitchClient.EventSub.WebSocket;
+using UnityEngine.Playables;
 
 namespace UniTwitchClient.EventSub
 {
@@ -17,8 +18,8 @@ namespace UniTwitchClient.EventSub
         private ITwitchEventSubWebsocketClient _wsClient;
         private ITwitchEventSubApiClient _apiClient;
 
-        private Action<ChannelFollow> _onChannelFollowReceived;
-        private Action<ChannelSubscribe> _onChannelSubscribeReceived;
+        private Subject<ChannelFollow> _onChannelFollowSubject;
+        private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
 
         private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
 
@@ -90,17 +91,11 @@ namespace UniTwitchClient.EventSub
 
         private void InitializeObservables()
         {
-            OnChannelFollowAsObservable = Observable.FromEvent<ChannelFollow>(
-                                        h => _onChannelFollowReceived += h,
-                                        h => _onChannelFollowReceived -= h)
-                                        .ObserveOnMainThread()
-                                        .Share();
+            _onChannelFollowSubject = new Subject<ChannelFollow>().AddTo(_disposables);
+            _onChannelSubscribeSubject = new Subject<ChannelSubscribe>().AddTo(_disposables);
 
-            OnChannelSubscribeAsObservable = Observable.FromEvent<ChannelSubscribe>(
-                                        h => _onChannelSubscribeReceived += h,
-                                        h => _onChannelSubscribeReceived -= h)
-                                        .ObserveOnMainThread()
-                                        .Share();
+            OnChannelFollowAsObservable = _onChannelFollowSubject.AsObservable();
+            OnChannelSubscribeAsObservable = _onChannelSubscribeSubject.AsObservable();
         }
 
         private void HandleNotification(WebSocket.Notification notification)
@@ -110,12 +105,12 @@ namespace UniTwitchClient.EventSub
 
         private void OnChannelFollow(ChannelFollow channelFollow)
         {
-            _onChannelFollowReceived?.Invoke(channelFollow);
+            _onChannelFollowSubject.OnNext(channelFollow);
         }
 
         private void OnChannelSubscribe(ChannelSubscribe channelSubscribe) 
         {
-            _onChannelSubscribeReceived?.Invoke(channelSubscribe);
+            _onChannelSubscribeSubject.OnNext(channelSubscribe);
         }
 
         #region ISubscriptionManager

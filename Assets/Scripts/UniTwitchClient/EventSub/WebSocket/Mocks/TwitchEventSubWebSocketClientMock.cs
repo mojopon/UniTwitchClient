@@ -29,10 +29,10 @@ namespace UniTwitchClient.EventSub.Mocks
             disposables.Add(_notificationSubject);
             disposables.Add(_errorSubject);
 
-            OnWelcomeMessageAsObservable = _welcomeSubject.AsObservable().ObserveOnMainThread().Share();
-            OnKeepAliveAsObservable = _keepAliveSubject.AsObservable().ObserveOnMainThread().Share();
-            OnNotificationAsObservable = _notificationSubject.AsObservable().ObserveOnMainThread().Share();
-            OnErrorAsObservable = _errorSubject.AsObservable().ObserveOnMainThread().Share();
+            OnWelcomeMessageAsObservable = _welcomeSubject.AsObservable();
+            OnKeepAliveAsObservable = _keepAliveSubject.AsObservable();
+            OnNotificationAsObservable = _notificationSubject.AsObservable();
+            OnErrorAsObservable = _errorSubject.AsObservable();
         }
 
         public void Connect()
@@ -51,6 +51,11 @@ namespace UniTwitchClient.EventSub.Mocks
         public void ReceiveWelcomeMessage(Welcome welcomeMessage)
         {
             _welcomeSubject.OnNext(welcomeMessage);
+        }
+
+        public void ReceiveNotification(Notification notification) 
+        {
+            _notificationSubject.OnNext(notification);
         }
     }
 }
