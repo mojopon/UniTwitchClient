@@ -1,5 +1,10 @@
+using System;
+using System.Diagnostics;
+using System.Diagnostics.Tracing;
+using System.Xml;
 using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
+using UnityEngine;
 
 namespace UniTwitchClient.EventSub.WebSocket
 {
@@ -69,6 +74,7 @@ namespace UniTwitchClient.EventSub.WebSocket
                 notification.BroadCasterUserId = eventSource.broadcaster_user_id;
                 notification.BroadCasterUserName = eventSource.broadcaster_user_name;
                 notification.BroadCasterUserLogin = eventSource.broadcaster_user_login;
+                notification.FollowedAt = ParseDateTime(eventSource.followed_at);
 
                 if (eventSource.reward != null)
                 {
@@ -83,6 +89,18 @@ namespace UniTwitchClient.EventSub.WebSocket
             }
 
             return notification;
+        }
+
+        private static DateTime ParseDateTime(string dateTimeRaw) 
+        {
+            DateTime dateTime = new DateTime();
+
+            try
+            {
+                dateTime = XmlConvert.ToDateTime(dateTimeRaw, XmlDateTimeSerializationMode.Utc);
+            }catch (Exception ex) { }
+
+            return dateTime;
         }
     }
 }

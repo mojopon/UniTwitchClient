@@ -32,6 +32,13 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("59784628", model.BroadCasterUserId);
             Assert.AreEqual("59784628", model.BroadCasterUserLogin);
             Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
+
+            Assert.AreEqual(2023, model.FollowedAt.Year);
+            Assert.AreEqual(12, model.FollowedAt.Month);
+            Assert.AreEqual(6, model.FollowedAt.Day);
+            Assert.AreEqual(4, model.FollowedAt.Hour);
+            Assert.AreEqual(37, model.FollowedAt.Minute);
+            Assert.AreEqual(14, model.FollowedAt.Second);
         }
 
         [Test]
