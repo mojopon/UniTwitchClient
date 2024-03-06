@@ -54,6 +54,7 @@ namespace UniTwitchClient.Tests.EventSub
                 BroadCasterUserId = "1337",
                 BroadCasterUserLogin = "cooler_user",
                 BroadCasterUserName = "Cooler_User",
+                FollowedAt = new DateTime(2023, 12, 21, 23, 54, 12),
             };
             _wsClient.ReceiveNotification(notification);
 
@@ -64,6 +65,9 @@ namespace UniTwitchClient.Tests.EventSub
             Assert.AreEqual("1337", channelFollow.BroadcasterUserId);
             Assert.AreEqual("cooler_user", channelFollow.BroadcasterUserLogin);
             Assert.AreEqual("Cooler_User", channelFollow.BroadcasterUserName);
+
+            var targetTime = new DateTime(2023, 12, 21, 23, 54, 12);
+            Assert.AreEqual(0, targetTime.CompareTo(channelFollow.FollowedAt));
         }
     }
 }

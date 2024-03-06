@@ -17,7 +17,7 @@ namespace UniTwitchClient.EventSub
         public DateTime FollowedAt { get; private set; }
 
 
-        public ChannelFollow(string userId, string userName, string userLogin, string broadcasterUserId, string broadcasterUserName, string broadcasterUserLogin)
+        public ChannelFollow(string userId, string userName, string userLogin, string broadcasterUserId, string broadcasterUserName, string broadcasterUserLogin, DateTime followedAt)
         {
             UserId = userId;
             UserName = userName;
@@ -25,6 +25,7 @@ namespace UniTwitchClient.EventSub
             BroadcasterUserId = broadcasterUserId;
             BroadcasterUserName = broadcasterUserName;
             BroadcasterUserLogin = broadcasterUserLogin;
+            FollowedAt = followedAt;
         }
     }
 }

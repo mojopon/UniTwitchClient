@@ -17,7 +17,8 @@ namespace UniTwitchClient.EventSub
                                                   notification.UserLogin,
                                                   notification.BroadCasterUserId,
                                                   notification.BroadCasterUserName,
-                                                  notification.BroadCasterUserLogin);
+                                                  notification.BroadCasterUserLogin,
+                                                  notification.FollowedAt);
 
             _onHandle(channelFollow);
         }
