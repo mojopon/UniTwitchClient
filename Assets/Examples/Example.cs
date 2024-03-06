@@ -21,10 +21,6 @@ public class Example : MonoBehaviour
         apiClient.DebugMode = true;
         _twitchEventSubClient = new TwitchEventSubClient(wsClient, apiClient);
 
-        _twitchEventSubClient.SubscribeChannelFollow(broadcasterUserId);
-        _twitchEventSubClient.SubscribeChannelSubscribe(broadcasterUserId);
-        _twitchEventSubClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
-
         _twitchEventSubClient.OnChannelFollowAsObservable.Subscribe(x => 
         {
             Debug.Log("the channel is followed by " + x.UserName + " !, UserId: " + x.UserId);
@@ -35,7 +31,7 @@ public class Example : MonoBehaviour
             Debug.Log("the channel is subscribed by " + x.UserName + " !, UserId: " + x.UserId);
         });
 
-        _twitchEventSubClient.Connect();
+        _twitchEventSubClient.ConnectChannel(broadcasterUserId);
     }
 
     private void OnDestroy()

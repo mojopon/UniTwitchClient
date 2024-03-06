@@ -9,7 +9,7 @@ using UnityEngine.Playables;
 
 namespace UniTwitchClient.EventSub
 {
-    public class TwitchEventSubClient : IDisposable, ISubscriptionManager
+    public class TwitchEventSubClient : IDisposable
     {
         public IObservable<ChannelFollow> OnChannelFollowAsObservable { get; private set; }
         public IObservable<ChannelSubscribe> OnChannelSubscribeAsObservable { get; private set; }
@@ -44,8 +44,12 @@ namespace UniTwitchClient.EventSub
             InitializeObservables();
         }
 
-        public void Connect()
+        public void ConnectChannel(string broadcasterUserId)
         {
+            _apiClient.SubscribeChannelFollow(broadcasterUserId);
+            _apiClient.SubscribeChannelSubscribe(broadcasterUserId);
+            _apiClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
+
             _wsClient.Connect();
         }
 
@@ -112,24 +116,5 @@ namespace UniTwitchClient.EventSub
         {
             _onChannelSubscribeSubject.OnNext(channelSubscribe);
         }
-
-        #region ISubscriptionManager
-
-        public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
-        {
-            _apiClient.SubscribeChannelFollow(broadcasterUserId, moderatorUserId);
-        }
-
-        public void SubscribeChannelSubscribe(string broadcasterUserId)
-        {
-            _apiClient.SubscribeChannelSubscribe(broadcasterUserId);
-        }
-
-        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
-        {
-            _apiClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
-        }
-
-        #endregion
     }
 }
