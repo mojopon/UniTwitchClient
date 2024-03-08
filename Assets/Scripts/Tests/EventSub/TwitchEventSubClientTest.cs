@@ -69,5 +69,37 @@ namespace UniTwitchClient.Tests.EventSub
             var targetTime = new DateTime(2023, 12, 21, 23, 54, 12);
             Assert.AreEqual(0, targetTime.CompareTo(channelFollow.FollowedAt));
         }
+
+        [Test]
+        public void ReceiveChannelSubscribeTest() 
+        {
+            ChannelSubscribe channelSubscribe = null;
+            _client.OnChannelSubscribeAsObservable.Subscribe(x =>
+            {
+                channelSubscribe = x;
+            });
+
+            var notification = new Notification()
+            {
+                SubscriptionType = SubscriptionType.ChannelSubscribe,
+                UserId = "1234",
+                UserLogin = "cool_user",
+                UserName = "Cool_User",
+                BroadCasterUserId = "1337",
+                BroadCasterUserLogin = "cooler_user",
+                BroadCasterUserName = "Cooler_User",
+                Tier = "1000",
+                IsGift = true,
+            };
+            _wsClient.ReceiveNotification(notification);
+
+            Assert.IsNotNull(channelSubscribe);
+            Assert.AreEqual("1234", channelSubscribe.UserId);
+            Assert.AreEqual("cool_user", channelSubscribe.UserLogin);
+            Assert.AreEqual("Cool_User", channelSubscribe.UserName);
+            Assert.AreEqual("1337", channelSubscribe.BroadcasterUserId);
+            Assert.AreEqual("cooler_user", channelSubscribe.BroadcasterUserLogin);
+            Assert.AreEqual("Cooler_User", channelSubscribe.BroadcasterUserName);
+        }
     }
 }
