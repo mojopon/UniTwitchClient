@@ -33,6 +33,13 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("59784628", model.BroadCasterUserLogin);
             Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
 
+            Assert.AreEqual(2023, model.MessageTimeStamp.Year);
+            Assert.AreEqual(12, model.MessageTimeStamp.Month);
+            Assert.AreEqual(6, model.MessageTimeStamp.Day);
+            Assert.AreEqual(4, model.MessageTimeStamp.Hour);
+            Assert.AreEqual(37, model.MessageTimeStamp.Minute);
+            Assert.AreEqual(14, model.MessageTimeStamp.Second);
+
             Assert.AreEqual(2023, model.FollowedAt.Year);
             Assert.AreEqual(12, model.FollowedAt.Month);
             Assert.AreEqual(6, model.FollowedAt.Day);
@@ -58,6 +65,13 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
             Assert.AreEqual(true, model.IsGift);
             Assert.AreEqual("1000", model.Tier);
+
+            Assert.AreEqual(2023, model.MessageTimeStamp.Year);
+            Assert.AreEqual(12, model.MessageTimeStamp.Month);
+            Assert.AreEqual(21, model.MessageTimeStamp.Day);
+            Assert.AreEqual(5, model.MessageTimeStamp.Hour);
+            Assert.AreEqual(47, model.MessageTimeStamp.Minute);
+            Assert.AreEqual(25, model.MessageTimeStamp.Second);
         }
     }
 }

@@ -52,6 +52,7 @@ namespace UniTwitchClient.EventSub.WebSocket
             if (source.metadata != null)
             {
                 notification.MessageType = source.metadata.message_type;
+                notification.MessageTimeStamp = ParseDateTime(source.metadata.message_timestamp);
             }
 
             if (source.payload != null)
