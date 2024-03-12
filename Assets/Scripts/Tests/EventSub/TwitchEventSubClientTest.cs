@@ -101,5 +101,11 @@ namespace UniTwitchClient.Tests.EventSub
             Assert.AreEqual("cooler_user", channelSubscribe.BroadcasterUserLogin);
             Assert.AreEqual("Cooler_User", channelSubscribe.BroadcasterUserName);
         }
+
+        [Test]
+        public void ReceiveChannelPointsCustomRewardRedemptionAddTest() 
+        {
+            throw new NotImplementedException();
+        }
     }
 }

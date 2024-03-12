@@ -73,5 +73,33 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual(47, model.MessageTimeStamp.Minute);
             Assert.AreEqual(25, model.MessageTimeStamp.Second);
         }
+
+        [Test]
+        public void ConvertChannelPointsCustomRewardRedemptionAddToNotificationTest() 
+        {
+            string data = "{\"metadata\":{\"message_id\":\"247cedf0-ad59-0399-990c-affd423a2acd\",\"message_type\":\"notification\",\"message_timestamp\":\"2024-03-08T07:58:04.2650485Z\",\"subscription_type\":\"channel.channel_points_custom_reward_redemption.add\",\"subscription_version\":\"1\"},\"payload\":{\"subscription\":{\"id\":\"860a5ef8-8288-2d61-0e72-a73258dc8fc8\",\"status\":\"enabled\",\"type\":\"channel.channel_points_custom_reward_redemption.add\",\"version\":\"1\",\"condition\":{\"broadcaster_user_id\":\"86630555\"},\"transport\":{\"method\":\"websocket\",\"session_id\":\"e3ffe25e_dfd480b9\"},\"created_at\":\"2024-03-08T07:57:55.66569Z\",\"cost\":0},\"event\":{\"broadcaster_user_id\":\"86630555\",\"broadcaster_user_login\":\"testBroadcaster\",\"broadcaster_user_name\":\"testBroadcaster\",\"id\":\"860a5ef8-8288-2d61-0e72-a73258dc8fc8\",\"redeemed_at\":\"2024-03-08T07:58:04.2444073Z\",\"reward\":{\"cost\":150,\"id\":\"d53ad741-f148-4a29-2e7f-355fffe73563\",\"prompt\":\"RedeemYourTestRewardfromCLI\",\"title\":\"TestRewardfromCLI\"},\"status\":\"unfulfilled\",\"user_id\":\"71310683\",\"user_input\":\"TestInputFromCLI\",\"user_login\":\"testFromUser\",\"user_name\":\"testFromUser\"}}}";
+            var rawModel = JsonWrapper.ConvertFromJson<notification_raw>(data);
+            var model = rawModel.ConvertRawToModel();
+
+            Assert.AreEqual("notification", model.MessageType);
+            Assert.AreEqual("channel.channel_points_custom_reward_redemption.add", model.SubscriptionType.ToName());
+            Assert.AreEqual("71310683", model.UserId);
+            Assert.AreEqual("testFromUser", model.UserLogin);
+            Assert.AreEqual("testFromUser", model.UserName);
+            Assert.AreEqual("86630555", model.BroadCasterUserId);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserLogin);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
+
+            Assert.AreEqual(150, model.RewardCost);
+            Assert.AreEqual("RedeemYourTestRewardfromCLI", model.RewardPrompt);
+            Assert.AreEqual("TestRewardfromCLI", model.RewardTitle);
+
+            Assert.AreEqual(2024, model.RedeemedAt.Year);
+            Assert.AreEqual(3, model.RedeemedAt.Month);
+            Assert.AreEqual(8, model.RedeemedAt.Day);
+            Assert.AreEqual(7, model.RedeemedAt.Hour);
+            Assert.AreEqual(58, model.RedeemedAt.Minute);
+            Assert.AreEqual(4, model.RedeemedAt.Second);
+        }
     }
 }

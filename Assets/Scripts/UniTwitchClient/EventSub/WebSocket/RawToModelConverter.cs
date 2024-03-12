@@ -85,6 +85,8 @@ namespace UniTwitchClient.EventSub.WebSocket
                     notification.RewardCost = eventSource.reward.cost;
                 }
 
+                notification.RedeemedAt = ParseDateTime(eventSource.redeemed_at);
+
                 notification.IsGift = eventSource.is_gift;
                 notification.Tier = eventSource.tier;
             }

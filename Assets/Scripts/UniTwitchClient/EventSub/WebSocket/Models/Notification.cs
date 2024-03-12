@@ -17,12 +17,22 @@ namespace UniTwitchClient.EventSub.WebSocket
         public string UserId { get; set; }
         public string UserLogin { get; set; }
         public string UserName { get; set; }
+
+        // Channel Follow Events
         public DateTime FollowedAt { get; set; }
+
+        // Reward
         public string RewardId { get; set; }
         public string RewardTitle { get; set; }
         public int RewardCost { get; set; }
         public string RewardPrompt { get; set; }
+
+        // Channel Subscribe Events
         public string Tier { get; set; }
         public bool IsGift { get; set; }
+
+        // Channel Points Custom Reward Redemption Add Event
+        public string Status { get; set; }
+        public DateTime RedeemedAt { get; set; }
     }
 }
