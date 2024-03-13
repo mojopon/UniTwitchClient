@@ -9,5 +9,6 @@ namespace UniTwitchClient.EventSub.Api
     public interface ITwitchEventSubApiClient : ISubscriptionManager
     {
         UniTask CreateSubscriptionsAsync(string sessionId);
+        UniTask<string> GetEventSubSubscriptionsAsync();
     }
 }

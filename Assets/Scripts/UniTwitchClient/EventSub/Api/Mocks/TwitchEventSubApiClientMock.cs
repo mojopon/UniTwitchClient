@@ -12,6 +12,11 @@ namespace UniTwitchClient.EventSub.Api.Mocks
             throw new System.NotImplementedException();
         }
 
+        public UniTask<string> GetEventSubSubscriptionsAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
         {
             throw new System.NotImplementedException();

@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api
 {
-    public class SubscriptionBuilder : ISubscriptionManager
+    public class EventSubSubscribeRequestBuilder : ISubscriptionManager
     {
-        private List<Subscription> _subscriptions = new List<Subscription>();
+        private List<EventSubSubscribeRequest> _subscriptions = new List<EventSubSubscribeRequest>();
 
         public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
         {
@@ -17,25 +17,25 @@ namespace UniTwitchClient.EventSub.Api
             }
 
             var condition = CreateCondition(broadcasterUserId, moderatorUserId, "", "", "");
-            var subscription = new Subscription(SubscriptionType.ChannelFollow, condition);
+            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelFollow, condition);
             _subscriptions.Add(subscription);
         }
 
         public void SubscribeChannelSubscribe(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
-            var subscription = new Subscription(SubscriptionType.ChannelSubscribe, condition);
+            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelSubscribe, condition);
             _subscriptions.Add(subscription);
         }
 
         public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
-            var subscription = new Subscription(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, condition);
+            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, condition);
             _subscriptions.Add(subscription);
         }
 
-        public Subscription[] GetSubscriptionsWithSessionId(string sessionId)
+        public EventSubSubscribeRequest[] GetEventSubSubscribeRequestsWithSessionId(string sessionId)
         {
             foreach (var subscription in _subscriptions)
             {

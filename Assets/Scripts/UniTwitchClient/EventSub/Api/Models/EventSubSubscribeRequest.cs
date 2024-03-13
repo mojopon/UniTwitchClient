@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api.Models
 {
-    public class Subscription
+    public class EventSubSubscribeRequest
     {
         public SubscriptionType SubscriptionType { get; private set; }
         public string SessionId { get; private set; }
         public Condition Condition { get; private set; }
 
-        public Subscription(SubscriptionType subscriptionType, Condition condition)
+        public EventSubSubscribeRequest(SubscriptionType subscriptionType, Condition condition)
         {
             SubscriptionType = subscriptionType;
             Condition = condition;

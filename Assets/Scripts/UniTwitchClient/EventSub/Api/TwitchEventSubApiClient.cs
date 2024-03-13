@@ -26,13 +26,13 @@ namespace UniTwitchClient.EventSub.Api
         private const string API_DEBUG_URL = "http://localhost:8080/eventsub/subscriptions";
         private const string API_URL = "https://api.twitch.tv/helix/eventsub/subscriptions";
 
-        private SubscriptionBuilder _subscriptionBuilder;
+        private EventSubSubscribeRequestBuilder _subscriptionBuilder;
         private ApiCredentials _apiCredentials;
         private bool _debugMode;
 
         public TwitchEventSubApiClient(ApiCredentials apiCredentials)
         {
-            _subscriptionBuilder = new SubscriptionBuilder();
+            _subscriptionBuilder = new EventSubSubscribeRequestBuilder();
             _apiCredentials = apiCredentials;
         }
 
@@ -43,7 +43,7 @@ namespace UniTwitchClient.EventSub.Api
 
         public async UniTask CreateSubscriptionsAsync(string sessionId)
         {
-            var subscriptions = _subscriptionBuilder.GetSubscriptionsWithSessionId(sessionId);
+            var subscriptions = _subscriptionBuilder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
             foreach (var subscription in subscriptions)
             {
@@ -51,7 +51,7 @@ namespace UniTwitchClient.EventSub.Api
             }
         }
 
-        private async UniTask CreateSubscriptionAsync(Subscription subscription)
+        private async UniTask CreateSubscriptionAsync(EventSubSubscribeRequest subscription)
         {
             var json = subscription.ToJson();
             Debug.Log("[TwitchEventSubApiClient] Json:" + json);
@@ -72,36 +72,23 @@ namespace UniTwitchClient.EventSub.Api
 
             var result = await uwr.SendWebRequest().ToUniTask();
 
+            //await GetEventSubSubscriptionsAsync();
             Debug.Log("created subscription.");
         }
 
-        public async UniTask CreateEventSubSucscriptionAsync(string sessionId, SubscriptionType subscriptionType)
+        public async UniTask<string> GetEventSubSubscriptionsAsync()
         {
-            var request = new SubscribeRequest()
-            {
-                SubscriptionType = subscriptionType,
-                ConditionBroadCasterUserId = "1234",
-                ConditionModeraterUserId = "1234",
-                TransportSessionId = sessionId,
-            };
-            var json = request.ToJson();
-            var postData = Encoding.UTF8.GetBytes(json);
-
-            Debug.Log(json);
-
-            //await UniTask.SwitchToMainThread();
-
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
-            Debug.Log("[TwitchEventSubApiClient] Post to " + url);
-            using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST)
+            using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET)
             {
-                uploadHandler = new UploadHandlerRaw(postData),
                 downloadHandler = new DownloadHandlerBuffer()
             };
             uwr.SetRequestHeader("Authorization", _apiCredentials.AuthorizationBearer);
             uwr.SetRequestHeader("Client-Id", _apiCredentials.ClientId);
-            uwr.SetRequestHeader("Content-type", "application/json");
-            await uwr.SendWebRequest().ToUniTask();
+
+            var result = await uwr.SendWebRequest().ToUniTask();
+            return result.downloadHandler.text;
+            Debug.Log("GetEventSubSubscriptionsAsync");
         }
 
         public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
@@ -118,5 +105,6 @@ namespace UniTwitchClient.EventSub.Api
         {
             _subscriptionBuilder.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
         }
+
     }
 }

@@ -6,6 +6,7 @@ using System;
 using UniTwitchClient.EventSub.Api;
 using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine.Playables;
+using Cysharp.Threading.Tasks;
 
 namespace UniTwitchClient.EventSub
 {
@@ -69,7 +70,7 @@ namespace UniTwitchClient.EventSub
             _wsClient.OnWelcomeMessageAsObservable.Subscribe(x =>
             {
                 Debug.Log("[Example] Welcome");
-                _apiClient.CreateSubscriptionsAsync(x.SessionId);
+                _ = CreateSubscriptions(x.SessionId);
             }).AddTo(_disposables);
 
             _wsClient.OnKeepAliveAsObservable.Subscribe(x =>
@@ -84,6 +85,13 @@ namespace UniTwitchClient.EventSub
             }).AddTo(_disposables);
 
             _wsClient.AddTo(_disposables);
+        }
+
+        private async UniTask CreateSubscriptions(string sessionId) 
+        {
+            await _apiClient.CreateSubscriptionsAsync(sessionId);
+            var result = await _apiClient.GetEventSubSubscriptionsAsync();
+            Debug.Log("GetEventSubSucscriptions: " + result);
         }
 
         private void InitializeApiClient(ITwitchEventSubApiClient apiClient)

@@ -5,13 +5,13 @@ namespace UniTwitchClient.Tests.EventSub.Api
 {
     public class SubscriptionBuilderTest
     {
-        private SubscriptionBuilder builder;
+        private EventSubSubscribeRequestBuilder builder;
         private const string sessionId = "AQoQILE98gtqShGmLD7AM6yJThAB";
 
         [SetUp]
         public void SetUp()
         {
-            builder = new SubscriptionBuilder();
+            builder = new EventSubSubscribeRequestBuilder();
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var broadCasterUserId = "12345";
             builder.SubscribeChannelFollow(broadCasterUserId);
 
-            var subscriptions = builder.GetSubscriptionsWithSessionId(sessionId);
+            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelFollow, subscriptions[0].SubscriptionType);
             Assert.AreEqual(sessionId, subscriptions[0].SessionId);
@@ -33,7 +33,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var broadCasterUserId = "12345";
             builder.SubscribeChannelSubscribe(broadCasterUserId);
 
-            var subscriptions = builder.GetSubscriptionsWithSessionId(sessionId);
+            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelSubscribe, subscriptions[0].SubscriptionType);
             Assert.AreEqual(sessionId, subscriptions[0].SessionId);
@@ -47,7 +47,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
             builder.SubscribeChannelSubscribe(broadCasterUserId);
             builder.SubscribeChannelFollow(broadCasterUserId);
 
-            var subscriptions = builder.GetSubscriptionsWithSessionId(sessionId);
+            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelSubscribe, subscriptions[0].SubscriptionType);
             Assert.AreEqual(sessionId, subscriptions[0].SessionId);

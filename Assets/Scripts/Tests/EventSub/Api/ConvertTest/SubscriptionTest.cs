@@ -20,7 +20,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
                 ToBroadcasterUserId = "98765",
             };
 
-            var subscription = new Subscription(SubscriptionType.ChannelFollow, condition);
+            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelFollow, condition);
             subscription.AddSessionId(session_id);
             var json = subscription.ToJson();
             var rawModel = JsonWrapper.ConvertFromJson<request_subscription_json>(json);
