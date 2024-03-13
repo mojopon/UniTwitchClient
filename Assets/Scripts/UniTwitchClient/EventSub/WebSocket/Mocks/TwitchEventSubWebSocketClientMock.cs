@@ -15,6 +15,8 @@ namespace UniTwitchClient.EventSub.Mocks
         public IObservable<Notification> OnNotificationAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
+        public bool IsDisposed { get; private set; }
+
         private Subject<Welcome> _welcomeSubject = new Subject<Welcome>();
         private Subject<KeepAlive> _keepAliveSubject = new Subject<KeepAlive>();
         private Subject<Notification> _notificationSubject = new Subject<Notification>();
@@ -46,6 +48,7 @@ namespace UniTwitchClient.EventSub.Mocks
         public void Dispose()
         {
             disposables.Dispose();
+            IsDisposed = true;
         }
 
         public void ReceiveWelcomeMessage(Welcome welcomeMessage)

@@ -174,5 +174,12 @@ namespace UniTwitchClient.Tests.EventSub
             Assert.IsNull(channelSubscribe);
             Assert.IsNull(channelPointsCustomRewardRedemptionAdd);
         }
+
+        [Test]
+        public void DisposeTest() 
+        {
+            _client.Dispose();
+            Assert.IsTrue(_wsClient.IsDisposed);
+        }
     }
 }
