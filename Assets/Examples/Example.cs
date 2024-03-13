@@ -30,6 +30,10 @@ public class Example : MonoBehaviour
         {
             Debug.Log("the channel is subscribed by " + x.UserName + " !, UserId: " + x.UserId);
         });
+        _twitchEventSubClient.OnChannelPointsCustomRewardRedemptionAddAsObservable.Subscribe(x =>
+        {
+            Debug.Log($"the channel points custom reward redemption is added!\nTitle:{x.RewardTitle}\nPrompt:{x.RewardPrompt}\nCost:{x.RewardCost}");
+        });
 
         _twitchEventSubClient.ConnectChannel(broadcasterUserId);
     }
