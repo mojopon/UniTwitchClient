@@ -145,5 +145,34 @@ namespace UniTwitchClient.Tests.EventSub
             Assert.AreEqual(58, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Minute);
             Assert.AreEqual(4, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Second);
         }
+
+        [Test]
+        public void ReceiveBlankDataTest()
+        {
+            ChannelFollow channelFollow = null;
+            _client.OnChannelFollowAsObservable.Subscribe(x =>
+            {
+                channelFollow = x;
+            });
+            ChannelSubscribe channelSubscribe = null;
+            _client.OnChannelSubscribeAsObservable.Subscribe(x =>
+            {
+                channelSubscribe = x;
+            });
+            ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd = null;
+            _client.OnChannelPointsCustomRewardRedemptionAddAsObservable.Subscribe(x =>
+            {
+                channelPointsCustomRewardRedemptionAdd = x;
+            });
+
+            var notification = new Notification();
+            // エラーが出ない事を確認。
+            _wsClient.ReceiveNotification(notification);
+
+            // データが通知されてない事を確認
+            Assert.IsNull(channelFollow);
+            Assert.IsNull(channelSubscribe);
+            Assert.IsNull(channelPointsCustomRewardRedemptionAdd);
+        }
     }
 }

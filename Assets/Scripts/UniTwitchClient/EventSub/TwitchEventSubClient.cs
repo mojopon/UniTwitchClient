@@ -58,7 +58,6 @@ namespace UniTwitchClient.EventSub
 
         public void Dispose()
         {
-            _wsClient.Dispose();
             _disposables.Dispose();
         }
 
@@ -83,6 +82,8 @@ namespace UniTwitchClient.EventSub
                 Debug.Log("[Example] Notification");
                 HandleNotification(x);
             }).AddTo(_disposables);
+
+            _wsClient.AddTo(_disposables);
         }
 
         private void InitializeApiClient(ITwitchEventSubApiClient apiClient)
@@ -110,7 +111,14 @@ namespace UniTwitchClient.EventSub
 
         private void HandleNotification(WebSocket.Notification notification)
         {
-            _handlerDict[notification.SubscriptionType].HandleNotification(notification);
+            if (_handlerDict.ContainsKey(notification.SubscriptionType))
+            {
+                _handlerDict[notification.SubscriptionType].HandleNotification(notification);
+            }
+            else 
+            {
+                Debug.LogWarning("No correspoinding Notification Handler exists. SubscriptionType:" + notification.SubscriptionType);
+            }
         }
 
         private void OnChannelFollow(ChannelFollow channelFollow)
