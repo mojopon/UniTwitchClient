@@ -105,7 +105,45 @@ namespace UniTwitchClient.Tests.EventSub
         [Test]
         public void ReceiveChannelPointsCustomRewardRedemptionAddTest() 
         {
-            throw new NotImplementedException();
+            ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd = null;
+            _client.OnChannelPointsCustomRewardRedemptionAddAsObservable.Subscribe(x =>
+            {
+                channelPointsCustomRewardRedemptionAdd = x;
+            });
+
+            var notification = new Notification()
+            {
+                SubscriptionType = SubscriptionType.ChannelPointsCustomRewardRedemptionAdd,
+                BroadCasterUserId = "86630555",
+                BroadCasterUserName = "testBroadcaster",
+                BroadCasterUserLogin = "testBroadcaster",
+                UserId = "71310683",
+                UserName = "testFromUser",
+                UserLogin = "testFromUser",
+                RewardCost = 150,
+                RewardPrompt = "RedeemYourTestRewardfromCLI",
+                RewardTitle = "TestRewardfromCLI",
+                RedeemedAt = new System.DateTime(2024, 3, 8, 7, 58, 4),
+            };
+            _wsClient.ReceiveNotification(notification);
+
+            Assert.IsNotNull(channelPointsCustomRewardRedemptionAdd);
+            Assert.AreEqual("71310683", channelPointsCustomRewardRedemptionAdd.UserId);
+            Assert.AreEqual("testFromUser", channelPointsCustomRewardRedemptionAdd.UserName);
+            Assert.AreEqual("testFromUser", channelPointsCustomRewardRedemptionAdd.UserLogin);
+            Assert.AreEqual("86630555", channelPointsCustomRewardRedemptionAdd.BroadcasterUserId);
+            Assert.AreEqual("testBroadcaster", channelPointsCustomRewardRedemptionAdd.BroadcasterUserName);
+            Assert.AreEqual("testBroadcaster", channelPointsCustomRewardRedemptionAdd.BroadcasterUserLogin);
+            Assert.AreEqual(150, channelPointsCustomRewardRedemptionAdd.RewardCost);
+            Assert.AreEqual("RedeemYourTestRewardfromCLI", channelPointsCustomRewardRedemptionAdd.RewardPrompt);
+            Assert.AreEqual("TestRewardfromCLI", channelPointsCustomRewardRedemptionAdd.RewardTitle);
+
+            Assert.AreEqual(2024, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Year);
+            Assert.AreEqual(3, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Month);
+            Assert.AreEqual(8, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Day);
+            Assert.AreEqual(7, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Hour);
+            Assert.AreEqual(58, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Minute);
+            Assert.AreEqual(4, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Second);
         }
     }
 }

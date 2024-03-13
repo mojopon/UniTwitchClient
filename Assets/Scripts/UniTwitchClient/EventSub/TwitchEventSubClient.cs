@@ -13,13 +13,16 @@ namespace UniTwitchClient.EventSub
     {
         public IObservable<ChannelFollow> OnChannelFollowAsObservable { get; private set; }
         public IObservable<ChannelSubscribe> OnChannelSubscribeAsObservable { get; private set; }
+        public IObservable<ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddAsObservable { get; private set; }
 
         private CompositeDisposable _disposables = new CompositeDisposable();
+
         private ITwitchEventSubWebsocketClient _wsClient;
         private ITwitchEventSubApiClient _apiClient;
 
         private Subject<ChannelFollow> _onChannelFollowSubject;
         private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
+        private Subject<ChannelPointsCustomRewardRedemptionAdd> _onChannelPointsCustomRewardRedemptionAddSubject;
 
         private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
 
@@ -38,10 +41,10 @@ namespace UniTwitchClient.EventSub
 
         private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
         {
-            InitializeWebSocketClient(wsClient);
-            InitializeApiClient(apiClient);
             InitializeHandlers();
             InitializeObservables();
+            InitializeWebSocketClient(wsClient);
+            InitializeApiClient(apiClient);
         }
 
         public void ConnectChannel(string broadcasterUserId)
@@ -91,15 +94,18 @@ namespace UniTwitchClient.EventSub
         {
             _handlerDict.Add(SubscriptionType.ChannelFollow, new ChannelFollowHandler(OnChannelFollow));
             _handlerDict.Add(SubscriptionType.ChannelSubscribe, new ChannelSubscribeHandler(OnChannelSubscribe));
+            _handlerDict.Add(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, new ChannelPointsCustomRewardRedemptionAddHandler(OnChannelPointsCustomRewardRedemptionAdd));
         }
 
         private void InitializeObservables()
         {
             _onChannelFollowSubject = new Subject<ChannelFollow>().AddTo(_disposables);
             _onChannelSubscribeSubject = new Subject<ChannelSubscribe>().AddTo(_disposables);
+            _onChannelPointsCustomRewardRedemptionAddSubject = new Subject<ChannelPointsCustomRewardRedemptionAdd>().AddTo(_disposables);
 
             OnChannelFollowAsObservable = _onChannelFollowSubject.AsObservable();
             OnChannelSubscribeAsObservable = _onChannelSubscribeSubject.AsObservable();
+            OnChannelPointsCustomRewardRedemptionAddAsObservable = _onChannelPointsCustomRewardRedemptionAddSubject.AsObservable();
         }
 
         private void HandleNotification(WebSocket.Notification notification)
@@ -115,6 +121,11 @@ namespace UniTwitchClient.EventSub
         private void OnChannelSubscribe(ChannelSubscribe channelSubscribe) 
         {
             _onChannelSubscribeSubject.OnNext(channelSubscribe);
+        }
+
+        private void OnChannelPointsCustomRewardRedemptionAdd(ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd) 
+        {
+            _onChannelPointsCustomRewardRedemptionAddSubject.OnNext(channelPointsCustomRewardRedemptionAdd);
         }
     }
 }
