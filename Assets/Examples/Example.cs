@@ -35,7 +35,14 @@ public class Example : MonoBehaviour
             Debug.Log($"the channel points custom reward redemption is added!\nTitle:{x.RewardTitle}\nPrompt:{x.RewardPrompt}\nCost:{x.RewardCost}");
         });
 
-        _twitchEventSubClient.ConnectChannel(broadcasterUserId);
+        DoAsync();
+    }
+
+    private async void DoAsync() 
+    {
+        await _twitchEventSubClient.ConnectChannelAsync(broadcasterUserId);
+
+        Debug.Log("Connect is done");
     }
 
     private void OnDestroy()
