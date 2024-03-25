@@ -36,13 +36,13 @@ namespace UniTwitchClient.EventSub.Api
             _apiCredentials = apiCredentials;
         }
 
-        public void CreateSubscriptions(string sessionId)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId = null)
         {
-            _ = CreateSubscriptionsAsync(sessionId);
-        }
-
-        public async UniTask CreateSubscriptionsAsync(string sessionId)
-        {
+            if (string.IsNullOrEmpty(moderatorUserId)) 
+            {
+                moderatorUserId = broadcasterUserId;
+            }
+            _subscriptionBuilder.CreateAllSubscriptionRequests(broadcasterUserId, moderatorUserId);
             var subscriptions = _subscriptionBuilder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
             foreach (var subscription in subscriptions)
@@ -76,7 +76,7 @@ namespace UniTwitchClient.EventSub.Api
             Debug.Log("created subscription.");
         }
 
-        public async UniTask<string> GetEventSubSubscriptionsAsync()
+        public async UniTask<List<EventSubSubscription>> GetEventSubSubscriptionsAsync()
         {
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
             using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET)
@@ -87,24 +87,13 @@ namespace UniTwitchClient.EventSub.Api
             uwr.SetRequestHeader("Client-Id", _apiCredentials.ClientId);
 
             var result = await uwr.SendWebRequest().ToUniTask();
-            return result.downloadHandler.text;
             Debug.Log("GetEventSubSubscriptionsAsync");
+            return null;
         }
 
-        public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
+        public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
         {
-            _subscriptionBuilder.SubscribeChannelFollow(broadcasterUserId, moderatorUserId);
+            throw new System.NotImplementedException();
         }
-
-        public void SubscribeChannelSubscribe(string broadcasterUserId)
-        {
-            _subscriptionBuilder.SubscribeChannelSubscribe(broadcasterUserId);
-        }
-
-        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
-        {
-            _subscriptionBuilder.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
-        }
-
     }
 }

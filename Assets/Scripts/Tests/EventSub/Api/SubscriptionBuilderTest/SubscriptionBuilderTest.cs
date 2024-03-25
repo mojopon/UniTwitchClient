@@ -18,7 +18,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelFollowTest()
         {
             var broadCasterUserId = "12345";
-            builder.SubscribeChannelFollow(broadCasterUserId);
+            builder.CreateSubscribeChannelFollowRequest(broadCasterUserId);
 
             var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
@@ -31,7 +31,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelSubscribeTest()
         {
             var broadCasterUserId = "12345";
-            builder.SubscribeChannelSubscribe(broadCasterUserId);
+            builder.CreateSubscribeChannelSubscribeRequest(broadCasterUserId);
 
             var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
@@ -44,8 +44,8 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeAllTest()
         {
             var broadCasterUserId = "12345";
-            builder.SubscribeChannelSubscribe(broadCasterUserId);
-            builder.SubscribeChannelFollow(broadCasterUserId);
+            builder.CreateSubscribeChannelSubscribeRequest(broadCasterUserId);
+            builder.CreateSubscribeChannelFollowRequest(broadCasterUserId);
 
             var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 

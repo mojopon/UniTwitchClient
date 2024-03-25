@@ -5,11 +5,18 @@ using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api
 {
-    public class EventSubSubscribeRequestBuilder : ISubscriptionManager
+    public class EventSubSubscribeRequestBuilder
     {
-        private List<EventSubSubscribeRequest> _subscriptions = new List<EventSubSubscribeRequest>();
+        private List<EventSubSubscribeRequest> _requests = new List<EventSubSubscribeRequest>();
 
-        public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
+        public void CreateAllSubscriptionRequests(string broadcasterUserId, string moderatorUserId) 
+        {
+            CreateSubscribeChannelFollowRequest(broadcasterUserId, moderatorUserId);
+            CreateSubscribeChannelSubscribeRequest(broadcasterUserId);
+            CreateSubscribeChannelPointsCustomRewardRedemptionAddRequest(broadcasterUserId);
+        }
+
+        public void CreateSubscribeChannelFollowRequest(string broadcasterUserId, string moderatorUserId = null)
         {
             if (string.IsNullOrEmpty(moderatorUserId))
             {
@@ -18,31 +25,31 @@ namespace UniTwitchClient.EventSub.Api
 
             var condition = CreateCondition(broadcasterUserId, moderatorUserId, "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelFollow, condition);
-            _subscriptions.Add(subscription);
+            _requests.Add(subscription);
         }
 
-        public void SubscribeChannelSubscribe(string broadcasterUserId)
+        public void CreateSubscribeChannelSubscribeRequest(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelSubscribe, condition);
-            _subscriptions.Add(subscription);
+            _requests.Add(subscription);
         }
 
-        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
+        public void CreateSubscribeChannelPointsCustomRewardRedemptionAddRequest(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, condition);
-            _subscriptions.Add(subscription);
+            _requests.Add(subscription);
         }
 
         public EventSubSubscribeRequest[] GetEventSubSubscribeRequestsWithSessionId(string sessionId)
         {
-            foreach (var subscription in _subscriptions)
+            foreach (var subscription in _requests)
             {
                 subscription.AddSessionId(sessionId);
             }
 
-            return _subscriptions.ToArray();
+            return _requests.ToArray();
         }
 
         private Condition CreateCondition(string broadcasterUserId, string moderatorUserId, string userId, string fromBroadcasterUserId, string toBroadcasterUserId)

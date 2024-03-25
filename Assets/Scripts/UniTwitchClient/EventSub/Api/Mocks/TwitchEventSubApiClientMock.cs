@@ -7,27 +7,17 @@ namespace UniTwitchClient.EventSub.Api.Mocks
 {
     public class TwitchEventSubApiClientMock : ITwitchEventSubApiClient
     {
-        public UniTask CreateSubscriptionsAsync(string sessionId)
+        public UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId = null)
         {
             throw new System.NotImplementedException();
         }
 
-        public UniTask<string> GetEventSubSubscriptionsAsync()
+        public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
         {
             throw new System.NotImplementedException();
         }
 
-        public void SubscribeChannelFollow(string broadcasterUserId, string moderatorUserId = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SubscribeChannelPointsCustomRewardRedemptionAdd(string broadcasterUserId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SubscribeChannelSubscribe(string broadcasterUserId)
+        public UniTask<List<EventSubSubscription>> GetEventSubSubscriptionsAsync()
         {
             throw new System.NotImplementedException();
         }

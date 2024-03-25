@@ -21,6 +21,9 @@ namespace UniTwitchClient.EventSub
         private ITwitchEventSubWebsocketClient _wsClient;
         private ITwitchEventSubApiClient _apiClient;
 
+        private string _broadcasterUserId;
+        private int timeoutMiliseconds = 5000;
+
         private Subject<ChannelFollow> _onChannelFollowSubject;
         private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
         private Subject<ChannelPointsCustomRewardRedemptionAdd> _onChannelPointsCustomRewardRedemptionAddSubject;
@@ -48,13 +51,51 @@ namespace UniTwitchClient.EventSub
             InitializeApiClient(apiClient);
         }
 
-        public void ConnectChannel(string broadcasterUserId)
+        public async UniTask ConnectChannelAsync(string broadcasterUserId) 
         {
-            _apiClient.SubscribeChannelFollow(broadcasterUserId);
-            _apiClient.SubscribeChannelSubscribe(broadcasterUserId);
-            _apiClient.SubscribeChannelPointsCustomRewardRedemptionAdd(broadcasterUserId);
+            if (!string.IsNullOrEmpty(_broadcasterUserId)) { return; }
+
+            _broadcasterUserId = broadcasterUserId;
+            var onWelcomeTask = _wsClient.OnWelcomeMessageAsObservable.ToUniTask(useFirstValue: true);
+            var delayTask = UniTask.Delay(timeoutMiliseconds);
+            Welcome welcome = null;
 
             _wsClient.Connect();
+
+            await UniTask.WaitUntil(() =>
+            {
+                if (onWelcomeTask.GetAwaiter().IsCompleted)
+                {
+                    welcome = onWelcomeTask.GetAwaiter().GetResult();
+                    return true;
+                }
+
+                if (delayTask.GetAwaiter().IsCompleted)
+                {
+                    return true;
+                }
+
+                return false;
+            });
+
+            if (welcome != null)
+            {
+                await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, welcome.SessionId);
+                var result = await _apiClient.GetEventSubSubscriptionsAsync();
+                Debug.Log("GetEventSubSucscriptions: " + result);
+            }
+            else 
+            {
+                _wsClient.Disconnect();
+                Dispose();
+                throw new Exception("connection failure.");
+            }
+        }
+
+        public void DisconnectChannel() 
+        {
+            _broadcasterUserId = null;
+            _wsClient.Disconnect();
         }
 
         public void Dispose()
@@ -65,13 +106,6 @@ namespace UniTwitchClient.EventSub
         private void InitializeWebSocketClient(ITwitchEventSubWebsocketClient wsClient)
         {
             _wsClient = wsClient;
-
-
-            _wsClient.OnWelcomeMessageAsObservable.Subscribe(x =>
-            {
-                Debug.Log("[Example] Welcome");
-                _ = CreateSubscriptions(x.SessionId);
-            }).AddTo(_disposables);
 
             _wsClient.OnKeepAliveAsObservable.Subscribe(x =>
             {
@@ -85,13 +119,6 @@ namespace UniTwitchClient.EventSub
             }).AddTo(_disposables);
 
             _wsClient.AddTo(_disposables);
-        }
-
-        private async UniTask CreateSubscriptions(string sessionId) 
-        {
-            await _apiClient.CreateSubscriptionsAsync(sessionId);
-            var result = await _apiClient.GetEventSubSubscriptionsAsync();
-            Debug.Log("GetEventSubSucscriptions: " + result);
         }
 
         private void InitializeApiClient(ITwitchEventSubApiClient apiClient)

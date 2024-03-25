@@ -6,9 +6,10 @@ using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api
 {
-    public interface ITwitchEventSubApiClient : ISubscriptionManager
+    public interface ITwitchEventSubApiClient
     {
-        UniTask CreateSubscriptionsAsync(string sessionId);
-        UniTask<string> GetEventSubSubscriptionsAsync();
+        UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId,string sessionId, string moderatorUserId = null);
+        UniTask<List<EventSubSubscription>> GetEventSubSubscriptionsAsync();
+        UniTask DeleteEventSubSubscriptionsAsync(string sessionId);
     }
 }
