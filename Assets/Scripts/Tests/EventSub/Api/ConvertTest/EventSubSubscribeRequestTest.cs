@@ -5,10 +5,10 @@ using UniTwitchClient.EventSub.Api.Models.Raws;
 
 namespace UniTwitchClient.Tests.EventSub.Api
 {
-    public class SubscriptionTest
+    public class EventSubSubscribeRequestTest
     {
         [Test]
-        public void ConvertSubscriptionToJsonTest()
+        public void ConvertEventSubSubscribeRequestToJsonTest()
         {
             var session_id = "AQoQILE98gtqShGmLD7AM6yJThAB";
             var condition = new Condition()
@@ -20,9 +20,9 @@ namespace UniTwitchClient.Tests.EventSub.Api
                 ToBroadcasterUserId = "98765",
             };
 
-            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelFollow, condition);
-            subscription.AddSessionId(session_id);
-            var json = subscription.ToJson();
+            var eventSubSubscribeRequest = new EventSubSubscribeRequest(SubscriptionType.ChannelFollow, condition);
+            eventSubSubscribeRequest.AddSessionId(session_id);
+            var json = eventSubSubscribeRequest.ToJson();
             var rawModel = JsonWrapper.ConvertFromJson<request_subscription_json>(json);
 
             Assert.AreEqual(SubscriptionType.ChannelFollow, SubscriptionTypeConverter.ToSubscriptionType(rawModel.type));
