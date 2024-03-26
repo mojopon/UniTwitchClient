@@ -22,7 +22,7 @@ namespace UniTwitchClient.EventSub
         private ITwitchEventSubApiClient _apiClient;
 
         private string _broadcasterUserId;
-        private int timeoutMiliseconds = 5000;
+        private int timeoutSeconds = 5;
 
         private Subject<ChannelFollow> _onChannelFollowSubject;
         private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
@@ -56,39 +56,27 @@ namespace UniTwitchClient.EventSub
             if (!string.IsNullOrEmpty(_broadcasterUserId)) { return; }
 
             _broadcasterUserId = broadcasterUserId;
-            var onWelcomeTask = _wsClient.OnWelcomeMessageAsObservable.ToUniTask(useFirstValue: true);
-            var delayTask = UniTask.Delay(timeoutMiliseconds);
-            Welcome welcome = null;
+            var getWelcomeMessageTask = _wsClient.OnWelcomeMessageAsObservable.ToUniTask(useFirstValue: true);
 
             _wsClient.Connect();
 
-            await UniTask.WaitUntil(() =>
+            Welcome welcomeMessage = null;
+            try 
             {
-                if (onWelcomeTask.GetAwaiter().IsCompleted)
-                {
-                    welcome = onWelcomeTask.GetAwaiter().GetResult();
-                    return true;
-                }
-
-                if (delayTask.GetAwaiter().IsCompleted)
-                {
-                    return true;
-                }
-
-                return false;
-            });
-
-            if (welcome != null)
-            {
-                await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, welcome.SessionId);
-                var result = await _apiClient.GetEventSubSubscriptionsAsync();
-                Debug.Log("GetEventSubSucscriptions: " + result);
+                welcomeMessage = await getWelcomeMessageTask.Timeout(TimeSpan.FromSeconds(timeoutSeconds));
             }
-            else 
+            catch (Exception ex)
             {
                 _wsClient.Disconnect();
                 Dispose();
                 throw new Exception("connection failure.");
+            }
+
+            if (welcomeMessage != null)
+            {
+                await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, welcomeMessage.SessionId);
+                var result = await _apiClient.GetEventSubSubscriptionsAsync();
+                Debug.Log("GetEventSubSucscriptions: " + result);
             }
         }
 
