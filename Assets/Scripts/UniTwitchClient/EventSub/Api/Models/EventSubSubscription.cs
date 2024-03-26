@@ -2,7 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventSubSubscription
+namespace UniTwitchClient.EventSub.Api.Models
 {
-    public string Id { get; private set; }
+    public class EventSubSubscription
+    {
+        public string Id { get; private set; }
+
+        public EventSubSubscription(string id) 
+        {
+            Id = id;
+        }
+    }
 }
