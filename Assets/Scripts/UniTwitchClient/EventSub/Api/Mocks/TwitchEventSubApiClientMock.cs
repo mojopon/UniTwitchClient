@@ -18,7 +18,7 @@ namespace UniTwitchClient.EventSub.Api.Mocks
             throw new System.NotImplementedException();
         }
 
-        public UniTask<List<EventSubSubscription>> GetEventSubSubscriptionsAsync()
+        public UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
         {
             throw new System.NotImplementedException();
         }

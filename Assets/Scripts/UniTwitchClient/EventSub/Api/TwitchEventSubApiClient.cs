@@ -56,39 +56,52 @@ namespace UniTwitchClient.EventSub.Api
             var json = subscription.ToJson();
             Debug.Log("[TwitchEventSubApiClient] Json:" + json);
 
-            var postData = Encoding.UTF8.GetBytes(json);
-
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
-            Debug.Log("[TwitchEventSubApiClient] Post to " + url);
-
-            using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST)
+            var unityWebRequest = CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, json);
+            using (unityWebRequest)
             {
-                uploadHandler = new UploadHandlerRaw(postData),
-                downloadHandler = new DownloadHandlerBuffer()
-            };
-            uwr.SetRequestHeader("Authorization", _apiCredentials.AuthorizationBearer);
-            uwr.SetRequestHeader("Client-Id", _apiCredentials.ClientId);
-            uwr.SetRequestHeader("Content-type", "application/json");
+                var result = await unityWebRequest.SendWebRequest().ToUniTask();
+            }
 
-            var result = await uwr.SendWebRequest().ToUniTask();
-
-            //await GetEventSubSubscriptionsAsync();
             Debug.Log("created subscription.");
         }
 
-        public async UniTask<List<EventSubSubscription>> GetEventSubSubscriptionsAsync()
+        public async UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
         {
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
-            using var uwr = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET)
+            var unityWebRequest = CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
+
+            EventSubSubscriptionData eventSubSubscriptionData = null;
+            using (unityWebRequest)
             {
+                var result = await unityWebRequest.SendWebRequest().ToUniTask();
+                eventSubSubscriptionData = JsonWrapper.ConvertFromJson<subscription_data>(result.downloadHandler.text).ConvertRawToModel();
+            }
+
+            return eventSubSubscriptionData;
+        }
+
+        private UnityWebRequest CreateUnityWebRequest(string url, string method, string postData = null) 
+        {
+            byte[] data = null;
+            if (method == UnityWebRequest.kHttpVerbPOST) 
+            {
+                data = Encoding.UTF8.GetBytes(postData);
+            }
+
+            var uwr = new UnityWebRequest(url, method)
+            {
+                uploadHandler = new UploadHandlerRaw(data),
                 downloadHandler = new DownloadHandlerBuffer()
             };
             uwr.SetRequestHeader("Authorization", _apiCredentials.AuthorizationBearer);
             uwr.SetRequestHeader("Client-Id", _apiCredentials.ClientId);
+            if (data != null)
+            {
+                uwr.SetRequestHeader("Content-type", "application/json");
+            }
 
-            var result = await uwr.SendWebRequest().ToUniTask();
-            Debug.Log("GetEventSubSubscriptionsAsync");
-            return null;
+            return uwr;
         }
 
         public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
