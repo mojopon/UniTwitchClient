@@ -13,5 +13,20 @@ namespace UniTwitchClient.EventSub.Api
         {
             return new EventSubSubscription(data.id);
         }
+
+        public static EventSubSubscriptionData ConvertRawToModel(this subscription_data data) 
+        {
+            var subscriptions = new List<EventSubSubscription>();
+
+            if (data.data != null)
+            {
+                foreach (var subscription in data.data)
+                {
+                    subscriptions.Add(subscription.ConvertRawToModel());
+                }
+            }
+
+            return new EventSubSubscriptionData(subscriptions);
+        }
     }
 }

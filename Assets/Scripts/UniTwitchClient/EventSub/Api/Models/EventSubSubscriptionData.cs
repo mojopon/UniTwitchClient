@@ -8,6 +8,9 @@ namespace UniTwitchClient.EventSub.Api.Models
     {
         public List<EventSubSubscription> Subscriptions { get; private set; }
 
-
+        public EventSubSubscriptionData(List<EventSubSubscription> subscriptions)
+        {
+            Subscriptions = subscriptions;
+        }
     }
 }

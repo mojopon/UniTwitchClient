@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniTwitchClient.EventSub;
 using UniTwitchClient.EventSub.Api;
+using UniTwitchClient.EventSub.Api.Models;
 using UniTwitchClient.EventSub.Api.Models.Raws;
 using UnityEngine;
 
@@ -30,6 +31,26 @@ namespace UniTwitchClient.Tests.EventSub.Api
             Assert.AreEqual("db775189_a299dfaa", subscription_data.data[0].transport.session_id);
             Assert.AreEqual("db775189_a299dfaa", subscription_data.data[1].transport.session_id);
             Assert.AreEqual("db775189_a299dfaa", subscription_data.data[2].transport.session_id);
+        }
+
+        [Test]
+        public void ConvertEventSubscriptionDataRawToModelTest() 
+        {
+            subscription_data subscription_data_raw = JsonWrapper.ConvertFromJson<subscription_data>(data);
+            EventSubSubscriptionData eventSubSubscriptionData = subscription_data_raw.ConvertRawToModel();
+
+            Assert.AreEqual("4b073b17-a1c9-fedf-5023-63cbb308c9c5", eventSubSubscriptionData.Subscriptions[0].Id);
+            Assert.AreEqual("85cad4fe-b154-32ed-d51c-90b7ff8810d1", eventSubSubscriptionData.Subscriptions[1].Id);
+            Assert.AreEqual("68bc74dd-507b-cfcb-0e0c-108a80dd42f8", eventSubSubscriptionData.Subscriptions[2].Id);
+        }
+
+        [Test]
+        public void ConvertEventSubscriptionDataRawFromBlankDataToModelTest()
+        {
+            subscription_data subscription_data_raw = JsonWrapper.ConvertFromJson<subscription_data>("{}");
+            EventSubSubscriptionData eventSubSubscriptionData = subscription_data_raw.ConvertRawToModel();
+
+            Assert.IsNotNull(eventSubSubscriptionData);
         }
 
         [Test]
