@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UniTwitchClient.EventSub;
+using UnityEngine.UI;
 
 public class TwitchEventSubClientExampleScript : MonoBehaviour
 {
@@ -15,11 +16,13 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     private TMP_InputField clientIdInputField;
     [SerializeField]
     private TMP_InputField broadcasterUserIdInputField;
+    [SerializeField]
+    private Toggle connectToLocalServerToggle;
 
     public void Start()
     {
         string path = Application.dataPath + "/TwitchEventSubClientInputData.txt";
-        Debug.Log(path);
+
         if (File.Exists(path)) 
         {
             string json = File.ReadAllText(path);
@@ -28,6 +31,7 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
             twitchUserNameInputField.text = data.TwitchUserName;
             clientIdInputField.text = data.ClientId;
             broadcasterUserIdInputField.text = data.BroadcasterUserId;
+            connectToLocalServerToggle.isOn = data.ConnectToLocalServer;
         }
     }
 
@@ -47,5 +51,6 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         public string TwitchUserName;
         public string ClientId;
         public string BroadcasterUserId;
+        public bool ConnectToLocalServer;
     }
 }
