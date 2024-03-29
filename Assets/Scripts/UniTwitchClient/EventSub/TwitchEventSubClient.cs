@@ -65,17 +65,16 @@ namespace UniTwitchClient.EventSub
             try 
             {
                 welcomeMessage = await getWelcomeMessageTask.Timeout(TimeSpan.FromSeconds(timeoutSeconds));
+                if (welcomeMessage != null) 
+                {
+                    _sessionId = welcomeMessage.SessionId;
+                    await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
+                }
             }
             catch (Exception ex)
             {
                 _wsClient.Disconnect();
                 throw new Exception("connection failure.");
-            }
-
-            if (welcomeMessage != null)
-            {
-                _sessionId = welcomeMessage.SessionId;
-               await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
             }
         }
 
