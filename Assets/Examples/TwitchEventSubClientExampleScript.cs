@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UniTwitchClient.EventSub;
 
 public class TwitchEventSubClientExampleScript : MonoBehaviour
 {
@@ -21,7 +22,12 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         Debug.Log(path);
         if (File.Exists(path)) 
         {
-            Debug.Log("the file is exists");
+            string json = File.ReadAllText(path);
+            var data = JsonWrapper.ConvertFromJson<TwitchEventSubClientInputData>(json);
+            userAccessTokenInputField.text = data.UserAccessToken;
+            twitchUserNameInputField.text = data.TwitchUserName;
+            clientIdInputField.text = data.ClientId;
+            broadcasterUserIdInputField.text = data.BroadcasterUserId;
         }
     }
 
@@ -37,6 +43,9 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
 
     private class TwitchEventSubClientInputData 
     {
-
+        public string UserAccessToken;
+        public string TwitchUserName;
+        public string ClientId;
+        public string BroadcasterUserId;
     }
 }
