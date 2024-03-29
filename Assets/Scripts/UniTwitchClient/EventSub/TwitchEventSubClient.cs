@@ -75,7 +75,7 @@ namespace UniTwitchClient.EventSub
             if (welcomeMessage != null)
             {
                 _sessionId = welcomeMessage.SessionId;
-               // await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
+               await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
             }
         }
 
