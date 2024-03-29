@@ -53,7 +53,7 @@ namespace UniTwitchClient.EventSub.WebSocket
 
             AddHandlers();
 
-            _ws.Connect();
+            Task.Run(()=> _ws.Connect());
         }
 
         public void Disconnect()
