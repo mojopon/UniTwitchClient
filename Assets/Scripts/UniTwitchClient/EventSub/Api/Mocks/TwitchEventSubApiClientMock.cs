@@ -13,7 +13,7 @@ namespace UniTwitchClient.EventSub.Api.Mocks
             throw new System.NotImplementedException();
         }
 
-        public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
+        public UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions)
         {
             throw new System.NotImplementedException();
         }

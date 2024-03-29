@@ -3,6 +3,8 @@ using UniRx;
 using UniTwitchClient.EventSub;
 using UniTwitchClient.EventSub.Api;
 using UniTwitchClient.EventSub.WebSocket;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 public class Example : MonoBehaviour
 {
@@ -12,8 +14,16 @@ public class Example : MonoBehaviour
     public string broadcasterUserId;
 
     private TwitchEventSubClient _twitchEventSubClient;
-    void Start()
+
+    public void Connect()
     {
+        ConnectAsync();
+    }
+
+    public async void ConnectAsync() 
+    {
+        if(_twitchEventSubClient != null) { return; }
+
         var connectionCredential = new ConnectionCredentials(userAccessToken, twitchUserName, clientId);
         var wsClient = new TwitchEventSubWebsocketClient();
         wsClient.DebugMode = true;
@@ -21,7 +31,7 @@ public class Example : MonoBehaviour
         apiClient.DebugMode = true;
         _twitchEventSubClient = new TwitchEventSubClient(wsClient, apiClient);
 
-        _twitchEventSubClient.OnChannelFollowAsObservable.Subscribe(x => 
+        _twitchEventSubClient.OnChannelFollowAsObservable.Subscribe(x =>
         {
             Debug.Log("the channel is followed by " + x.UserName + " !, UserId: " + x.UserId);
         });
@@ -35,18 +45,28 @@ public class Example : MonoBehaviour
             Debug.Log($"the channel points custom reward redemption is added!\nTitle:{x.RewardTitle}\nPrompt:{x.RewardPrompt}\nCost:{x.RewardCost}");
         });
 
-        DoAsync();
-    }
-
-    private async void DoAsync() 
-    {
         await _twitchEventSubClient.ConnectChannelAsync(broadcasterUserId);
 
-        Debug.Log("Connect is done");
+        Debug.Log("Connected.");
     }
 
-    private void OnDestroy()
+    public void Disconnect()
     {
+        DisconnectAsync();
+    }
+
+    private bool _disconnecting = false;
+    private async void DisconnectAsync() 
+    {
+        if(_disconnecting || _twitchEventSubClient == null) return;
+
+        _disconnecting = true;
+        await _twitchEventSubClient.DisconnectChannel();
+
         _twitchEventSubClient.Dispose();
+        _twitchEventSubClient = null;
+        _disconnecting = false;
+
+        Debug.Log("Disconnected.");
     }
 }

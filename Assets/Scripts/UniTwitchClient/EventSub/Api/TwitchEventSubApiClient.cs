@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using System.Text;
 using System.Threading;
 using UniTwitchClient.EventSub.Api.Models;
+using System.Linq;
 
 namespace UniTwitchClient.EventSub.Api
 {
@@ -62,8 +63,6 @@ namespace UniTwitchClient.EventSub.Api
             {
                 var result = await unityWebRequest.SendWebRequest().ToUniTask();
             }
-
-            Debug.Log("created subscription.");
         }
 
         public async UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
@@ -75,10 +74,24 @@ namespace UniTwitchClient.EventSub.Api
             using (unityWebRequest)
             {
                 var result = await unityWebRequest.SendWebRequest().ToUniTask();
+                Debug.Log(result.downloadHandler.text);
                 eventSubSubscriptionData = JsonWrapper.ConvertFromJson<subscription_data>(result.downloadHandler.text).ConvertRawToModel();
             }
 
             return eventSubSubscriptionData;
+        }
+
+        public async UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions)
+        {
+            var url = DebugMode == true ? API_DEBUG_URL : API_URL;
+            List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
+
+            foreach(var subscription in subscriptions.Subscriptions) 
+            {
+                unityWebRequests.Add(CreateUnityWebRequest(url + $"?id={subscription.Id}", UnityWebRequest.kHttpVerbDELETE));
+            }
+
+            await unityWebRequests.Select(x => x.SendWebRequest().ToUniTask());
         }
 
         private UnityWebRequest CreateUnityWebRequest(string url, string method, string postData = null) 
@@ -102,11 +115,6 @@ namespace UniTwitchClient.EventSub.Api
             }
 
             return uwr;
-        }
-
-        public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -22,6 +22,7 @@ namespace UniTwitchClient.EventSub
         private ITwitchEventSubApiClient _apiClient;
 
         private string _broadcasterUserId;
+        private string _sessionId;
         private int timeoutSeconds = 5;
 
         private Subject<ChannelFollow> _onChannelFollowSubject;
@@ -68,19 +69,23 @@ namespace UniTwitchClient.EventSub
             catch (Exception ex)
             {
                 _wsClient.Disconnect();
-                Dispose();
                 throw new Exception("connection failure.");
             }
 
             if (welcomeMessage != null)
             {
-                await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, welcomeMessage.SessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
+                _sessionId = welcomeMessage.SessionId;
+               // await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
             }
         }
 
-        public void DisconnectChannel() 
+        public async UniTask DisconnectChannel() 
         {
+            var subscriptions = await _apiClient.GetEventSubSubscriptionsAsync();
+            await _apiClient.DeleteEventSubSubscriptionsAsync(subscriptions.GetSubscriptionsBySessionId(_sessionId));
+
             _broadcasterUserId = null;
+            _sessionId = null;
             _wsClient.Disconnect();
         }
 
