@@ -23,7 +23,7 @@ namespace UniTwitchClient.EventSub
 
         private string _broadcasterUserId;
         private string _sessionId;
-        private int timeoutSeconds = 5;
+        private int timeoutSeconds = 10;
 
         private Subject<ChannelFollow> _onChannelFollowSubject;
         private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
