@@ -38,30 +38,43 @@ namespace UniTwitchClient.Tests.EventSub
             _disposables?.Dispose();
         }
 
+        private readonly string _broadcasterUserId = "abcde";
+        private readonly string _sessionId = "abcsession";
         [Test]
         public async Task ConnectTest() 
         {
-            var broadcasterUserId = "abcde";
-            var sessionId = "abcsession";
-
             // UniTask.Yieldで1フレーム後にTwitchEventSubClientにWebSocketClient経由でセッション情報を通知
             UniTask.Create(async () =>
             {
                 await UniTask.Yield();
-                var welcomeMessage = new Welcome() { SessionId = sessionId };
+                var welcomeMessage = new Welcome() { SessionId = _sessionId };
                 _wsClient.ReceiveWelcomeMessage(welcomeMessage);
             }).Forget();
 
-            await _client.ConnectChannelAsync(broadcasterUserId);
+            await _client.ConnectChannelAsync(_broadcasterUserId);
 
             // ITwitchEventSubWebsocketClient.ConnectAsync()が呼ばれている事を確認
             Assert.IsTrue(_wsClient.IsConnected);
 
             // ITwitchEventSubApiClient.CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId)が正しく呼ばれていることを確認
             Assert.AreEqual(TwitchEventSubApiCalledMethodLog.MethodType.Create, _apiClient.CalledMethods[0].Type);
-            Assert.AreEqual(broadcasterUserId, _apiClient.CalledMethods[0].Parameters["broadcasterUserId"]);
-            Assert.AreEqual(sessionId, _apiClient.CalledMethods[0].Parameters["sessionId"]);
-            Assert.AreEqual(broadcasterUserId, _apiClient.CalledMethods[0].Parameters["moderatorUserId"]);
+            Assert.AreEqual(_broadcasterUserId, _apiClient.CalledMethods[0].Parameters["broadcasterUserId"]);
+            Assert.AreEqual(_sessionId, _apiClient.CalledMethods[0].Parameters["sessionId"]);
+            Assert.AreEqual(_broadcasterUserId, _apiClient.CalledMethods[0].Parameters["moderatorUserId"]);
+        }
+
+        [Test]
+        public async Task DisconnectTest() 
+        {
+            await ConnectTest();
+            await _client.DisconnectChannelAsync();
+
+            // ITwitchEventSubWebsocketClient.DisconnectAsync()が呼ばれている事を確認
+            Assert.IsFalse(_wsClient.IsConnected);
+
+            // ITwitchEventSubApiClient.DeleteEventSubSubscriptionsAsync(sessionId)が正しく呼ばれていることを確認
+            Assert.AreEqual(TwitchEventSubApiCalledMethodLog.MethodType.Delete, _apiClient.CalledMethods[1].Type);
+            Assert.AreEqual(_sessionId, _apiClient.CalledMethods[1].Parameters["sessionId"]);
         }
 
         [Test]

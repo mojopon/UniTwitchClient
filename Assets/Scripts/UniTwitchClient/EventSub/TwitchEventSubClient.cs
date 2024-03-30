@@ -78,7 +78,7 @@ namespace UniTwitchClient.EventSub
             }
         }
 
-        public async UniTask DisconnectChannel() 
+        public async UniTask DisconnectChannelAsync() 
         {
             await _apiClient.DeleteEventSubSubscriptionsAsync(_sessionId);
 

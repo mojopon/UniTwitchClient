@@ -64,7 +64,7 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     {
         try
         {
-            await _client.DisconnectChannel();
+            await _client.DisconnectChannelAsync();
         }
         catch
         {

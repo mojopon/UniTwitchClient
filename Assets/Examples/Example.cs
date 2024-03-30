@@ -61,7 +61,7 @@ public class Example : MonoBehaviour
         if(_disconnecting || _twitchEventSubClient == null) return;
 
         _disconnecting = true;
-        await _twitchEventSubClient.DisconnectChannel();
+        await _twitchEventSubClient.DisconnectChannelAsync();
 
         _twitchEventSubClient.Dispose();
         _twitchEventSubClient = null;

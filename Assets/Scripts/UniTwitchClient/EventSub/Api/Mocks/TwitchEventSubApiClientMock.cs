@@ -36,7 +36,7 @@ namespace UniTwitchClient.EventSub.Api.Mocks
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("sessionId", sessionId);
-            //CalledMethods.Add(new TwitchEventSubApiCalledMethodLog(TwitchEventSubApiCalledMethodLog.MethodType.Delete, parameters));
+            CalledMethods.Add(new TwitchEventSubApiCalledMethodLog(TwitchEventSubApiCalledMethodLog.MethodType.Delete, parameters));
 
             await UniTask.CompletedTask;
         }
