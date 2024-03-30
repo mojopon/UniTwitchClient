@@ -95,6 +95,14 @@ namespace UniTwitchClient.EventSub.Api
             await unityWebRequests.Select(x => x.SendWebRequest().ToUniTask());
         }
 
+        public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId) 
+        {
+            if (string.IsNullOrEmpty(sessionId)) return;
+
+            var eventSubSubscriptionData = await GetEventSubSubscriptionsAsync();
+            await DeleteEventSubSubscriptionsAsync(eventSubSubscriptionData.GetSubscriptionsBySessionId(sessionId));
+        }
+
         private UnityWebRequest CreateUnityWebRequest(string url, string method, string postData = null) 
         {
             byte[] data = null;

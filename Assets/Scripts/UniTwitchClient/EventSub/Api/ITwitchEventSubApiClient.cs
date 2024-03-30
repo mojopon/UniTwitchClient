@@ -12,5 +12,6 @@ namespace UniTwitchClient.EventSub.Api
         UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId,string sessionId, string moderatorUserId = null);
         UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync();
         UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions);
+        UniTask DeleteEventSubSubscriptionsAsync(string sessionId);
     }
 }

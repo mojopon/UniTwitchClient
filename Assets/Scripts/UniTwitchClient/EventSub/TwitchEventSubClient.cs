@@ -80,8 +80,7 @@ namespace UniTwitchClient.EventSub
 
         public async UniTask DisconnectChannel() 
         {
-            var subscriptions = await _apiClient.GetEventSubSubscriptionsAsync();
-            await _apiClient.DeleteEventSubSubscriptionsAsync(subscriptions.GetSubscriptionsBySessionId(_sessionId));
+            await _apiClient.DeleteEventSubSubscriptionsAsync(_sessionId);
 
             _broadcasterUserId = null;
             _sessionId = null;
