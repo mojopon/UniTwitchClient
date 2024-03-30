@@ -10,6 +10,8 @@ using Notification = UniTwitchClient.EventSub.WebSocket.Notification;
 using UnityEngine;
 using UniRx;
 using System;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace UniTwitchClient.Tests.EventSub
 {
@@ -34,6 +36,32 @@ namespace UniTwitchClient.Tests.EventSub
         public void TearDown() 
         {
             _disposables?.Dispose();
+        }
+
+        [Test]
+        public async Task ConnectTest() 
+        {
+            var broadcasterUserId = "abcde";
+            var sessionId = "abcsession";
+
+            // UniTask.Yieldで1フレーム後にTwitchEventSubClientにWebSocketClient経由でセッション情報を通知
+            UniTask.Create(async () =>
+            {
+                await UniTask.Yield();
+                var welcomeMessage = new Welcome() { SessionId = sessionId };
+                _wsClient.ReceiveWelcomeMessage(welcomeMessage);
+            }).Forget();
+
+            await _client.ConnectChannelAsync(broadcasterUserId);
+
+            // ITwitchEventSubWebsocketClient.ConnectAsync()が呼ばれている事を確認
+            Assert.IsTrue(_wsClient.IsConnected);
+
+            // ITwitchEventSubApiClient.CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId)が正しく呼ばれていることを確認
+            Assert.AreEqual(TwitchEventSubApiCalledMethodLog.MethodType.Create, _apiClient.CalledMethods[0].Type);
+            Assert.AreEqual(broadcasterUserId, _apiClient.CalledMethods[0].Parameters["broadcasterUserId"]);
+            Assert.AreEqual(sessionId, _apiClient.CalledMethods[0].Parameters["sessionId"]);
+            Assert.AreEqual(broadcasterUserId, _apiClient.CalledMethods[0].Parameters["moderatorUserId"]);
         }
 
         [Test]

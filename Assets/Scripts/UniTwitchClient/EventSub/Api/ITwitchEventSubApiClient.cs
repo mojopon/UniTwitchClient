@@ -9,7 +9,8 @@ namespace UniTwitchClient.EventSub.Api
 {
     public interface ITwitchEventSubApiClient
     {
-        UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId,string sessionId, string moderatorUserId = null);
+        UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId);
+        UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId);
         UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync();
         UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions);
         UniTask DeleteEventSubSubscriptionsAsync(string sessionId);

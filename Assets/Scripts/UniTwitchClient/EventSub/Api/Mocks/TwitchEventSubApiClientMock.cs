@@ -8,9 +8,23 @@ namespace UniTwitchClient.EventSub.Api.Mocks
 {
     public class TwitchEventSubApiClientMock : ITwitchEventSubApiClient
     {
-        public UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId = null)
+        public List<TwitchEventSubApiCalledMethodLog> CalledMethods { get; private set; } = new List<TwitchEventSubApiCalledMethodLog>();
+
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId)
         {
-            throw new System.NotImplementedException();
+            await CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId, broadcasterUserId);
+        }
+
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("broadcasterUserId", broadcasterUserId);
+            parameters.Add("sessionId", sessionId);
+            parameters.Add("moderatorUserId", moderatorUserId);
+
+            CalledMethods.Add(new TwitchEventSubApiCalledMethodLog(TwitchEventSubApiCalledMethodLog.MethodType.Create, parameters));
+
+            await UniTask.CompletedTask;
         }
 
         public UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions)
@@ -18,14 +32,38 @@ namespace UniTwitchClient.EventSub.Api.Mocks
             throw new System.NotImplementedException();
         }
 
-        public UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
+        public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
         {
-            throw new System.NotImplementedException();
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            parameters.Add("sessionId", sessionId);
+            //CalledMethods.Add(new TwitchEventSubApiCalledMethodLog(TwitchEventSubApiCalledMethodLog.MethodType.Delete, parameters));
+
+            await UniTask.CompletedTask;
         }
 
         public UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
         {
             throw new System.NotImplementedException();
+        }
+    }
+
+    public class TwitchEventSubApiCalledMethodLog 
+    {
+        public enum MethodType 
+        {
+            None,
+            Create,
+            Delete,
+            Get,
+        }
+
+        public MethodType Type { get; private set; }
+        public Dictionary<string, string> Parameters { get; private set; }
+
+        public TwitchEventSubApiCalledMethodLog(MethodType methodType, Dictionary<string,string> parameters) 
+        {
+            Type = methodType;
+            Parameters = parameters;
         }
     }
 }

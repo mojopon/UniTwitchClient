@@ -37,12 +37,13 @@ namespace UniTwitchClient.EventSub.Api
             _apiCredentials = apiCredentials;
         }
 
-        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId = null)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId)
         {
-            if (string.IsNullOrEmpty(moderatorUserId)) 
-            {
-                moderatorUserId = broadcasterUserId;
-            }
+            await CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId, broadcasterUserId);
+        }
+
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId)
+        {
             _subscriptionBuilder.CreateAllSubscriptionRequests(broadcasterUserId, moderatorUserId);
             var subscriptions = _subscriptionBuilder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 

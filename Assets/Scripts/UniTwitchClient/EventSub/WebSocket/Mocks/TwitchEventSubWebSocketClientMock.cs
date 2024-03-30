@@ -15,6 +15,7 @@ namespace UniTwitchClient.EventSub.Mocks
         public IObservable<Notification> OnNotificationAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
+        public bool IsConnected { get; private set; }
         public bool IsDisposed { get; private set; }
 
         private Subject<Welcome> _welcomeSubject = new Subject<Welcome>();
@@ -39,10 +40,12 @@ namespace UniTwitchClient.EventSub.Mocks
 
         public void Connect()
         {
+            IsConnected = true;
         }
 
         public void Disconnect()
         {
+            IsConnected = false;
         }
 
         public void Dispose()
