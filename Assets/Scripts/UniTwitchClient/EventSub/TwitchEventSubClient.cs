@@ -7,6 +7,7 @@ using UniTwitchClient.EventSub.Api;
 using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine.Playables;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 namespace UniTwitchClient.EventSub
 {
@@ -15,6 +16,7 @@ namespace UniTwitchClient.EventSub
         public IObservable<ChannelFollow> OnChannelFollowAsObservable { get; private set; }
         public IObservable<ChannelSubscribe> OnChannelSubscribeAsObservable { get; private set; }
         public IObservable<ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddAsObservable { get; private set; }
+        public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
         private CompositeDisposable _disposables = new CompositeDisposable();
 
@@ -24,10 +26,12 @@ namespace UniTwitchClient.EventSub
         private string _broadcasterUserId;
         private string _sessionId;
         private int timeoutSeconds = 10;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private Subject<ChannelFollow> _onChannelFollowSubject;
         private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
         private Subject<ChannelPointsCustomRewardRedemptionAdd> _onChannelPointsCustomRewardRedemptionAddSubject;
+        private Subject<Exception> _onErrorSubject;
 
         private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
 
@@ -57,7 +61,7 @@ namespace UniTwitchClient.EventSub
             if (!string.IsNullOrEmpty(_broadcasterUserId)) { return; }
 
             _broadcasterUserId = broadcasterUserId;
-            var getWelcomeMessageTask = _wsClient.OnWelcomeMessageAsObservable.ToUniTask(useFirstValue: true);
+            var getWelcomeMessageTask = _wsClient.OnWelcomeMessageAsObservable.ToUniTask(useFirstValue: true, cancellationToken: _cancellationTokenSource.Token);
 
             _wsClient.Connect();
 
@@ -107,6 +111,8 @@ namespace UniTwitchClient.EventSub
                 HandleNotification(x);
             }).AddTo(_disposables);
 
+            _wsClient.OnErrorAsObservable.Subscribe(x => HandleError(x)).AddTo(_disposables);
+
             _wsClient.AddTo(_disposables);
         }
 
@@ -127,10 +133,12 @@ namespace UniTwitchClient.EventSub
             _onChannelFollowSubject = new Subject<ChannelFollow>().AddTo(_disposables);
             _onChannelSubscribeSubject = new Subject<ChannelSubscribe>().AddTo(_disposables);
             _onChannelPointsCustomRewardRedemptionAddSubject = new Subject<ChannelPointsCustomRewardRedemptionAdd>().AddTo(_disposables);
+            _onErrorSubject = new Subject<Exception>().AddTo(_disposables);
 
             OnChannelFollowAsObservable = _onChannelFollowSubject.AsObservable();
             OnChannelSubscribeAsObservable = _onChannelSubscribeSubject.AsObservable();
             OnChannelPointsCustomRewardRedemptionAddAsObservable = _onChannelPointsCustomRewardRedemptionAddSubject.AsObservable();
+            OnErrorAsObservable = _onErrorSubject.AsObservable();
         }
 
         private void HandleNotification(WebSocket.Notification notification)
@@ -143,6 +151,12 @@ namespace UniTwitchClient.EventSub
             {
                 Debug.LogWarning("No correspoinding Notification Handler exists. SubscriptionType:" + notification.SubscriptionType);
             }
+        }
+
+        private void HandleError(Exception exception) 
+        {
+            _cancellationTokenSource.Cancel();
+            _onErrorSubject.OnNext(exception);
         }
 
         private void OnChannelFollow(ChannelFollow channelFollow)

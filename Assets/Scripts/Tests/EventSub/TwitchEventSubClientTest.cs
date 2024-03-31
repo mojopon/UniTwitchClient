@@ -64,6 +64,32 @@ namespace UniTwitchClient.Tests.EventSub
         }
 
         [Test]
+        public async Task ConnectErrorTest() 
+        {
+            Exception error = null;
+            var subscription = _client.OnErrorAsObservable.Subscribe(x => error = x);
+
+            UniTask.Create(async () =>
+            {
+                await UniTask.Yield();
+                var error = new Exception("an error has occured.");
+                _wsClient.ReceiveError(error);
+            }).Forget();
+
+            try
+            {
+                await _client.ConnectChannelAsync(_broadcasterUserId);
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            Assert.Pass();
+            Assert.IsNotNull(error);
+        }
+
+        [Test]
         public async Task DisconnectTest() 
         {
             await ConnectTest();

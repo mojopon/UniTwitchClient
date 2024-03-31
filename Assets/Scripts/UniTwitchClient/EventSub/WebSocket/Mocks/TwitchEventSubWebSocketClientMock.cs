@@ -63,5 +63,10 @@ namespace UniTwitchClient.EventSub.Mocks
         {
             _notificationSubject.OnNext(notification);
         }
+
+        public void ReceiveError(Exception error)
+        {
+            _errorSubject.OnNext(error);
+        }
     }
 }

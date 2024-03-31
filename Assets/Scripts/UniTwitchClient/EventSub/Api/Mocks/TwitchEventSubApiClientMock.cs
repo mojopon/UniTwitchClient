@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UniTwitchClient.EventSub.Api.Models;
 using UnityEngine;
 
@@ -10,12 +11,12 @@ namespace UniTwitchClient.EventSub.Api.Mocks
     {
         public List<TwitchEventSubApiCalledMethodLog> CalledMethods { get; private set; } = new List<TwitchEventSubApiCalledMethodLog>();
 
-        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, CancellationToken cancellationToken = default)
         {
             await CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId, broadcasterUserId);
         }
 
-        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId, CancellationToken cancellationToken = default)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add("broadcasterUserId", broadcasterUserId);

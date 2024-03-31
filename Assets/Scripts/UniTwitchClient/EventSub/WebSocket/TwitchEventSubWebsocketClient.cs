@@ -80,6 +80,12 @@ namespace UniTwitchClient.EventSub.WebSocket
                                                h => _onNotificationReceived -= h)
                                                .ObserveOnMainThread()
                                                .Share();
+
+            OnErrorAsObservable = Observable.FromEvent<Exception>(
+                                               h => _onError += h,
+                                               h => _onError -= h)
+                                               .ObserveOnMainThread()
+                                               .Share();
         }
 
         private void AddHandlers()

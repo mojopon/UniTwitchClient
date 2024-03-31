@@ -37,33 +37,33 @@ namespace UniTwitchClient.EventSub.Api
             _apiCredentials = apiCredentials;
         }
 
-        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, CancellationToken cancellationToken = default)
         {
             await CreateEventSubSubscriptionsAsync(broadcasterUserId, sessionId, broadcasterUserId);
         }
 
-        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId)
+        public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId, CancellationToken cancellationToken = default)
         {
             _subscriptionBuilder.CreateAllSubscriptionRequests(broadcasterUserId, moderatorUserId);
             var subscriptions = _subscriptionBuilder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
+            List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
             foreach (var subscription in subscriptions)
             {
-                await CreateSubscriptionAsync(subscription);
+                unityWebRequests.Add(CreateEventSubSubscriptionRequest(subscription));
             }
+
+            var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask(cancellationToken: cancellationToken));
+            await UniTask.WhenAll(tasks);
         }
 
-        private async UniTask CreateSubscriptionAsync(EventSubSubscribeRequest subscription)
+        private UnityWebRequest CreateEventSubSubscriptionRequest(EventSubSubscribeRequest subscription)
         {
             var json = subscription.ToJson();
             Debug.Log("[TwitchEventSubApiClient] Json:" + json);
 
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
-            var unityWebRequest = CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, json);
-            using (unityWebRequest)
-            {
-                var result = await unityWebRequest.SendWebRequest().ToUniTask();
-            }
+            return CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, json);
         }
 
         public async UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
@@ -93,7 +93,8 @@ namespace UniTwitchClient.EventSub.Api
                 unityWebRequests.Add(CreateUnityWebRequest(url + $"?id={subscription.Id}", UnityWebRequest.kHttpVerbDELETE));
             }
 
-            await unityWebRequests.Select(x => x.SendWebRequest().ToUniTask());
+            var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask());
+            await UniTask.WhenAll(tasks);
         }
 
         public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId) 
