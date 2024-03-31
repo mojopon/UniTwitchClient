@@ -1452,7 +1452,7 @@ GameObject:
   - component: {fileID: 625695227}
   - component: {fileID: 625695226}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: OutputField (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5407,6 +5407,7 @@ MonoBehaviour:
   clientIdInputField: {fileID: 1332512027}
   broadcasterUserIdInputField: {fileID: 1477368180}
   connectToLocalServerToggle: {fileID: 1711055304}
+  outputField: {fileID: 625695226}
 --- !u!1 &2105300775
 GameObject:
   m_ObjectHideFlags: 0

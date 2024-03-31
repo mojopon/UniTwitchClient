@@ -8,6 +8,8 @@ using UnityEngine.UI;
 using UnityEditor.PackageManager;
 using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.Api;
+using UniRx;
+using System;
 
 public class TwitchEventSubClientExampleScript : MonoBehaviour
 {
@@ -21,8 +23,11 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     private TMP_InputField broadcasterUserIdInputField;
     [SerializeField]
     private Toggle connectToLocalServerToggle;
+    [SerializeField]
+    private TMP_InputField outputField;
 
     private TwitchEventSubClient _client;
+    private CompositeDisposable _disposables;
 
     public void Start()
     {
@@ -46,8 +51,33 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         {
             return;
         }
+
         _client = CreateTwitchEventSubClient();
+        SubscribeClient();
         ConnectAsync();
+    }
+
+    private void SubscribeClient()
+    {
+        _disposables = new CompositeDisposable();
+
+        _client.OnChannelFollowAsObservable.Subscribe(x =>
+        {
+            outputField.text += $"an user followed. User Name:{x.UserName}";
+            outputField.text += Environment.NewLine;
+        }).AddTo(_disposables);
+
+        _client.OnChannelPointsCustomRewardRedemptionAddAsObservable.Subscribe(x =>
+        {
+            outputField.text += $"an user redeemed a reward. User Name:{x.UserName}, Reward Title:{x.RewardTitle}";
+            outputField.text += Environment.NewLine;
+        }).AddTo(_disposables);
+
+        _client.OnChannelSubscribeAsObservable.Subscribe(x =>
+        {
+            outputField.text += $"an user subscribed the channel. User Name:{x.UserName}";
+            outputField.text += Environment.NewLine;
+        }).AddTo(_disposables);
     }
 
     private async void ConnectAsync() 
@@ -58,6 +88,7 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     public void Disconnect() 
     {
         DisconnectAsync();
+        _disposables.Dispose();
     }
 
     private async void DisconnectAsync() 
