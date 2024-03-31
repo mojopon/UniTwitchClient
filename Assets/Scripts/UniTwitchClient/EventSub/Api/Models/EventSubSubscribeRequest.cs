@@ -32,14 +32,13 @@ namespace UniTwitchClient.EventSub.Api.Models
                 method = "websocket",
                 session_id = SessionId,
             };
-            rawModel.condition = new condition()
-            {
-                broadcaster_user_id = Condition.BroadcasterUserId,
-                moderator_user_id = Condition.ModeratorUserId,
-                user_id = Condition.UserId,
-                from_broadcaster_user_id = Condition.FromBroadcasterUserId,
-                to_broadcaster_user_id = Condition.ToBroadcasterUserId
-            };
+            rawModel.condition = new condition();
+
+            if (!string.IsNullOrEmpty(Condition.BroadcasterUserId)) { rawModel.condition.broadcaster_user_id = Condition.BroadcasterUserId; }
+            if (!string.IsNullOrEmpty(Condition.ModeratorUserId)) { rawModel.condition.moderator_user_id = Condition.ModeratorUserId; }
+            if (!string.IsNullOrEmpty(Condition.UserId)) { rawModel.condition.user_id = Condition.UserId; }
+            if (!string.IsNullOrEmpty(Condition.FromBroadcasterUserId)) { rawModel.condition.from_broadcaster_user_id = Condition.FromBroadcasterUserId; }
+            if (!string.IsNullOrEmpty(Condition.ToBroadcasterUserId)) { rawModel.condition.to_broadcaster_user_id = Condition.ToBroadcasterUserId; }
 
             return JsonWrapper.ConvertToJson(rawModel);
         }

@@ -40,5 +40,20 @@ namespace UniTwitchClient.Tests.EventSub.Api
             Assert.AreEqual(rawModel.transport.method, convertedModel.transport.method);
             Assert.AreEqual(rawModel.transport.session_id, convertedModel.transport.session_id);
         }
+
+        [Test]
+        public void ConvertConditionNullTest() 
+        {
+            condition condition = new condition();
+            condition.user_id = "";
+            var data = JsonWrapper.ConvertToJson(condition);
+
+            // nullのパラメータが含まれていない事を確認
+            Assert.IsFalse(data.Contains("\"broadcaster_user_id\":null"));
+            Assert.IsFalse(data.Contains("\"user_id\":null"));
+            Assert.IsFalse(data.Contains("\"moderator_user_id\":null"));
+            Assert.IsFalse(data.Contains("\"from_broadcaster_user_id\":null"));
+            Assert.IsFalse(data.Contains("\"to_broadcaster_user_id\":null"));
+        }
     }
 }

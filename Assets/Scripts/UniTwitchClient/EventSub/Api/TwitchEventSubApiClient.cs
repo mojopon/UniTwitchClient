@@ -57,7 +57,7 @@ namespace UniTwitchClient.EventSub.Api
             var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask(cancellationToken: cancellationToken));
             try
             {
-                await UniTask.WhenAll(tasks);
+                var results = await UniTask.WhenAll(tasks);
             }
             catch (Exception ex)
             {

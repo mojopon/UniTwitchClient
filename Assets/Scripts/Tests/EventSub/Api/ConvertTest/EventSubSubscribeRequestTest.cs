@@ -34,5 +34,13 @@ namespace UniTwitchClient.Tests.EventSub.Api
             Assert.AreEqual(condition.FromBroadcasterUserId, rawModel.condition.from_broadcaster_user_id);
             Assert.AreEqual(condition.ToBroadcasterUserId, rawModel.condition.to_broadcaster_user_id);
         }
+
+        [Test]
+        public void BlankConditionShouldntBeIncludeParametersTest()
+        {
+            EventSubSubscribeRequest eventSubSubscribeRequest = new EventSubSubscribeRequest(SubscriptionType.None, new Condition());
+            var json = eventSubSubscribeRequest.ToJson();
+            Assert.IsTrue(json.Contains("\"condition\":{}"));
+        }
     }
 }
