@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using UniTwitchClient.EventSub.Api.Models;
 using System.Linq;
+using System;
 
 namespace UniTwitchClient.EventSub.Api
 {
@@ -54,7 +55,18 @@ namespace UniTwitchClient.EventSub.Api
             }
 
             var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask(cancellationToken: cancellationToken));
-            await UniTask.WhenAll(tasks);
+            try
+            {
+                await UniTask.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                unityWebRequests.ForEach(x => x.Dispose());
+            }
         }
 
         private UnityWebRequest CreateEventSubSubscriptionRequest(EventSubSubscribeRequest subscription)
@@ -94,7 +106,18 @@ namespace UniTwitchClient.EventSub.Api
             }
 
             var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask());
-            await UniTask.WhenAll(tasks);
+            try
+            {
+                await UniTask.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                unityWebRequests.ForEach(x => x.Dispose());
+            }
         }
 
         public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId) 
