@@ -78,7 +78,7 @@ namespace UniTwitchClient.EventSub
             catch (Exception ex)
             {
                 _wsClient.Disconnect();
-                throw new Exception("connection failure.");
+                throw new Exception("an error has occured while connecting. error:" + ex);
             }
         }
 
