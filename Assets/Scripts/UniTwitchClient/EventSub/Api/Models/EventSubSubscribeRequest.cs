@@ -26,7 +26,15 @@ namespace UniTwitchClient.EventSub.Api.Models
         {
             var rawModel = new request_subscription_json();
             rawModel.type = SubscriptionType.ToName();
-            rawModel.version = "1";
+
+            if (SubscriptionType == SubscriptionType.ChannelFollow)
+            {
+                rawModel.version = "2";
+            }
+            else
+            {
+                rawModel.version = "1";
+            }
             rawModel.transport = new transport()
             {
                 method = "websocket",
