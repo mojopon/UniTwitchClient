@@ -31,12 +31,12 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
 
     public void Start()
     {
-        string path = Application.dataPath + "/TwitchEventSubClientInputData.txt";
+        string path = Application.dataPath + "/UniTwitchClientExampleSceneInputData.txt";
 
         if (File.Exists(path)) 
         {
             string json = File.ReadAllText(path);
-            var data = JsonWrapper.ConvertFromJson<TwitchEventSubClientInputData>(json);
+            var data = JsonWrapper.ConvertFromJson<UniTwitchClientExampleSceneInputData>(json);
             userAccessTokenInputField.text = data.UserAccessToken;
             twitchUserNameInputField.text = data.TwitchUserName;
             clientIdInputField.text = data.ClientId;
@@ -129,14 +129,5 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     private ConnectionCredentials CreateConnectionCredentials() 
     {
         return new ConnectionCredentials(userAccessTokenInputField.text, twitchUserNameInputField.text, clientIdInputField.text);
-    }
-
-    private class TwitchEventSubClientInputData 
-    {
-        public string UserAccessToken;
-        public string TwitchUserName;
-        public string ClientId;
-        public string BroadcasterUserId;
-        public bool ConnectToLocalServer;
     }
 }
