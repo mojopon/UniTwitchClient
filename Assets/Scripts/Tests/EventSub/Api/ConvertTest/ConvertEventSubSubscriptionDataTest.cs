@@ -61,8 +61,26 @@ namespace UniTwitchClient.Tests.EventSub.Api
             subscription subscription_raw = subscription_data.data[0];
             var eventSubSubscription = subscription_raw.ConvertRawToModel();
 
+            Assert.AreEqual(SubscriptionType.ChannelFollow, eventSubSubscription.SubscriptionType);
             Assert.AreEqual("4b073b17-a1c9-fedf-5023-63cbb308c9c5", eventSubSubscription.Id);
             Assert.AreEqual("db775189_a299dfaa", eventSubSubscription.SessionId);
+            Assert.AreEqual("enabled", eventSubSubscription.Status);
+
+            subscription_raw = subscription_data.data[1];
+            eventSubSubscription = subscription_raw.ConvertRawToModel();
+
+            Assert.AreEqual(SubscriptionType.ChannelSubscribe, eventSubSubscription.SubscriptionType);
+            Assert.AreEqual("85cad4fe-b154-32ed-d51c-90b7ff8810d1", eventSubSubscription.Id);
+            Assert.AreEqual("db775189_a299dfaa", eventSubSubscription.SessionId);
+            Assert.AreEqual("enabled", eventSubSubscription.Status);
+
+            subscription_raw = subscription_data.data[2];
+            eventSubSubscription = subscription_raw.ConvertRawToModel();
+
+            Assert.AreEqual(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, eventSubSubscription.SubscriptionType);
+            Assert.AreEqual("68bc74dd-507b-cfcb-0e0c-108a80dd42f8", eventSubSubscription.Id);
+            Assert.AreEqual("db775189_a299dfaa", eventSubSubscription.SessionId);
+            Assert.AreEqual("enabled", eventSubSubscription.Status);
         }
     }
 }

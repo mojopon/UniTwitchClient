@@ -11,7 +11,7 @@ namespace UniTwitchClient.EventSub.Api
     {
         public static EventSubSubscription ConvertRawToModel(this subscription data) 
         {
-            return new EventSubSubscription(data.id, data.transport.session_id);
+            return new EventSubSubscription(SubscriptionTypeConverter.ToSubscriptionType(data.type), data.id, data.transport.session_id, data.status);
         }
 
         public static EventSubSubscriptionData ConvertRawToModel(this subscription_data data) 

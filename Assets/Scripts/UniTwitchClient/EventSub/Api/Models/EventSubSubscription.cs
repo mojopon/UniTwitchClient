@@ -6,13 +6,17 @@ namespace UniTwitchClient.EventSub.Api.Models
 {
     public class EventSubSubscription
     {
+        public SubscriptionType SubscriptionType { get; private set; }
         public string Id { get; private set; }
         public string SessionId { get; private set; }
+        public string Status { get; private set; }
 
-        public EventSubSubscription(string id, string sessionId) 
+        public EventSubSubscription(SubscriptionType subscriptionType, string id, string sessionId, string status) 
         {
+            SubscriptionType = subscriptionType;
             Id = id;
             SessionId = sessionId;
+            Status = status;
         }
     }
 }

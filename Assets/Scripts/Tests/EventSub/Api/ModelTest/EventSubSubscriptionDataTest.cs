@@ -13,10 +13,10 @@ namespace UniTwitchClient.Tests.EventSub.Api
         {
             List<EventSubSubscription> eventSubSubscriptions = new List<EventSubSubscription>();
 
-            EventSubSubscription subs1 = new EventSubSubscription("abc1", "abcsession1");
-            EventSubSubscription subs2 = new EventSubSubscription("abc2", "abcsession2");
-            EventSubSubscription subs3 = new EventSubSubscription("abc3", "abcsession1");
-            EventSubSubscription subs4 = new EventSubSubscription("abc4", "abcsession2");
+            EventSubSubscription subs1 = new EventSubSubscription(SubscriptionType.ChannelFollow, "abc1", "abcsession1", "enabled");
+            EventSubSubscription subs2 = new EventSubSubscription(SubscriptionType.ChannelCheer, "abc2", "abcsession2", "enabled");
+            EventSubSubscription subs3 = new EventSubSubscription(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, "abc3", "abcsession1", "enabled");
+            EventSubSubscription subs4 = new EventSubSubscription(SubscriptionType.ChannelSubscribe, "abc4", "abcsession2", "enabled");
 
 
             eventSubSubscriptions.Add(subs1);
