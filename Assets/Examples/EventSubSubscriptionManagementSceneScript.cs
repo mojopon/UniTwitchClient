@@ -48,6 +48,7 @@ public class EventSubSubscriptionManagementSceneScript : MonoBehaviour
     {
         var result = await CreateClient().GetEventSubSubscriptionsAsync();
 
+        outputField.text = "";
         foreach (var subscription in result.Subscriptions) 
         {
             outputField.text += $"Id:{subscription.Id}, + Session Id:{subscription.SessionId}, Type:{subscription.SubscriptionType}, Status:{subscription.Status}";
@@ -57,7 +58,16 @@ public class EventSubSubscriptionManagementSceneScript : MonoBehaviour
 
     public void DeleteAllSubs() 
     {
-        Debug.Log("Delete All Subs");
+        DeleteAllSubsAsync();
+    }
+
+    private async void DeleteAllSubsAsync() 
+    {
+        var client = CreateClient();
+        var result = await client.GetEventSubSubscriptionsAsync();
+        await client.DeleteEventSubSubscriptionsAsync(result);
+
+        Debug.Log("EventSub Subscriptions Deleted.");
     }
 
     TwitchEventSubApiClient CreateClient() 
