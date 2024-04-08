@@ -18,5 +18,10 @@ namespace UniTwitchClient.EventSub.Api.Models
         {
             return new EventSubSubscriptionData(Subscriptions.Where(x => x.SessionId == sessionId).ToList());
         }
+
+        public EventSubSubscriptionData GetEnabledSubscriptions() 
+        {
+            return new EventSubSubscriptionData(Subscriptions.Where(x => x.Status == "enabled").ToList());
+        }
     }
 }
