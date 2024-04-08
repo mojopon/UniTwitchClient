@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +41,18 @@ public class EventSubSubscriptionManagementSceneScript : MonoBehaviour
 
     public void GetSubs() 
     {
-        Debug.Log("Get Subs");
+        GetSubsAsync();
+    }
+
+    private async void GetSubsAsync() 
+    {
+        var result = await CreateClient().GetEventSubSubscriptionsAsync();
+
+        foreach (var subscription in result.Subscriptions) 
+        {
+            outputField.text += $"Id:{subscription.Id}, + Session Id:{subscription.SessionId}, Type:{subscription.SubscriptionType}, Status:{subscription.Status}";
+            outputField.text += Environment.NewLine;
+        }
     }
 
     public void DeleteAllSubs() 
@@ -51,6 +63,8 @@ public class EventSubSubscriptionManagementSceneScript : MonoBehaviour
     TwitchEventSubApiClient CreateClient() 
     {
         var credentials = new ConnectionCredentials(userAccessTokenInputField.text, "user", clientIdInputField.text);
-        return new TwitchEventSubApiClient(credentials.ToApiCredentials());
+        var client = new TwitchEventSubApiClient(credentials.ToApiCredentials());
+        client.DebugMode = connectToLocalServerToggle.isOn;
+        return client;
     }
 }
