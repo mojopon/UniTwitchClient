@@ -81,7 +81,6 @@ namespace UniTwitchClient.EventSub.Api
         public async UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
         {
             var url = DebugMode == true ? API_DEBUG_URL : API_URL;
-            url = url + "?status=enabled";
             var unityWebRequest = CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
 
             EventSubSubscriptionData eventSubSubscriptionData = null;
