@@ -13,6 +13,8 @@ namespace UniTwitchClient.EventSub
         public NotificationConverter() 
         {
             converterDictionary.Add(SubscriptionType.ChannelFollow, new ChannelFollowConverter());
+            converterDictionary.Add(SubscriptionType.ChannelSubscribe, new ChannelSubscribeConverter());
+            converterDictionary.Add(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, new ChannelPointsCustomRewardRedemptionAddConverter());
         }
 
         public object Convert(Notification notification)

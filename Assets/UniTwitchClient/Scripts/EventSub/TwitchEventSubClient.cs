@@ -8,6 +8,7 @@ using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine.Playables;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using UniTwitchClient.Tests.EventSub;
 
 namespace UniTwitchClient.EventSub
 {
@@ -28,12 +29,8 @@ namespace UniTwitchClient.EventSub
         private int timeoutSeconds = 10;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private Subject<ChannelFollow> _onChannelFollowSubject;
-        private Subject<ChannelSubscribe> _onChannelSubscribeSubject;
-        private Subject<ChannelPointsCustomRewardRedemptionAdd> _onChannelPointsCustomRewardRedemptionAddSubject;
-        private Subject<Exception> _onErrorSubject;
-
-        private Dictionary<SubscriptionType, INotificationHandler> _handlerDict = new Dictionary<SubscriptionType, INotificationHandler>();
+        private SubjectComposition _subjectComposition = new SubjectComposition();
+        private NotificationConverter _notificationConverter = new NotificationConverter();
 
         public TwitchEventSubClient(ConnectionCredentials connectionCredentials) 
         {
@@ -50,7 +47,6 @@ namespace UniTwitchClient.EventSub
 
         private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
         {
-            InitializeHandlers();
             InitializeObservables();
             InitializeWebSocketClient(wsClient);
             InitializeApiClient(apiClient);
@@ -121,57 +117,26 @@ namespace UniTwitchClient.EventSub
             _apiClient = apiClient;
         }
 
-        private void InitializeHandlers()
-        {
-            _handlerDict.Add(SubscriptionType.ChannelFollow, new ChannelFollowHandler(OnChannelFollow));
-            _handlerDict.Add(SubscriptionType.ChannelSubscribe, new ChannelSubscribeHandler(OnChannelSubscribe));
-            _handlerDict.Add(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, new ChannelPointsCustomRewardRedemptionAddHandler(OnChannelPointsCustomRewardRedemptionAdd));
-        }
-
         private void InitializeObservables()
         {
-            _onChannelFollowSubject = new Subject<ChannelFollow>().AddTo(_disposables);
-            _onChannelSubscribeSubject = new Subject<ChannelSubscribe>().AddTo(_disposables);
-            _onChannelPointsCustomRewardRedemptionAddSubject = new Subject<ChannelPointsCustomRewardRedemptionAdd>().AddTo(_disposables);
-            _onErrorSubject = new Subject<Exception>().AddTo(_disposables);
+            OnChannelFollowAsObservable = _subjectComposition.CreateSubject<ChannelFollow>(SubscriptionType.ChannelFollow.ToString()).AsObservable();
+            OnChannelSubscribeAsObservable = _subjectComposition.CreateSubject<ChannelSubscribe>(SubscriptionType.ChannelSubscribe.ToString()).AsObservable();
+            OnChannelPointsCustomRewardRedemptionAddAsObservable = _subjectComposition.CreateSubject<ChannelPointsCustomRewardRedemptionAdd>(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd.ToString()).AsObservable();
+            OnErrorAsObservable = _subjectComposition.CreateSubject<Exception>("Exception").AsObservable();
 
-            OnChannelFollowAsObservable = _onChannelFollowSubject.AsObservable();
-            OnChannelSubscribeAsObservable = _onChannelSubscribeSubject.AsObservable();
-            OnChannelPointsCustomRewardRedemptionAddAsObservable = _onChannelPointsCustomRewardRedemptionAddSubject.AsObservable();
-            OnErrorAsObservable = _onErrorSubject.AsObservable();
+            _subjectComposition.AddTo(_disposables);
         }
 
         private void HandleNotification(WebSocket.Notification notification)
         {
-            if (_handlerDict.ContainsKey(notification.SubscriptionType))
-            {
-                _handlerDict[notification.SubscriptionType].HandleNotification(notification);
-            }
-            else 
-            {
-                Debug.LogWarning("No correspoinding Notification Handler exists. SubscriptionType:" + notification.SubscriptionType);
-            }
+            _subjectComposition.OnNext(notification.SubscriptionType.ToString(), _notificationConverter.Convert(notification));
         }
 
         private void HandleError(Exception exception) 
         {
             _cancellationTokenSource.Cancel();
-            _onErrorSubject.OnNext(exception);
-        }
-
-        private void OnChannelFollow(ChannelFollow channelFollow)
-        {
-            _onChannelFollowSubject.OnNext(channelFollow);
-        }
-
-        private void OnChannelSubscribe(ChannelSubscribe channelSubscribe) 
-        {
-            _onChannelSubscribeSubject.OnNext(channelSubscribe);
-        }
-
-        private void OnChannelPointsCustomRewardRedemptionAdd(ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd) 
-        {
-            _onChannelPointsCustomRewardRedemptionAddSubject.OnNext(channelPointsCustomRewardRedemptionAdd);
+            _cancellationTokenSource = new CancellationTokenSource();
+            _subjectComposition.OnNext("Exception", exception);
         }
     }
 }
