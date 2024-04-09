@@ -11,9 +11,9 @@ namespace UniTwitchClient.Tests.EventSub
     public class NotificationConverterTest
     {
         [Test]
-        public void ConvertChannelFollowTest() 
+        public void ConvertChannelFollowTest()
         {
-            var dateTime = new DateTime(2000,8,1);
+            var dateTime = new DateTime(2000, 8, 1);
             var notification = new Notification()
             {
                 UserId = "1234",
@@ -44,7 +44,7 @@ namespace UniTwitchClient.Tests.EventSub
         }
 
         [Test]
-        public void ConvertChannelSubscribeTest() 
+        public void ConvertChannelSubscribeTest()
         {
             var notification = new Notification()
             {
@@ -59,7 +59,7 @@ namespace UniTwitchClient.Tests.EventSub
             };
 
             var converter = new ChannelSubscribeConverter();
-            var result = converter.Convert(notification)as ChannelSubscribe;
+            var result = converter.Convert(notification) as ChannelSubscribe;
 
             Assert.IsNotNull(result);
 
@@ -73,6 +73,47 @@ namespace UniTwitchClient.Tests.EventSub
 
             Assert.AreEqual("1000", result.Tier);
             Assert.IsTrue(result.IsGift);
+        }
+
+        [Test]
+        public void ConvertChannelPointsCustomRewardRedemptionAddTest()
+        {
+            var dateTime = new DateTime(2000, 8, 1);
+            var notification = new Notification()
+            {
+                UserId = "1234",
+                UserLogin = "testUserLogin",
+                UserName = "testUserName",
+                BroadCasterUserId = "2345",
+                BroadCasterUserLogin = "broadcasterUserLogin",
+                BroadCasterUserName = "broadcasterUserName",
+                Status = "fulfilled",
+                RewardCost = 150,
+                RewardPrompt = "RedeemYourTestRewardfromCLI",
+                RewardTitle = "TestRewardfromCLI",
+                RedeemedAt = dateTime,
+            };
+
+            var converter = new ChannelPointsCustomRewardRedemptionAddConverter();
+            var result = converter.Convert(notification) as ChannelPointsCustomRewardRedemptionAdd;
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual("1234", result.UserId);
+            Assert.AreEqual("testUserLogin", result.UserLogin);
+            Assert.AreEqual("testUserName", result.UserName);
+
+            Assert.AreEqual("2345", result.BroadcasterUserId);
+            Assert.AreEqual("broadcasterUserLogin", result.BroadcasterUserLogin);
+            Assert.AreEqual("broadcasterUserName", result.BroadcasterUserName);
+
+            Assert.AreEqual(150, result.RewardCost);
+            Assert.AreEqual("RedeemYourTestRewardfromCLI", result.RewardPrompt);
+            Assert.AreEqual("TestRewardfromCLI", result.RewardTitle);
+
+            Assert.AreEqual(2000, result.RedeemedAt.Year);
+            Assert.AreEqual(8, result.RedeemedAt.Month);
+            Assert.AreEqual(1, result.RedeemedAt.Day);
         }
     }
 }
