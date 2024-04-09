@@ -107,6 +107,7 @@ namespace UniTwitchClient.Tests.EventSub
             Assert.AreEqual("broadcasterUserLogin", result.BroadcasterUserLogin);
             Assert.AreEqual("broadcasterUserName", result.BroadcasterUserName);
 
+            Assert.AreEqual("fulfilled", result.Status);
             Assert.AreEqual(150, result.RewardCost);
             Assert.AreEqual("RedeemYourTestRewardfromCLI", result.RewardPrompt);
             Assert.AreEqual("TestRewardfromCLI", result.RewardTitle);

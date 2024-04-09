@@ -15,7 +15,7 @@ namespace UniTwitchClient.EventSub
                                                               notification.BroadCasterUserId,
                                                               notification.BroadCasterUserName,
                                                               notification.BroadCasterUserLogin,
-                                                              null,
+                                                              notification.Status,
                                                               notification.RewardTitle,
                                                               notification.RewardCost,
                                                               notification.RewardPrompt,
