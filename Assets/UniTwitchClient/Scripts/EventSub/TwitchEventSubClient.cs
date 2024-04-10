@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
 using UniTwitchClient.EventSub.Api;
 using UniTwitchClient.EventSub.WebSocket;
-using UnityEngine.Playables;
 using Cysharp.Threading.Tasks;
 using System.Threading;
-using UniTwitchClient.Tests.EventSub;
 using UniTwitchClient.EventSub.Converters;
 
 namespace UniTwitchClient.EventSub

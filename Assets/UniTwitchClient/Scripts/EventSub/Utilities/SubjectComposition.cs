@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
-namespace UniTwitchClient.Tests.EventSub
+namespace UniTwitchClient.EventSub
 {
     public class SubjectComposition : IDisposable
     {
