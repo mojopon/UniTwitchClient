@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Linq;
 using UniTwitchClient.EventSub.Api;
 
 namespace UniTwitchClient.Tests.EventSub.Api
@@ -75,6 +76,10 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(4, requests.Length);
+            Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelFollow));
+            Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelSubscribe));
+            Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelSubscriptionMessage));
+            Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd));
         }
     }
 }
