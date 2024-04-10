@@ -15,7 +15,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
-        public void SubscribeChannelFollowTest()
+        public void CreateChannelFollowTest()
         {
             var broadCasterUserId = "12345";
             builder.CreateChannelFollowRequest(broadCasterUserId);
@@ -28,7 +28,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
-        public void SubscribeChannelSubscribeTest()
+        public void CreateChannelSubscribeTest()
         {
             var broadCasterUserId = "12345";
             builder.CreateChannelSubscribeRequest(broadCasterUserId);
@@ -41,7 +41,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
-        public void SubscribeChannelSubscriptionMessageTest() 
+        public void CreateChannelSubscriptionMessageTest() 
         {
             var broadCasterUserId = "12345";
             builder.CreateChannelSubscriptionMessage(broadCasterUserId);
@@ -54,7 +54,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
-        public void SubscribeChannelPointsCustomRewardRedemptionAddRequest()
+        public void CreateChannelPointsCustomRewardRedemptionAddRequest()
         {
             var broadCasterUserId = "12345";
             builder.CreateChannelPointsCustomRewardRedemptionAddRequest(broadCasterUserId);
@@ -67,7 +67,7 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
-        public void SubscribeAllTest()
+        public void CreateAllTest()
         {
             var broadCasterUserId = "12345";
             var moderatorUserId = "23456";
