@@ -20,11 +20,11 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var broadCasterUserId = "12345";
             builder.CreateSubscribeChannelFollowRequest(broadCasterUserId);
 
-            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
-            Assert.AreEqual(SubscriptionType.ChannelFollow, subscriptions[0].SubscriptionType);
-            Assert.AreEqual(sessionId, subscriptions[0].SessionId);
-            Assert.AreEqual(broadCasterUserId, subscriptions[0].Condition.BroadcasterUserId);
+            Assert.AreEqual(SubscriptionType.ChannelFollow, requests[0].SubscriptionType);
+            Assert.AreEqual(sessionId, requests[0].SessionId);
+            Assert.AreEqual(broadCasterUserId, requests[0].Condition.BroadcasterUserId);
         }
 
         [Test]
@@ -33,28 +33,35 @@ namespace UniTwitchClient.Tests.EventSub.Api
             var broadCasterUserId = "12345";
             builder.CreateSubscribeChannelSubscribeRequest(broadCasterUserId);
 
-            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
-            Assert.AreEqual(SubscriptionType.ChannelSubscribe, subscriptions[0].SubscriptionType);
-            Assert.AreEqual(sessionId, subscriptions[0].SessionId);
-            Assert.AreEqual(broadCasterUserId, subscriptions[0].Condition.BroadcasterUserId);
+            Assert.AreEqual(SubscriptionType.ChannelSubscribe, requests[0].SubscriptionType);
+            Assert.AreEqual(sessionId, requests[0].SessionId);
+            Assert.AreEqual(broadCasterUserId, requests[0].Condition.BroadcasterUserId);
+        }
+
+        [Test]
+        public void SubscribeChannelSubscriptionMessageTest() 
+        {
+            var broadCasterUserId = "12345";
+            builder.CreateSubscribeChannelSubscriptionMessage(broadCasterUserId);
+
+            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+
+            Assert.AreEqual(SubscriptionType.ChannelSubscriptionMessage, requests[0].SubscriptionType);
+            Assert.AreEqual(sessionId, requests[0].SessionId);
+            Assert.AreEqual(broadCasterUserId, requests[0].Condition.BroadcasterUserId);
         }
 
         [Test]
         public void SubscribeAllTest()
         {
             var broadCasterUserId = "12345";
-            builder.CreateSubscribeChannelSubscribeRequest(broadCasterUserId);
-            builder.CreateSubscribeChannelFollowRequest(broadCasterUserId);
+            var moderatorUserId = "23456";
+            builder.CreateAllSubscriptionRequests(broadCasterUserId, moderatorUserId);
+            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
 
-            var subscriptions = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
-
-            Assert.AreEqual(SubscriptionType.ChannelSubscribe, subscriptions[0].SubscriptionType);
-            Assert.AreEqual(sessionId, subscriptions[0].SessionId);
-            Assert.AreEqual(broadCasterUserId, subscriptions[0].Condition.BroadcasterUserId);
-            Assert.AreEqual(SubscriptionType.ChannelFollow, subscriptions[1].SubscriptionType);
-            Assert.AreEqual(sessionId, subscriptions[1].SessionId);
-            Assert.AreEqual(broadCasterUserId, subscriptions[1].Condition.BroadcasterUserId);
+            Assert.AreEqual(4, requests.Length);
         }
     }
 }
