@@ -28,13 +28,13 @@ namespace UniTwitchClient.EventSub.Api
         private const string API_DEBUG_URL = "http://localhost:8080/eventsub/subscriptions";
         private const string API_URL = "https://api.twitch.tv/helix/eventsub/subscriptions";
 
-        private EventSubSubscribeRequestBuilder _subscriptionBuilder;
+        private EventSubSubscribeRequestBuilder _eventSubSubscribeRequestBuilder;
         private ApiCredentials _apiCredentials;
         private bool _debugMode;
 
         public TwitchEventSubApiClient(ApiCredentials apiCredentials)
         {
-            _subscriptionBuilder = new EventSubSubscribeRequestBuilder();
+            _eventSubSubscribeRequestBuilder = new EventSubSubscribeRequestBuilder();
             _apiCredentials = apiCredentials;
         }
 
@@ -45,13 +45,13 @@ namespace UniTwitchClient.EventSub.Api
 
         public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId, CancellationToken cancellationToken = default)
         {
-            _subscriptionBuilder.CreateAllRequests(broadcasterUserId, moderatorUserId);
-            var subscriptions = _subscriptionBuilder.BuildRequestsWithSessionId(sessionId);
+            _eventSubSubscribeRequestBuilder.CreateAllRequests(broadcasterUserId, moderatorUserId);
+            var requests = _eventSubSubscribeRequestBuilder.BuildRequestsWithSessionId(sessionId);
 
             List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
-            foreach (var subscription in subscriptions)
+            foreach (var request in requests)
             {
-                unityWebRequests.Add(CreateEventSubSubscriptionRequest(subscription));
+                unityWebRequests.Add(CreateEventSubSubscriptionRequest(request));
             }
 
             var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask(cancellationToken: cancellationToken));
