@@ -9,6 +9,7 @@ using UnityEngine.Playables;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniTwitchClient.Tests.EventSub;
+using UniTwitchClient.EventSub.Converters;
 
 namespace UniTwitchClient.EventSub
 {

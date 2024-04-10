@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine;
 
-namespace UniTwitchClient.EventSub
+namespace UniTwitchClient.EventSub.Converters
 {
     public class ChannelFollowConverter : INotificationConverter
     {

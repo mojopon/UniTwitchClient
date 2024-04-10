@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniTwitchClient.EventSub;
+using UniTwitchClient.EventSub.Converters;
 using UniTwitchClient.EventSub.WebSocket;
 using UnityEngine;
 
