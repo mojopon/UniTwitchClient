@@ -54,6 +54,19 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
+        public void SubscribeChannelPointsCustomRewardRedemptionAddRequest()
+        {
+            var broadCasterUserId = "12345";
+            builder.CreateSubscribeChannelPointsCustomRewardRedemptionAddRequest(broadCasterUserId);
+
+            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+
+            Assert.AreEqual(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, requests[0].SubscriptionType);
+            Assert.AreEqual(sessionId, requests[0].SessionId);
+            Assert.AreEqual(broadCasterUserId, requests[0].Condition.BroadcasterUserId);
+        }
+
+        [Test]
         public void SubscribeAllTest()
         {
             var broadCasterUserId = "12345";
