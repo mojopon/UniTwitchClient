@@ -3,7 +3,7 @@ using UniTwitchClient.EventSub.Api;
 
 namespace UniTwitchClient.Tests.EventSub.Api
 {
-    public class SubscriptionBuilderTest
+    public class EventSubSubscribeRequestBuilderTest
     {
         private EventSubSubscribeRequestBuilder builder;
         private const string sessionId = "AQoQILE98gtqShGmLD7AM6yJThAB";
