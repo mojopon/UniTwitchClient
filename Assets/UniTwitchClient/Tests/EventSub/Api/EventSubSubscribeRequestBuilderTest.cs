@@ -18,9 +18,9 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelFollowTest()
         {
             var broadCasterUserId = "12345";
-            builder.CreateSubscribeChannelFollowRequest(broadCasterUserId);
+            builder.CreateChannelFollowRequest(broadCasterUserId);
 
-            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelFollow, requests[0].SubscriptionType);
             Assert.AreEqual(sessionId, requests[0].SessionId);
@@ -31,9 +31,9 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelSubscribeTest()
         {
             var broadCasterUserId = "12345";
-            builder.CreateSubscribeChannelSubscribeRequest(broadCasterUserId);
+            builder.CreateChannelSubscribeRequest(broadCasterUserId);
 
-            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelSubscribe, requests[0].SubscriptionType);
             Assert.AreEqual(sessionId, requests[0].SessionId);
@@ -44,9 +44,9 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelSubscriptionMessageTest() 
         {
             var broadCasterUserId = "12345";
-            builder.CreateSubscribeChannelSubscriptionMessage(broadCasterUserId);
+            builder.CreateChannelSubscriptionMessage(broadCasterUserId);
 
-            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelSubscriptionMessage, requests[0].SubscriptionType);
             Assert.AreEqual(sessionId, requests[0].SessionId);
@@ -57,9 +57,9 @@ namespace UniTwitchClient.Tests.EventSub.Api
         public void SubscribeChannelPointsCustomRewardRedemptionAddRequest()
         {
             var broadCasterUserId = "12345";
-            builder.CreateSubscribeChannelPointsCustomRewardRedemptionAddRequest(broadCasterUserId);
+            builder.CreateChannelPointsCustomRewardRedemptionAddRequest(broadCasterUserId);
 
-            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, requests[0].SubscriptionType);
             Assert.AreEqual(sessionId, requests[0].SessionId);
@@ -71,8 +71,8 @@ namespace UniTwitchClient.Tests.EventSub.Api
         {
             var broadCasterUserId = "12345";
             var moderatorUserId = "23456";
-            builder.CreateAllSubscriptionRequests(broadCasterUserId, moderatorUserId);
-            var requests = builder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            builder.CreateAllRequests(broadCasterUserId, moderatorUserId);
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
 
             Assert.AreEqual(4, requests.Length);
         }

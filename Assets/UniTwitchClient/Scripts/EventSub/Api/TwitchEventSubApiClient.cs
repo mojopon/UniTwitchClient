@@ -45,8 +45,8 @@ namespace UniTwitchClient.EventSub.Api
 
         public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, string moderatorUserId, CancellationToken cancellationToken = default)
         {
-            _subscriptionBuilder.CreateAllSubscriptionRequests(broadcasterUserId, moderatorUserId);
-            var subscriptions = _subscriptionBuilder.GetEventSubSubscribeRequestsWithSessionId(sessionId);
+            _subscriptionBuilder.CreateAllRequests(broadcasterUserId, moderatorUserId);
+            var subscriptions = _subscriptionBuilder.BuildRequestsWithSessionId(sessionId);
 
             List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
             foreach (var subscription in subscriptions)
