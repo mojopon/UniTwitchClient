@@ -18,6 +18,8 @@ namespace UniTwitchClient.EventSub.WebSocket.Models.Raws
         public string broadcaster_user_login;
         public string broadcaster_user_name;
 
+        public message message;
+
         public reward reward;
 
         // Channel Follow Event

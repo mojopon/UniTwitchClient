@@ -11,6 +11,8 @@ namespace UniTwitchClient.EventSub.WebSocket
         public DateTime MessageTimeStamp { get; set; }
         public SubscriptionType SubscriptionType { get; set; }
 
+        public Message Message { get; set; }
+
         public string BroadCasterUserId { get; set; }
         public string BroadCasterUserLogin { get; set; }
         public string BroadCasterUserName { get; set; }
