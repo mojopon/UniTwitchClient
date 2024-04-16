@@ -75,6 +75,23 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertChannelSubscriptionMessageToNotificationTest() 
+        {
+            string data = "{\"metadata\":{\"message_id\":\"da8a86e6-d75c-4ac4-7150-4dd09588a92f\",\"message_type\":\"notification\",\"message_timestamp\":\"2024-04-16T05:47:31.4499994Z\",\"subscription_type\":\"channel.subscription.message\",\"subscription_version\":\"1\"},\"payload\":{\"subscription\":{\"id\":\"44cfc4e8-2dc5-9d66-a39e-bca631cf8ee5\",\"status\":\"enabled\",\"type\":\"channel.subscription.message\",\"version\":\"1\",\"condition\":{\"broadcaster_user_id\":\"31200102\"},\"transport\":{\"method\":\"websocket\",\"session_id\":\"4f376e8e_f85c8dd2\"},\"created_at\":\"2024-04-16T05:47:17.2429992Z\",\"cost\":0},\"event\":{\"broadcaster_user_id\":\"31200102\",\"broadcaster_user_login\":\"testBroadcaster\",\"broadcaster_user_name\":\"testBroadcaster\",\"cumulative_months\":79,\"duration_months\":1,\"message\":{\"emotes\":[{\"begin\":26,\"end\":39,\"id\":\"304456816\"}],\"text\":\"Hello from the Twitch CLI! twitchdevLeek\"},\"streak_months\":79,\"tier\":\"1000\",\"user_id\":\"93642253\",\"user_login\":\"testFromUser\",\"user_name\":\"testFromUser\"}}}";
+            var rawModel = JsonWrapper.ConvertFromJson<notification_raw>(data);
+            var model = rawModel.ConvertRawToModel();
+
+            Assert.AreEqual("notification", model.MessageType);
+            Assert.AreEqual("channel.subscription.message", model.SubscriptionType.ToName());
+            Assert.AreEqual("93642253", model.UserId);
+            Assert.AreEqual("testFromUser", model.UserLogin);
+            Assert.AreEqual("testFromUser", model.UserName);
+            Assert.AreEqual("31200102", model.BroadCasterUserId);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserLogin);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
+        }
+
+        [Test]
         public void ConvertChannelPointsCustomRewardRedemptionAddToNotificationTest() 
         {
             string data = "{\"metadata\":{\"message_id\":\"247cedf0-ad59-0399-990c-affd423a2acd\",\"message_type\":\"notification\",\"message_timestamp\":\"2024-03-08T07:58:04.2650485Z\",\"subscription_type\":\"channel.channel_points_custom_reward_redemption.add\",\"subscription_version\":\"1\"},\"payload\":{\"subscription\":{\"id\":\"860a5ef8-8288-2d61-0e72-a73258dc8fc8\",\"status\":\"enabled\",\"type\":\"channel.channel_points_custom_reward_redemption.add\",\"version\":\"1\",\"condition\":{\"broadcaster_user_id\":\"86630555\"},\"transport\":{\"method\":\"websocket\",\"session_id\":\"e3ffe25e_dfd480b9\"},\"created_at\":\"2024-03-08T07:57:55.66569Z\",\"cost\":0},\"event\":{\"broadcaster_user_id\":\"86630555\",\"broadcaster_user_login\":\"testBroadcaster\",\"broadcaster_user_name\":\"testBroadcaster\",\"id\":\"860a5ef8-8288-2d61-0e72-a73258dc8fc8\",\"redeemed_at\":\"2024-03-08T07:58:04.2444073Z\",\"reward\":{\"cost\":150,\"id\":\"d53ad741-f148-4a29-2e7f-355fffe73563\",\"prompt\":\"RedeemYourTestRewardfromCLI\",\"title\":\"TestRewardfromCLI\"},\"status\":\"unfulfilled\",\"user_id\":\"71310683\",\"user_input\":\"TestInputFromCLI\",\"user_login\":\"testFromUser\",\"user_name\":\"testFromUser\"}}}";
