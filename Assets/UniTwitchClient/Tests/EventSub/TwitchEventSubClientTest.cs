@@ -106,10 +106,10 @@ namespace UniTwitchClient.Tests.EventSub
         [Test]
         public void ReceiveChannelFollowTest() 
         {
-            ChannelFollow channelFollow = null;
+            ChannelFollow result = null;
             _client.OnChannelFollowAsObservable.Subscribe(x => 
             {
-                channelFollow = x; 
+                result = x; 
             });
 
             var notification = new Notification()
@@ -125,25 +125,25 @@ namespace UniTwitchClient.Tests.EventSub
             };
             _wsClient.ReceiveNotification(notification);
 
-            Assert.IsNotNull(channelFollow);
-            Assert.AreEqual("1234", channelFollow.UserId);
-            Assert.AreEqual("cool_user", channelFollow.UserLogin);
-            Assert.AreEqual("Cool_User", channelFollow.UserName);
-            Assert.AreEqual("1337", channelFollow.BroadcasterUserId);
-            Assert.AreEqual("cooler_user", channelFollow.BroadcasterUserLogin);
-            Assert.AreEqual("Cooler_User", channelFollow.BroadcasterUserName);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("1234", result.UserId);
+            Assert.AreEqual("cool_user", result.UserLogin);
+            Assert.AreEqual("Cool_User", result.UserName);
+            Assert.AreEqual("1337", result.BroadcasterUserId);
+            Assert.AreEqual("cooler_user", result.BroadcasterUserLogin);
+            Assert.AreEqual("Cooler_User", result.BroadcasterUserName);
 
             var targetTime = new DateTime(2023, 12, 21, 23, 54, 12);
-            Assert.AreEqual(0, targetTime.CompareTo(channelFollow.FollowedAt));
+            Assert.AreEqual(0, targetTime.CompareTo(result.FollowedAt));
         }
 
         [Test]
         public void ReceiveChannelSubscribeTest() 
         {
-            ChannelSubscribe channelSubscribe = null;
+            ChannelSubscribe result = null;
             _client.OnChannelSubscribeAsObservable.Subscribe(x =>
             {
-                channelSubscribe = x;
+                result = x;
             });
 
             var notification = new Notification()
@@ -160,13 +160,15 @@ namespace UniTwitchClient.Tests.EventSub
             };
             _wsClient.ReceiveNotification(notification);
 
-            Assert.IsNotNull(channelSubscribe);
-            Assert.AreEqual("1234", channelSubscribe.UserId);
-            Assert.AreEqual("cool_user", channelSubscribe.UserLogin);
-            Assert.AreEqual("Cool_User", channelSubscribe.UserName);
-            Assert.AreEqual("1337", channelSubscribe.BroadcasterUserId);
-            Assert.AreEqual("cooler_user", channelSubscribe.BroadcasterUserLogin);
-            Assert.AreEqual("Cooler_User", channelSubscribe.BroadcasterUserName);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("1234", result.UserId);
+            Assert.AreEqual("cool_user", result.UserLogin);
+            Assert.AreEqual("Cool_User", result.UserName);
+            Assert.AreEqual("1337", result.BroadcasterUserId);
+            Assert.AreEqual("cooler_user", result.BroadcasterUserLogin);
+            Assert.AreEqual("Cooler_User", result.BroadcasterUserName);
+            Assert.AreEqual("1000", result.Tier);
+            Assert.AreEqual(true, result.IsGift);
         }
 
         [Test]
@@ -224,10 +226,10 @@ namespace UniTwitchClient.Tests.EventSub
         [Test]
         public void ReceiveChannelPointsCustomRewardRedemptionAddTest() 
         {
-            ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd = null;
+            ChannelPointsCustomRewardRedemptionAdd result = null;
             _client.OnChannelPointsCustomRewardRedemptionAddAsObservable.Subscribe(x =>
             {
-                channelPointsCustomRewardRedemptionAdd = x;
+                result = x;
             });
 
             var notification = new Notification()
@@ -246,23 +248,23 @@ namespace UniTwitchClient.Tests.EventSub
             };
             _wsClient.ReceiveNotification(notification);
 
-            Assert.IsNotNull(channelPointsCustomRewardRedemptionAdd);
-            Assert.AreEqual("71310683", channelPointsCustomRewardRedemptionAdd.UserId);
-            Assert.AreEqual("testFromUser", channelPointsCustomRewardRedemptionAdd.UserName);
-            Assert.AreEqual("testFromUser", channelPointsCustomRewardRedemptionAdd.UserLogin);
-            Assert.AreEqual("86630555", channelPointsCustomRewardRedemptionAdd.BroadcasterUserId);
-            Assert.AreEqual("testBroadcaster", channelPointsCustomRewardRedemptionAdd.BroadcasterUserName);
-            Assert.AreEqual("testBroadcaster", channelPointsCustomRewardRedemptionAdd.BroadcasterUserLogin);
-            Assert.AreEqual(150, channelPointsCustomRewardRedemptionAdd.RewardCost);
-            Assert.AreEqual("RedeemYourTestRewardfromCLI", channelPointsCustomRewardRedemptionAdd.RewardPrompt);
-            Assert.AreEqual("TestRewardfromCLI", channelPointsCustomRewardRedemptionAdd.RewardTitle);
+            Assert.IsNotNull(result);
+            Assert.AreEqual("71310683", result.UserId);
+            Assert.AreEqual("testFromUser", result.UserName);
+            Assert.AreEqual("testFromUser", result.UserLogin);
+            Assert.AreEqual("86630555", result.BroadcasterUserId);
+            Assert.AreEqual("testBroadcaster", result.BroadcasterUserName);
+            Assert.AreEqual("testBroadcaster", result.BroadcasterUserLogin);
+            Assert.AreEqual(150, result.RewardCost);
+            Assert.AreEqual("RedeemYourTestRewardfromCLI", result.RewardPrompt);
+            Assert.AreEqual("TestRewardfromCLI", result.RewardTitle);
 
-            Assert.AreEqual(2024, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Year);
-            Assert.AreEqual(3, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Month);
-            Assert.AreEqual(8, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Day);
-            Assert.AreEqual(7, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Hour);
-            Assert.AreEqual(58, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Minute);
-            Assert.AreEqual(4, channelPointsCustomRewardRedemptionAdd.RedeemedAt.Second);
+            Assert.AreEqual(2024, result.RedeemedAt.Year);
+            Assert.AreEqual(3, result.RedeemedAt.Month);
+            Assert.AreEqual(8, result.RedeemedAt.Day);
+            Assert.AreEqual(7, result.RedeemedAt.Hour);
+            Assert.AreEqual(58, result.RedeemedAt.Minute);
+            Assert.AreEqual(4, result.RedeemedAt.Second);
         }
 
         [Test]
