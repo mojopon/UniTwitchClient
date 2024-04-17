@@ -13,6 +13,7 @@ namespace UniTwitchClient.EventSub
     {
         public IObservable<ChannelFollow> OnChannelFollowAsObservable { get; private set; }
         public IObservable<ChannelSubscribe> OnChannelSubscribeAsObservable { get; private set; }
+        public IObservable<ChannelSubscriptionMessage> OnChannelSubscriptionMessageAsObservable { get; private set; }
         public IObservable<ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
@@ -118,6 +119,7 @@ namespace UniTwitchClient.EventSub
         {
             OnChannelFollowAsObservable = _subjectComposition.CreateSubject<ChannelFollow>(SubscriptionType.ChannelFollow.ToString()).AsObservable();
             OnChannelSubscribeAsObservable = _subjectComposition.CreateSubject<ChannelSubscribe>(SubscriptionType.ChannelSubscribe.ToString()).AsObservable();
+            OnChannelSubscriptionMessageAsObservable = _subjectComposition.CreateSubject<ChannelSubscriptionMessage>(SubscriptionType.ChannelSubscriptionMessage.ToString()).AsObservable();
             OnChannelPointsCustomRewardRedemptionAddAsObservable = _subjectComposition.CreateSubject<ChannelPointsCustomRewardRedemptionAdd>(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd.ToString()).AsObservable();
             OnErrorAsObservable = _subjectComposition.CreateSubject<Exception>("Exception").AsObservable();
 
