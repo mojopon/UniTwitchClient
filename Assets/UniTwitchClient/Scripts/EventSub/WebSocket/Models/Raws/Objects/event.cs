@@ -22,6 +22,11 @@ namespace UniTwitchClient.EventSub.WebSocket.Models.Raws
 
         public reward reward;
 
+        // Channel Subscription Message Event
+        public int cumulative_months;
+        public int streak_months;
+        public int duration_months;
+
         // Channel Follow Event
         public string followed_at;
 

@@ -170,6 +170,12 @@ namespace UniTwitchClient.Tests.EventSub
         }
 
         [Test]
+        public void ReceiveChannelSubscriptionMessageTest() 
+        {
+
+        }
+
+        [Test]
         public void ReceiveChannelPointsCustomRewardRedemptionAddTest() 
         {
             ChannelPointsCustomRewardRedemptionAdd channelPointsCustomRewardRedemptionAdd = null;

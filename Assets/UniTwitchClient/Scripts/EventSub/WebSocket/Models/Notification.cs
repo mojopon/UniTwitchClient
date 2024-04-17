@@ -20,7 +20,12 @@ namespace UniTwitchClient.EventSub.WebSocket
         public string UserLogin { get; set; }
         public string UserName { get; set; }
 
-        // Channel Follow Events
+        // Channel Subscription Message Event
+        public int CumulativeMonths { get; set; }
+        public int StreakMonths { get; set; }
+        public int DurationMonths { get; set; }
+
+        // Channel Follow Event
         public DateTime FollowedAt { get; set; }
 
         // Reward
@@ -29,7 +34,7 @@ namespace UniTwitchClient.EventSub.WebSocket
         public int RewardCost { get; set; }
         public string RewardPrompt { get; set; }
 
-        // Channel Subscribe Events
+        // Channel Subscribe Event
         public string Tier { get; set; }
         public bool IsGift { get; set; }
 

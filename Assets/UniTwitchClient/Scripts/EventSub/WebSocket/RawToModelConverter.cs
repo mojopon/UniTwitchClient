@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Xml;
@@ -76,6 +78,9 @@ namespace UniTwitchClient.EventSub.WebSocket
                 notification.BroadCasterUserName = eventSource.broadcaster_user_name;
                 notification.BroadCasterUserLogin = eventSource.broadcaster_user_login;
                 notification.FollowedAt = ParseDateTime(eventSource.followed_at);
+                notification.CumulativeMonths = eventSource.cumulative_months;
+                notification.StreakMonths = eventSource.streak_months;
+                notification.DurationMonths = eventSource.duration_months;
 
                 if (eventSource.reward != null)
                 {
@@ -83,6 +88,30 @@ namespace UniTwitchClient.EventSub.WebSocket
                     notification.RewardTitle = eventSource.reward.title;
                     notification.RewardPrompt = eventSource.reward.prompt;
                     notification.RewardCost = eventSource.reward.cost;
+                }
+
+                if (eventSource.message != null) 
+                {
+                    notification.Message = new Message()
+                    {
+                        Text = eventSource.message.text
+                    };
+
+                    if (eventSource.message.emotes != null)
+                    {
+                        List<Emote> emotes = new List<Emote>();
+                        foreach (var emote in eventSource.message.emotes)
+                        {
+                            emotes.Add(new Emote()
+                            {
+                                Begin = emote.begin,
+                                End = emote.end,
+                                Id = emote.id,
+                            });
+                        }
+
+                        notification.Message.Emotes = emotes;
+                    }
                 }
 
                 notification.RedeemedAt = ParseDateTime(eventSource.redeemed_at);

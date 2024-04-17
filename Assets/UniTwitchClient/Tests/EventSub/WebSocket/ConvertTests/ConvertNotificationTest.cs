@@ -89,6 +89,17 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
             Assert.AreEqual("31200102", model.BroadCasterUserId);
             Assert.AreEqual("testBroadcaster", model.BroadCasterUserLogin);
             Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
+
+            Assert.AreEqual("Hello from the Twitch CLI! twitchdevLeek", model.Message.Text);
+
+            Assert.AreEqual(1, model.Message.Emotes.Count);
+            Assert.AreEqual(26, model.Message.Emotes[0].Begin);
+            Assert.AreEqual(39, model.Message.Emotes[0].End);
+            Assert.AreEqual("304456816", model.Message.Emotes[0].Id);
+
+            Assert.AreEqual(79, model.CumulativeMonths);
+            Assert.AreEqual(1, model.DurationMonths);
+            Assert.AreEqual(79, model.StreakMonths);
         }
 
         [Test]
