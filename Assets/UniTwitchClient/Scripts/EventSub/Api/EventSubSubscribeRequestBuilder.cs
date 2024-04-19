@@ -14,6 +14,7 @@ namespace UniTwitchClient.EventSub.Api
             CreateChannelFollowRequest(broadcasterUserId, moderatorUserId);
             CreateChannelSubscribeRequest(broadcasterUserId);
             CreateChannelSubscriptionMessage(broadcasterUserId);
+            CreateChannelCheerRequest(broadcasterUserId);
             CreateChannelPointsCustomRewardRedemptionAddRequest(broadcasterUserId);
         }
 
@@ -40,6 +41,13 @@ namespace UniTwitchClient.EventSub.Api
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelSubscriptionMessage, condition);
+            _requests.Add(subscription);
+        }
+
+        public void CreateChannelCheerRequest(string broadcasterUserId) 
+        {
+            var condition = CreateCondition(broadcasterUserId, "", "", "", "");
+            var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelCheer, condition);
             _requests.Add(subscription);
         }
 

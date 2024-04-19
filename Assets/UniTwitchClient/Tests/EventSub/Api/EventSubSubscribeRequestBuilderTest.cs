@@ -55,6 +55,19 @@ namespace UniTwitchClient.Tests.EventSub.Api
         }
 
         [Test]
+        public void CreateChannelCheerTest()
+        {
+            var broadCasterUserId = "12345";
+            builder.CreateChannelCheerRequest(broadCasterUserId);
+
+            var requests = builder.BuildRequestsWithSessionId(sessionId);
+
+            Assert.AreEqual(SubscriptionType.ChannelCheer, requests[0].SubscriptionType);
+            Assert.AreEqual(sessionId, requests[0].SessionId);
+            Assert.AreEqual(broadCasterUserId, requests[0].Condition.BroadcasterUserId);
+        }
+
+        [Test]
         public void CreateChannelPointsCustomRewardRedemptionAddRequest()
         {
             var broadCasterUserId = "12345";
@@ -75,10 +88,11 @@ namespace UniTwitchClient.Tests.EventSub.Api
             builder.CreateAllRequests(broadCasterUserId, moderatorUserId);
             var requests = builder.BuildRequestsWithSessionId(sessionId);
 
-            Assert.AreEqual(4, requests.Length);
+            Assert.AreEqual(5, requests.Length);
             Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelFollow));
             Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelSubscribe));
             Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelSubscriptionMessage));
+            Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelCheer));
             Assert.IsTrue(requests.Select(x => x.SubscriptionType).Contains(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd));
         }
     }
