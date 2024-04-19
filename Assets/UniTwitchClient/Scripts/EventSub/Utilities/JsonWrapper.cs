@@ -9,7 +9,9 @@ namespace UniTwitchClient.EventSub
     {
         public static T ConvertFromJson<T>(string data) where T : class
         {
-            return JsonConvert.DeserializeObject<T>(data);
+            var settings = new JsonSerializerSettings();
+            settings.Converters.Add(new MessageConverter());
+            return JsonConvert.DeserializeObject<T>(data, settings);
         }
 
         public static string ConvertToJson(object obj)
