@@ -1,0 +1,31 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace UniTwitchClient.EventSub
+{
+    public class ChannelCheer
+    {
+        public string UserId { get; private set; }
+        public string UserName { get; private set; }
+        public string UserLogin { get; private set; }
+        public string BroadcasterUserId { get; private set; }
+        public string BroadcasterUserLogin { get; private set; }
+        public string BroadcasterUserName { get; private set; }
+        public string Message { get; private set; }
+        public int Bits { get; private set; }
+
+        public ChannelCheer(string userId, string userName, string userLogin, string broadcasterUserId, string broadcasterUserName, string broadcasterUserLogin, string message, int bits)
+        {
+            UserId = userId;
+            UserName = userName;
+            UserLogin = userLogin;
+            BroadcasterUserId = broadcasterUserId;
+            BroadcasterUserName = broadcasterUserName;
+            BroadcasterUserLogin = broadcasterUserLogin;
+            Message = message;
+            Bits = bits;
+        }
+    }
+}
