@@ -81,6 +81,7 @@ namespace UniTwitchClient.EventSub.WebSocket
                 notification.CumulativeMonths = eventSource.cumulative_months;
                 notification.StreakMonths = eventSource.streak_months;
                 notification.DurationMonths = eventSource.duration_months;
+                notification.Bits = eventSource.bits;
 
                 if (eventSource.reward != null)
                 {

@@ -20,6 +20,9 @@ namespace UniTwitchClient.EventSub.WebSocket
         public string UserLogin { get; set; }
         public string UserName { get; set; }
 
+        // Channel Cheer Event
+        public int Bits { get; set; }
+
         // Channel Subscription Message Event
         public int CumulativeMonths { get; set; }
         public int StreakMonths { get; set; }
