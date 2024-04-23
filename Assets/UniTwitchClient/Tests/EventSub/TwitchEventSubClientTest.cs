@@ -224,6 +224,46 @@ namespace UniTwitchClient.Tests.EventSub
         }
 
         [Test]
+        public void ReceiveChannelCheerTest() 
+        {
+            ChannelCheer result = null;
+            _client.OnChannelCheerAsObservable.Subscribe(x =>
+            {
+                result = x;
+            });
+
+            var notification = new Notification()
+            {
+                SubscriptionType = SubscriptionType.ChannelCheer,
+                UserId = "1234",
+                UserLogin = "testUserLogin",
+                UserName = "testUserName",
+                BroadCasterUserId = "2345",
+                BroadCasterUserLogin = "broadcasterUserLogin",
+                BroadCasterUserName = "broadcasterUserName",
+                Message = new Message()
+                {
+                    Text = "This is a test event.",
+                },
+                Bits = 100,
+            };
+            _wsClient.ReceiveNotification(notification);
+
+            Assert.IsNotNull(result);
+
+            Assert.AreEqual("1234", result.UserId);
+            Assert.AreEqual("testUserLogin", result.UserLogin);
+            Assert.AreEqual("testUserName", result.UserName);
+
+            Assert.AreEqual("2345", result.BroadcasterUserId);
+            Assert.AreEqual("broadcasterUserLogin", result.BroadcasterUserLogin);
+            Assert.AreEqual("broadcasterUserName", result.BroadcasterUserName);
+
+            Assert.AreEqual(100, result.Bits);
+            Assert.AreEqual("This is a test event.", result.Message);
+        }
+
+        [Test]
         public void ReceiveChannelPointsCustomRewardRedemptionAddTest() 
         {
             ChannelPointsCustomRewardRedemptionAdd result = null;

@@ -15,6 +15,7 @@ namespace UniTwitchClient.EventSub.Converters
             converterDictionary.Add(SubscriptionType.ChannelFollow, new ChannelFollowConverter());
             converterDictionary.Add(SubscriptionType.ChannelSubscribe, new ChannelSubscribeConverter());
             converterDictionary.Add(SubscriptionType.ChannelSubscriptionMessage, new ChannelSubscriptionMessageConverter());
+            converterDictionary.Add(SubscriptionType.ChannelCheer, new ChannelCheerConverter());
             converterDictionary.Add(SubscriptionType.ChannelPointsCustomRewardRedemptionAdd, new ChannelPointsCustomRewardRedemptionAddConverter());
         }
 
