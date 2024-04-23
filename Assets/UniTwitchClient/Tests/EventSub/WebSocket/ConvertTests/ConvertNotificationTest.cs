@@ -94,6 +94,26 @@ namespace UniTwitchClient.Tests.EventSub.WebSocket
         }
 
         [Test]
+        public void ConvertAnonymousChannelCheerToNotificationTest()
+        {
+            string data = "{\"metadata\":{\"message_id\":\"80d7f179-1e9e-d612-bc91-559b22b9ad48\",\"message_type\":\"notification\",\"message_timestamp\":\"2024-04-19T05:15:45.0593436Z\",\"subscription_type\":\"channel.cheer\",\"subscription_version\":\"1\"},\"payload\":{\"subscription\":{\"id\":\"eccc42b6-8961-3fc0-0f53-5a283a2125e5\",\"status\":\"enabled\",\"type\":\"channel.cheer\",\"version\":\"1\",\"condition\":{\"broadcaster_user_id\":\"78255695\"},\"transport\":{\"method\":\"websocket\",\"session_id\":\"0e9a70d0_f0fc0f90\"},\"created_at\":\"2024-04-19T05:14:57.3153474Z\",\"cost\":0},\"event\":{\"bits\":100,\"broadcaster_user_id\":\"78255695\",\"broadcaster_user_login\":\"testBroadcaster\",\"broadcaster_user_name\":\"testBroadcaster\",\"is_anonymous\":true,\"message\":\"This is a test event.\",\"user_id\":null,\"user_login\":null,\"user_name\":null}}}"; 
+            var rawModel = JsonWrapper.ConvertFromJson<notification_raw>(data);
+            var model = rawModel.ConvertRawToModel();
+
+            Assert.IsTrue(model.IsAnonymous);
+            Assert.AreEqual("notification", model.MessageType);
+            Assert.AreEqual("channel.cheer", model.SubscriptionType.ToName());
+            Assert.IsNull(model.UserId);
+            Assert.IsNull(model.UserLogin);
+            Assert.IsNull(model.UserName);
+            Assert.AreEqual("78255695", model.BroadCasterUserId);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserLogin);
+            Assert.AreEqual("testBroadcaster", model.BroadCasterUserName);
+            Assert.AreEqual(100, model.Bits);
+            Assert.AreEqual("This is a test event.", model.Message.Text);
+        }
+
+        [Test]
         public void ConvertChannelSubscriptionMessageToNotificationTest() 
         {
             string data = "{\"metadata\":{\"message_id\":\"da8a86e6-d75c-4ac4-7150-4dd09588a92f\",\"message_type\":\"notification\",\"message_timestamp\":\"2024-04-16T05:47:31.4499994Z\",\"subscription_type\":\"channel.subscription.message\",\"subscription_version\":\"1\"},\"payload\":{\"subscription\":{\"id\":\"44cfc4e8-2dc5-9d66-a39e-bca631cf8ee5\",\"status\":\"enabled\",\"type\":\"channel.subscription.message\",\"version\":\"1\",\"condition\":{\"broadcaster_user_id\":\"31200102\"},\"transport\":{\"method\":\"websocket\",\"session_id\":\"4f376e8e_f85c8dd2\"},\"created_at\":\"2024-04-16T05:47:17.2429992Z\",\"cost\":0},\"event\":{\"broadcaster_user_id\":\"31200102\",\"broadcaster_user_login\":\"testBroadcaster\",\"broadcaster_user_name\":\"testBroadcaster\",\"cumulative_months\":79,\"duration_months\":1,\"message\":{\"emotes\":[{\"begin\":26,\"end\":39,\"id\":\"304456816\"}],\"text\":\"Hello from the Twitch CLI! twitchdevLeek\"},\"streak_months\":79,\"tier\":\"1000\",\"user_id\":\"93642253\",\"user_login\":\"testFromUser\",\"user_name\":\"testFromUser\"}}}";

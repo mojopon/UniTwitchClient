@@ -20,6 +20,8 @@ namespace UniTwitchClient.EventSub.WebSocket
         public string UserLogin { get; set; }
         public string UserName { get; set; }
 
+        public bool IsAnonymous { get; set; }
+
         // Channel Cheer Event
         public int Bits { get; set; }
 

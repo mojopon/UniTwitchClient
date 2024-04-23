@@ -77,6 +77,7 @@ namespace UniTwitchClient.EventSub.WebSocket
                 notification.BroadCasterUserId = eventSource.broadcaster_user_id;
                 notification.BroadCasterUserName = eventSource.broadcaster_user_name;
                 notification.BroadCasterUserLogin = eventSource.broadcaster_user_login;
+                notification.IsAnonymous = eventSource.is_anonymous;
                 notification.FollowedAt = ParseDateTime(eventSource.followed_at);
                 notification.CumulativeMonths = eventSource.cumulative_months;
                 notification.StreakMonths = eventSource.streak_months;

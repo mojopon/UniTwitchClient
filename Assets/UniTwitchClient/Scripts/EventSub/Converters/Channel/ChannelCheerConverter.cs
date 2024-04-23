@@ -9,7 +9,8 @@ namespace UniTwitchClient.EventSub.Converters
     {
         public object Convert(Notification notification)
         {
-            return new ChannelCheer(notification.UserId,
+            return new ChannelCheer(notification.IsAnonymous,
+                                    notification.UserId,
                                     notification.UserName,
                                     notification.UserLogin,
                                     notification.BroadCasterUserId,

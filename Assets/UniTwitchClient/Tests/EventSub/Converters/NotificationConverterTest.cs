@@ -160,6 +160,42 @@ namespace UniTwitchClient.Tests.EventSub
         }
 
         [Test]
+        public void ConvertAnonymousChannelCheerTest()
+        {
+            var notification = new Notification()
+            {
+                IsAnonymous = true,
+                UserId = null,
+                UserLogin =  null,
+                UserName = null,
+                BroadCasterUserId = "2345",
+                BroadCasterUserLogin = "broadcasterUserLogin",
+                BroadCasterUserName = "broadcasterUserName",
+                Message = new Message()
+                {
+                    Text = "This is a test event.",
+                },
+                Bits = 100,
+            };
+
+            var converter = new ChannelCheerConverter();
+            var result = converter.Convert(notification) as ChannelCheer;
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.IsAnonymous);
+            Assert.IsNull(result.UserId);
+            Assert.IsNull(result.UserLogin);
+            Assert.IsNull(result.UserName);
+
+            Assert.AreEqual("2345", result.BroadcasterUserId);
+            Assert.AreEqual("broadcasterUserLogin", result.BroadcasterUserLogin);
+            Assert.AreEqual("broadcasterUserName", result.BroadcasterUserName);
+
+            Assert.AreEqual(100, result.Bits);
+            Assert.AreEqual("This is a test event.", result.Message);
+        }
+
+        [Test]
         public void ConvertChannelPointsCustomRewardRedemptionAddTest()
         {
             var dateTime = new DateTime(2000, 8, 1);
