@@ -31,8 +31,8 @@ namespace UniTwitchClient.Chat
         private CancellationTokenSource _cts;
         private CancellationToken _ct;
 
-        private IrcCredentials _credentials;
-        public TwitchIrcClient(IrcCredentials credentials) 
+        private TwitchIrcCredentials _credentials;
+        public TwitchIrcClient(TwitchIrcCredentials credentials) 
         {
             _credentials = credentials;
         }

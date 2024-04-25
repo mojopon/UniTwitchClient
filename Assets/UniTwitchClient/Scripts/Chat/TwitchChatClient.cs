@@ -33,15 +33,15 @@ namespace UniTwitchClient.Chat
         private ConnectionState _state = ConnectionState.Idle;
 
         private ITwitchIrcClient _client;
-        private IrcCredentials _ircCredentials;
+        private TwitchIrcCredentials _ircCredentials;
 
         private CompositeDisposable _disposables = new CompositeDisposable();
 
-        public TwitchChatClient(ConnectionCredentials credentials) : this(credentials, null) { }
+        public TwitchChatClient(TwitchIrcCredentials credentials) : this(credentials, null) { }
 
-        public TwitchChatClient(ConnectionCredentials credentials, ITwitchIrcClient client = null)
+        public TwitchChatClient(TwitchIrcCredentials credentials, ITwitchIrcClient client = null)
         {
-            _ircCredentials = credentials.ToIrcCredentials();
+            _ircCredentials = credentials;
 
             _disposables.Add(_onTwitchChatMessageSubject);
             _disposables.Add(_onMessageRawSubject);

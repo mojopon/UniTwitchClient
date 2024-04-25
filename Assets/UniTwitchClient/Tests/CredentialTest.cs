@@ -13,18 +13,10 @@ namespace UniTwitchClient.Tests
         private string userAccessToken = "1wteiz6quzbjfpr9sbv7pdqpja7jqr";
         private string clientId = "qmsa7usjzdisgavghu1tirlzhzw98n";
 
-        private ConnectionCredentials _connectionCredentials;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _connectionCredentials = new ConnectionCredentials(userAccessToken, userName, clientId);
-        }
-
         [Test]
         public void ConnectionCredentialsToApiCredentialsTest()
         {
-            var apiCredentials = _connectionCredentials.ToApiCredentials();
+            var apiCredentials = new TwitchApiCredentials(userAccessToken, clientId);
 
             Assert.AreEqual("Bearer 1wteiz6quzbjfpr9sbv7pdqpja7jqr", apiCredentials.AuthorizationBearer);
             Assert.AreEqual("qmsa7usjzdisgavghu1tirlzhzw98n", apiCredentials.ClientId);
@@ -33,7 +25,7 @@ namespace UniTwitchClient.Tests
         [Test]
         public void ConnectionCredentialsToIrcCredentialsTest()
         {
-            var ircCredentials = _connectionCredentials.ToIrcCredentials();
+            var ircCredentials = new TwitchIrcCredentials(userAccessToken, userName);
 
             Assert.AreEqual("oauth:1wteiz6quzbjfpr9sbv7pdqpja7jqr", ircCredentials.TwitchOAuthToken);
             Assert.AreEqual("anomaloris", ircCredentials.TwitchUsername);

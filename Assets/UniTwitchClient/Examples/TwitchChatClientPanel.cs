@@ -32,8 +32,8 @@ public class TwitchChatClientPanel : MonoBehaviour
         var username = _userNameField.text;
         var channelName = _channelNameField.text;
 
-        var connectionCredentials = new ConnectionCredentials(userToken, username, "");
-        _client = new TwitchChatClient(connectionCredentials);
+        var credentials = new TwitchIrcCredentials(userToken, username);
+        _client = new TwitchChatClient(credentials);
         _client.MessageRawAsObservable.Subscribe(x => 
         {
             Debug.Log(x);

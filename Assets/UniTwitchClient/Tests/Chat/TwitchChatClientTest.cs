@@ -21,7 +21,7 @@ namespace UniTwitchClient.Tests.Chat
         private readonly string clientId = "bmny4dt43ufheb95zc3w82b557eana";
 
         private CompositeDisposable _compositeDisposable;
-        private ConnectionCredentials _connectionCredentials;
+        private TwitchIrcCredentials _credentials;
         private TwitchIrcClientMock _mock;
         private TwitchChatClient _client;
 
@@ -29,9 +29,9 @@ namespace UniTwitchClient.Tests.Chat
         public void SetUp() 
         {
             _compositeDisposable = new CompositeDisposable();
-            _connectionCredentials = new ConnectionCredentials(userAccessToken, userName, clientId);
+            _credentials = new TwitchIrcCredentials(userAccessToken, userName);
             _mock = new TwitchIrcClientMock();
-            _client = new TwitchChatClient(_connectionCredentials, _mock);
+            _client = new TwitchChatClient(_credentials, _mock);
         }
 
         [TearDown]

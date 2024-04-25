@@ -29,10 +29,10 @@ namespace UniTwitchClient.EventSub.Api
         private const string API_URL = "https://api.twitch.tv/helix/eventsub/subscriptions";
 
         private EventSubSubscribeRequestBuilder _eventSubSubscribeRequestBuilder;
-        private ApiCredentials _apiCredentials;
+        private TwitchApiCredentials _apiCredentials;
         private bool _debugMode;
 
-        public TwitchEventSubApiClient(ApiCredentials apiCredentials)
+        public TwitchEventSubApiClient(TwitchApiCredentials apiCredentials)
         {
             _eventSubSubscribeRequestBuilder = new EventSubSubscribeRequestBuilder();
             _apiCredentials = apiCredentials;

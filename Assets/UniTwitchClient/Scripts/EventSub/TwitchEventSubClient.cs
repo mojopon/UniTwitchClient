@@ -31,10 +31,10 @@ namespace UniTwitchClient.EventSub
         private SubjectComposition _subjectComposition = new SubjectComposition();
         private NotificationConverter _notificationConverter = new NotificationConverter();
 
-        public TwitchEventSubClient(ConnectionCredentials connectionCredentials) 
+        public TwitchEventSubClient(TwitchApiCredentials apiCredentials) 
         {
             var wsClient = new TwitchEventSubWebsocketClient();
-            var apiClient = new TwitchEventSubApiClient(connectionCredentials.ToApiCredentials());
+            var apiClient = new TwitchEventSubApiClient(apiCredentials);
 
             Initialize(wsClient, apiClient);
         }

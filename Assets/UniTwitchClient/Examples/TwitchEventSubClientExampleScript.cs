@@ -110,12 +110,12 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
 
     private TwitchEventSubClient CreateTwitchEventSubClient() 
     {
-        var credentials = CreateConnectionCredentials();
+        var credentials = CreateTwitchApiCredentials();
 
         if (connectToLocalServerToggle.isOn)
         {
             var wsClient = new TwitchEventSubWebsocketClient();
-            var apiClient = new TwitchEventSubApiClient(credentials.ToApiCredentials());
+            var apiClient = new TwitchEventSubApiClient(credentials);
             wsClient.DebugMode = true;
             apiClient.DebugMode = true;
             return new TwitchEventSubClient(wsClient, apiClient);
@@ -126,8 +126,8 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         }
     }
 
-    private ConnectionCredentials CreateConnectionCredentials() 
+    private TwitchApiCredentials CreateTwitchApiCredentials() 
     {
-        return new ConnectionCredentials(userAccessTokenInputField.text, twitchUserNameInputField.text, clientIdInputField.text);
+        return new TwitchApiCredentials(userAccessTokenInputField.text, clientIdInputField.text);
     }
 }

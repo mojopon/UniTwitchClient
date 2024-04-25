@@ -24,10 +24,10 @@ public class Example : MonoBehaviour
     {
         if(_twitchEventSubClient != null) { return; }
 
-        var connectionCredential = new ConnectionCredentials(userAccessToken, twitchUserName, clientId);
+        var connectionCredential = new TwitchApiCredentials(userAccessToken, clientId);
         var wsClient = new TwitchEventSubWebsocketClient();
         wsClient.DebugMode = true;
-        var apiClient = new TwitchEventSubApiClient(connectionCredential.ToApiCredentials());
+        var apiClient = new TwitchEventSubApiClient(connectionCredential);
         apiClient.DebugMode = true;
         _twitchEventSubClient = new TwitchEventSubClient(wsClient, apiClient);
 
