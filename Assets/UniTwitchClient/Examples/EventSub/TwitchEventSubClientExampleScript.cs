@@ -16,8 +16,6 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
     [SerializeField]
     private TMP_InputField userAccessTokenInputField;
     [SerializeField]
-    private TMP_InputField twitchUserNameInputField;
-    [SerializeField]
     private TMP_InputField clientIdInputField;
     [SerializeField]
     private TMP_InputField broadcasterUserIdInputField;
@@ -38,7 +36,6 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
             string json = File.ReadAllText(path);
             var data = JsonWrapper.ConvertFromJson<UniTwitchClientExampleSceneInputData>(json);
             userAccessTokenInputField.text = data.UserAccessToken;
-            twitchUserNameInputField.text = data.TwitchUserName;
             clientIdInputField.text = data.ClientId;
             broadcasterUserIdInputField.text = data.BroadcasterUserId;
             connectToLocalServerToggle.isOn = data.ConnectToLocalServer;
