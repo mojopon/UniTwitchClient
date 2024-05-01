@@ -74,7 +74,7 @@ public class EventSubSubscriptionManagementSceneScript : MonoBehaviour
     {
         var credentials = new TwitchApiCredentials(userAccessTokenInputField.text, clientIdInputField.text);
         var client = new TwitchEventSubApiClient(credentials);
-        client.DebugMode = connectToLocalServerToggle.isOn;
+        client.ConnectToLocalCLIServer = connectToLocalServerToggle.isOn;
         return client;
     }
 }

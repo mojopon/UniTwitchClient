@@ -16,24 +16,13 @@ namespace UniTwitchClient.EventSub.Api
     {
         public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
 
-        public bool DebugMode
-        {
-            get
-            {
-                return _debugMode;
-            }
-            set
-            {
-                _debugMode = value;
-            }
-        }
+        public bool ConnectToLocalCLIServer { get; set; }
 
         private const string API_DEBUG_URL = "http://localhost:8080/eventsub/subscriptions";
         private const string API_URL = "https://api.twitch.tv/helix/eventsub/subscriptions";
 
         private EventSubSubscribeRequestBuilder _eventSubSubscribeRequestBuilder;
         private TwitchApiCredentials _apiCredentials;
-        private bool _debugMode;
 
         public TwitchEventSubApiClient(TwitchApiCredentials apiCredentials)
         {
@@ -77,13 +66,13 @@ namespace UniTwitchClient.EventSub.Api
             var json = subscription.ToJson();
             Debug.Log("[TwitchEventSubApiClient] Json:" + json);
 
-            var url = DebugMode == true ? API_DEBUG_URL : API_URL;
+            var url = ConnectToLocalCLIServer == true ? API_DEBUG_URL : API_URL;
             return CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, json);
         }
 
         public async UniTask<EventSubSubscriptionData> GetEventSubSubscriptionsAsync()
         {
-            var url = DebugMode == true ? API_DEBUG_URL : API_URL;
+            var url = ConnectToLocalCLIServer == true ? API_DEBUG_URL : API_URL;
             var unityWebRequest = CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbGET);
 
             EventSubSubscriptionData eventSubSubscriptionData = null;
@@ -99,7 +88,7 @@ namespace UniTwitchClient.EventSub.Api
 
         public async UniTask DeleteEventSubSubscriptionsAsync(EventSubSubscriptionData subscriptions)
         {
-            var url = DebugMode == true ? API_DEBUG_URL : API_URL;
+            var url = ConnectToLocalCLIServer == true ? API_DEBUG_URL : API_URL;
             List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
 
             foreach(var subscription in subscriptions.Subscriptions) 

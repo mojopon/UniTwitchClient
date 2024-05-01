@@ -26,9 +26,9 @@ public class Example : MonoBehaviour
 
         var connectionCredential = new TwitchApiCredentials(userAccessToken, clientId);
         var wsClient = new TwitchEventSubWebsocketClient();
-        wsClient.DebugMode = true;
+        wsClient.ConnectToLocalCLIServer = true;
         var apiClient = new TwitchEventSubApiClient(connectionCredential);
-        apiClient.DebugMode = true;
+        apiClient.ConnectToLocalCLIServer = true;
         _twitchEventSubClient = new TwitchEventSubClient(wsClient, apiClient);
 
         _twitchEventSubClient.OnChannelFollowAsObservable.Subscribe(x =>

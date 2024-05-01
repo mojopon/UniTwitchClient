@@ -114,8 +114,8 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         {
             var wsClient = new TwitchEventSubWebsocketClient();
             var apiClient = new TwitchEventSubApiClient(credentials);
-            wsClient.DebugMode = true;
-            apiClient.DebugMode = true;
+            wsClient.ConnectToLocalCLIServer = true;
+            apiClient.ConnectToLocalCLIServer = true;
             return new TwitchEventSubClient(wsClient, apiClient);
         }
         else 

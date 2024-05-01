@@ -11,24 +11,13 @@ namespace UniTwitchClient.EventSub.WebSocket
 {
     public class TwitchEventSubWebsocketClient : ITwitchEventSubWebsocketClient
     {
-        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
-
-        public bool DebugMode
-        {
-            get
-            {
-                return _debugMode;
-            }
-            set
-            {
-                _debugMode = value;
-            }
-        }
-
         public IObservable<Welcome> OnWelcomeMessageAsObservable { get; private set; }
         public IObservable<KeepAlive> OnKeepAliveAsObservable { get; private set; }
         public IObservable<Notification> OnNotificationAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
+
+        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
+        public bool ConnectToLocalCLIServer { get; set; }
 
         private event Action<Welcome> _onWelcomeMessageReceived;
         private event Action<KeepAlive> _onKeepAliveMessageReceived;
@@ -36,12 +25,10 @@ namespace UniTwitchClient.EventSub.WebSocket
         private event Action<Exception> _onError;
 
         private WebSocketSharp.WebSocket _ws;
-        private const string WEBSOCKET_DEBUG_URL = "ws://localhost:8080/ws";
+        private const string WEBSOCKET_LOCAL_URL = "ws://localhost:8080/ws";
         private const string WEBSOCKET_URL = "wss://eventsub.wss.twitch.tv/ws";
         private int _keepAlive_Timeout;
         private bool _disposed;
-
-        private bool _debugMode;
 
         public TwitchEventSubWebsocketClient()
         {
@@ -50,7 +37,7 @@ namespace UniTwitchClient.EventSub.WebSocket
 
         public void Connect()
         {
-            var url = DebugMode == true ? WEBSOCKET_DEBUG_URL : WEBSOCKET_URL;
+            var url = ConnectToLocalCLIServer == true ? WEBSOCKET_LOCAL_URL : WEBSOCKET_URL;
             Debug.Log("[TwitchEventSubWebSocketClient] Connecting to " + url);
             _ws = new WebSocketSharp.WebSocket(url);
 
