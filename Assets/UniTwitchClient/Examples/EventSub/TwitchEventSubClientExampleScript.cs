@@ -50,6 +50,7 @@ public class TwitchEventSubClientExampleScript : MonoBehaviour
         }
 
         _client = CreateTwitchEventSubClient();
+        _client.OutputLogOnUnity = true;
         SubscribeClient();
         ConnectAsync();
     }

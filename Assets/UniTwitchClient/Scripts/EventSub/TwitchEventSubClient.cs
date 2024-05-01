@@ -6,6 +6,7 @@ using UniTwitchClient.EventSub.WebSocket;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using UniTwitchClient.EventSub.Converters;
+using UniTwitchClient.Common;
 
 namespace UniTwitchClient.EventSub
 {
@@ -18,10 +19,30 @@ namespace UniTwitchClient.EventSub
         public IObservable<ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
+        public bool OutputLogOnUnity 
+        {
+            get { return _outputLogOnUnity; }
+            set 
+            {
+                _outputLogOnUnity = value;
+                if (_outputLogOnUnity)
+                {
+                    _logger = new UnityLogger();
+                }
+                else 
+                {
+                    _logger = new UniTwitchProductionLogger();
+                }
+            }
+        }
+        private bool _outputLogOnUnity = false;
+
         private CompositeDisposable _disposables = new CompositeDisposable();
 
         private ITwitchEventSubWebsocketClient _wsClient;
         private ITwitchEventSubApiClient _apiClient;
+
+        private IUniTwitchLogger _logger = new UniTwitchProductionLogger();
 
         private string _broadcasterUserId;
         private string _sessionId;
@@ -46,6 +67,8 @@ namespace UniTwitchClient.EventSub
 
         private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
         {
+            OutputLogOnUnity = false;
+
             InitializeObservables();
             InitializeWebSocketClient(wsClient);
             InitializeApiClient(apiClient);
@@ -97,12 +120,12 @@ namespace UniTwitchClient.EventSub
 
             _wsClient.OnKeepAliveAsObservable.Subscribe(x =>
             {
-                Debug.Log("[Example] Keepalive");
+                _logger.Log("[Example] Keepalive");
             }).AddTo(_disposables);
 
             _wsClient.OnNotificationAsObservable.Subscribe(x =>
             {
-                Debug.Log("[Example] Notification");
+                _logger.Log("[Example] Notification");
                 HandleNotification(x);
             }).AddTo(_disposables);
 
