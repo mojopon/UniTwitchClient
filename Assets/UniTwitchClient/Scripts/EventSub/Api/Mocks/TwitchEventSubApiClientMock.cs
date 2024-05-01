@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UniTwitchClient.Common;
 using UniTwitchClient.EventSub.Api.Models;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace UniTwitchClient.EventSub.Api.Mocks
 {
     public class TwitchEventSubApiClientMock : ITwitchEventSubApiClient
     {
+        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
+
         public List<TwitchEventSubApiCalledMethodLog> CalledMethods { get; private set; } = new List<TwitchEventSubApiCalledMethodLog>();
 
         public async UniTask CreateEventSubSubscriptionsAsync(string broadcasterUserId, string sessionId, CancellationToken cancellationToken = default)

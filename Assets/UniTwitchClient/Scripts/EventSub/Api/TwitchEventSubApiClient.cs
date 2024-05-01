@@ -8,11 +8,14 @@ using System.Threading;
 using UniTwitchClient.EventSub.Api.Models;
 using System.Linq;
 using System;
+using UniTwitchClient.Common;
 
 namespace UniTwitchClient.EventSub.Api
 {
     public class TwitchEventSubApiClient : ITwitchEventSubApiClient
     {
+        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
+
         public bool DebugMode
         {
             get
