@@ -100,7 +100,7 @@ namespace UniTwitchClient.EventSub
             catch (Exception ex)
             {
                 _wsClient.Disconnect();
-                throw new Exception("an error has occured while connecting. error:" + ex);
+                _logger.LogError("an error has occured while connecting. error:" + ex);
             }
         }
 
