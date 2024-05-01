@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityLogger : IUniTwitchLogger
+namespace UniTwitchClient.Common
 {
-    public void Log(string message)
+    public class UnityLogger : IUniTwitchLogger
     {
-        Debug.Log(message);
-    }
+        public void Log(string message)
+        {
+            Debug.Log(message);
+        }
 
-    public void LogError(string message)
-    {
-        Debug.LogError(message);
+        public void LogError(string message)
+        {
+            Debug.LogError(message);
+        }
     }
 }
