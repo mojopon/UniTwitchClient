@@ -7,46 +7,49 @@ using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
 
-public class TwitchChatClientPanel : MonoBehaviour
+namespace UniTwitchClient.Examples
 {
-    [SerializeField]
-    private TMP_InputField _userTokenField;
-    [SerializeField]
-    private TMP_InputField _userNameField;
-    [SerializeField]
-    private TMP_InputField _channelNameField;
-    [SerializeField]
-    private TMP_InputField _outputField;
-
-    private TwitchChatClient _client;
-
-    public void Connect()
+    public class TwitchChatClientPanel : MonoBehaviour
     {
-        if (_client != null) 
+        [SerializeField]
+        private TMP_InputField _userTokenField;
+        [SerializeField]
+        private TMP_InputField _userNameField;
+        [SerializeField]
+        private TMP_InputField _channelNameField;
+        [SerializeField]
+        private TMP_InputField _outputField;
+
+        private TwitchChatClient _client;
+
+        public void Connect()
         {
-            _client.Dispose();
-            _client = null;
+            if (_client != null)
+            {
+                _client.Dispose();
+                _client = null;
+            }
+
+            var userToken = _userTokenField.text;
+            var username = _userNameField.text;
+            var channelName = _channelNameField.text;
+
+            var credentials = new TwitchIrcCredentials(userToken, username);
+            _client = new TwitchChatClient(credentials);
+            _client.MessageRawAsObservable.Subscribe(x =>
+            {
+                Debug.Log(x);
+            });
+
+            _client.Connect(channelName);
         }
 
-        var userToken = _userTokenField.text;
-        var username = _userNameField.text;
-        var channelName = _channelNameField.text;
-
-        var credentials = new TwitchIrcCredentials(userToken, username);
-        _client = new TwitchChatClient(credentials);
-        _client.MessageRawAsObservable.Subscribe(x => 
+        private void Output(string text)
         {
-            Debug.Log(x);
-        });
+            _outputField.text += text;
+            _outputField.text += Environment.NewLine;
 
-        _client.Connect(channelName);
-    }
-
-    private void Output(string text) 
-    {
-        _outputField.text += text;
-        _outputField.text += Environment.NewLine;
-
-        Debug.Log(text);
+            Debug.Log(text);
+        }
     }
 }
