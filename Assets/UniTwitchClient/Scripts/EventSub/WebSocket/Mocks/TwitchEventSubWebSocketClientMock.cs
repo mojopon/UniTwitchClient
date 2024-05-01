@@ -5,11 +5,14 @@ using UniRx;
 using UniTwitchClient.EventSub.WebSocket;
 using Notification = UniTwitchClient.EventSub.WebSocket.Notification;
 using UnityEngine;
+using UniTwitchClient.Common;
 
 namespace UniTwitchClient.EventSub.Mocks
 {
     public class TwitchEventSubWebSocketClientMock : ITwitchEventSubWebsocketClient
     {
+        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
+
         public IObservable<Welcome> OnWelcomeMessageAsObservable { get; private set; }
         public IObservable<KeepAlive> OnKeepAliveAsObservable { get; private set; }
         public IObservable<Notification> OnNotificationAsObservable { get; private set; }

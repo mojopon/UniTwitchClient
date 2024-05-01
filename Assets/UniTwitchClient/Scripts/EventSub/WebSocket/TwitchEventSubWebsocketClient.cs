@@ -5,11 +5,14 @@ using UnityEngine;
 using UniRx;
 using System.Threading.Tasks;
 using WebSocketSharp;
+using UniTwitchClient.Common;
 
 namespace UniTwitchClient.EventSub.WebSocket
 {
     public class TwitchEventSubWebsocketClient : ITwitchEventSubWebsocketClient
     {
+        public IUniTwitchLogger Logger { get; set; } = new UniTwitchProductionLogger();
+
         public bool DebugMode
         {
             get
