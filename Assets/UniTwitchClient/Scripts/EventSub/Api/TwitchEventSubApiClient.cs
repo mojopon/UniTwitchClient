@@ -64,7 +64,7 @@ namespace UniTwitchClient.EventSub.Api
         private UnityWebRequest CreateEventSubSubscriptionRequest(EventSubSubscribeRequest subscription)
         {
             var json = subscription.ToJson();
-            Debug.Log("[TwitchEventSubApiClient] Json:" + json);
+            Logger.Log("[TwitchEventSubApiClient] Json:" + json);
 
             var url = ConnectToLocalCLIServer == true ? API_DEBUG_URL : API_URL;
             return CreateUnityWebRequest(url, UnityWebRequest.kHttpVerbPOST, json);
@@ -79,7 +79,7 @@ namespace UniTwitchClient.EventSub.Api
             using (unityWebRequest)
             {
                 var result = await unityWebRequest.SendWebRequest().ToUniTask();
-                Debug.Log(result.downloadHandler.text);
+                Logger.Log(result.downloadHandler.text);
                 eventSubSubscriptionData = JsonWrapper.ConvertFromJson<subscription_data>(result.downloadHandler.text).ConvertRawToModel();
             }
 

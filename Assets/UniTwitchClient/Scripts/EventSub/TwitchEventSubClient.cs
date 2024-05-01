@@ -28,10 +28,14 @@ namespace UniTwitchClient.EventSub
                 if (_outputLogOnUnity)
                 {
                     _logger = new UnityLogger();
+                    _wsClient.Logger = new UnityLogger();
+                    _apiClient.Logger = new UnityLogger();
                 }
                 else 
                 {
                     _logger = new UniTwitchProductionLogger();
+                    _wsClient.Logger = new UniTwitchProductionLogger();
+                    _apiClient.Logger = new UniTwitchProductionLogger();
                 }
             }
         }
@@ -67,11 +71,11 @@ namespace UniTwitchClient.EventSub
 
         private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
         {
-            OutputLogOnUnity = false;
-
             InitializeObservables();
             InitializeWebSocketClient(wsClient);
             InitializeApiClient(apiClient);
+
+            OutputLogOnUnity = false;
         }
 
         public async UniTask ConnectChannelAsync(string broadcasterUserId) 

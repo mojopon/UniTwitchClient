@@ -38,7 +38,7 @@ namespace UniTwitchClient.EventSub.WebSocket
         public void Connect()
         {
             var url = ConnectToLocalCLIServer == true ? WEBSOCKET_LOCAL_URL : WEBSOCKET_URL;
-            Debug.Log("[TwitchEventSubWebSocketClient] Connecting to " + url);
+            Logger.Log("[TwitchEventSubWebSocketClient] Connecting to " + url);
             _ws = new WebSocketSharp.WebSocket(url);
 
             AddHandlers();
@@ -96,8 +96,8 @@ namespace UniTwitchClient.EventSub.WebSocket
             var data = e.Data;
             var messageType = WebSocketMessageConverter.GetMessageType(data);
 
-            Debug.Log(data);
-            Debug.Log("MessageType:" + messageType.ToString());
+            Logger.Log(data);
+            Logger.Log("MessageType:" + messageType.ToString());
 
             switch (messageType)
             {
@@ -151,7 +151,7 @@ namespace UniTwitchClient.EventSub.WebSocket
         {
             var error = e.Exception;
             _onError?.Invoke(error);
-            Debug.LogError(error);
+            Logger.LogError(error.Message);
         }
 
         public void Dispose()
