@@ -9,6 +9,7 @@ using UniTwitchClient.EventSub.Api.Models;
 using System.Linq;
 using System;
 using UniTwitchClient.Common;
+using UniRx;
 
 namespace UniTwitchClient.EventSub.Api
 {
@@ -40,25 +41,47 @@ namespace UniTwitchClient.EventSub.Api
             _eventSubSubscribeRequestBuilder.CreateAllRequests(broadcasterUserId, moderatorUserId);
             var requests = _eventSubSubscribeRequestBuilder.BuildRequestsWithSessionId(sessionId);
 
-            List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
-            foreach (var request in requests)
+            List<UniTask<bool>> tasks = new List<UniTask<bool>>();
+            foreach (var request in requests) 
             {
-                unityWebRequests.Add(CreateEventSubSubscriptionRequest(request));
+                tasks.Add(CreateEventSubSubscriptionAsync(request, cancellationToken));
             }
 
-            var tasks = unityWebRequests.Select(x => x.SendWebRequest().ToUniTask(cancellationToken: cancellationToken));
             try
             {
-                var results = await UniTask.WhenAll(tasks);
+                await UniTask.WhenAll(tasks);
             }
-            catch (Exception ex)
+            catch(Exception ex) 
             {
                 throw ex;
             }
-            finally
+        }
+
+        private UniTask<bool> CreateEventSubSubscriptionAsync(EventSubSubscribeRequest request, CancellationToken cancellationToken) 
+        {
+            var uwp = CreateEventSubSubscriptionRequest(request);
+            uwp.timeout = 7;
+            var utcs = new UniTaskCompletionSource<bool>();
+            var disposables = new CompositeDisposable();
+            disposables.Add(uwp);
+
+            uwp.SendWebRequest().ToUniTask(cancellationToken: cancellationToken).ToObservable().Subscribe(x => 
             {
-                unityWebRequests.ForEach(x => x.Dispose());
-            }
+                Logger.Log($"Successfully subscribe {request.SubscriptionType.ToString()}");
+                utcs.TrySetResult(true);
+            }, ex => 
+            {
+                Logger.LogError($"Failed to subscribe {request.SubscriptionType.ToString()}");
+                Logger.LogError(ex.Message);
+                // Ž¸”s‚µ‚Ä‚àƒ^ƒXƒN‚ÍŠ®—¹‚³‚¹‚é
+                utcs.TrySetResult(true);
+                disposables.Dispose();
+            }, () => 
+            {
+                disposables.Dispose();
+            }).AddTo(disposables);
+
+            return utcs.Task;
         }
 
         private UnityWebRequest CreateEventSubSubscriptionRequest(EventSubSubscribeRequest subscription)
