@@ -8,12 +8,15 @@
 
 # 依存ライブラリ
 UniTwitchClient使用にあたって、次のライブラリの別途導入が必要です。
- - UniRx
- - UniTask
+ - UniRx(https://github.com/neuecc/UniRx)
+ - UniTask(https://github.com/Cysharp/UniTask)
+ - Newtonsoft.Json-for-Unity(https://github.com/applejag/Newtonsoft.Json-for-Unity)
 
 # 権利表記
 UniRx Copyright (c) 2014 Yoshifumi Kawai https://github.com/neuecc/UniRx/blob/master/LICENSE
 
 UniTask Copyright (c) 2019 Yoshifumi Kawai / Cysharp, Inc. https://github.com/Cysharp/UniTask/blob/master/LICENSE
+
+Newtonsoft.Json Copyright (c) 2019 Kalle Jillheden (jilleJr) https://github.com/applejag/Newtonsoft.Json-for-Unity/blob/master/LICENSE.md
 
 websocket-sharp Copyright (c) 2010-2018 sta.blockhead https://github.com/sta/websocket-sharp/blob/master/LICENSE.txt
