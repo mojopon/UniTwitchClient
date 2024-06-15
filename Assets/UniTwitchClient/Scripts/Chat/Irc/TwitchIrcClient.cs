@@ -1,14 +1,9 @@
-using Codice.Client.Common.GameUI;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
-using System.Threading.Tasks;
 using UniRx;
-using UniTwitchClient.EventSub.Api.Models.Raws;
 using UnityEngine;
 
 namespace UniTwitchClient.Chat
@@ -32,17 +27,17 @@ namespace UniTwitchClient.Chat
         private CancellationToken _ct;
 
         private TwitchIrcCredentials _credentials;
-        public TwitchIrcClient(TwitchIrcCredentials credentials) 
+        public TwitchIrcClient(TwitchIrcCredentials credentials)
         {
             _credentials = credentials;
         }
 
-        public void Connect(string channelName) 
+        public void Connect(string channelName)
         {
             _cts = new CancellationTokenSource();
             _ct = _cts.Token;
 
-            UniTask.Create(async () => 
+            UniTask.Create(async () =>
             {
                 await ConnectAsync(channelName);
             })
@@ -74,7 +69,7 @@ namespace UniTwitchClient.Chat
             {
                 await _tcpClient.ConnectAsync(TWITCH_IRC_URL, TWITCH_IRC_PORT);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _messageSubject.OnError(ex);
                 return;
@@ -112,7 +107,7 @@ namespace UniTwitchClient.Chat
         }
 
         private int _receiveNullMessageCount = 0;
-        private async UniTask ListenAsync() 
+        private async UniTask ListenAsync()
         {
             while (_tcpClient.Connected)
             {
@@ -123,12 +118,12 @@ namespace UniTwitchClient.Chat
                     {
                         HandleReceivedMessage(message);
                     }
-                    else 
+                    else
                     {
                         _receiveNullMessageCount++;
                     }
 
-                    if (_receiveNullMessageCount > 10) 
+                    if (_receiveNullMessageCount > 10)
                     {
                         Close();
                         HandleError(new Exception("An error occurred in the TwitchIrcClient connection."));
@@ -146,33 +141,33 @@ namespace UniTwitchClient.Chat
             }
         }
 
-        private void HandleReceivedMessage(string message) 
+        private void HandleReceivedMessage(string message)
         {
             _messageSubject.OnNext(message);
 
-            if (message.Contains("PING :tmi.twitch.tv")) 
+            if (message.Contains("PING :tmi.twitch.tv"))
             {
                 HandlePing();
             }
 
-            if (message.Contains(":tmi.twitch.tv NOTICE * :Login authentication failed")) 
+            if (message.Contains(":tmi.twitch.tv NOTICE * :Login authentication failed"))
             {
                 HandleError(new Exception("Login authentication failed."));
             }
 
-            if (message.Contains(":tmi.twitch.tv NOTICE * :Improperly formatted auth")) 
+            if (message.Contains(":tmi.twitch.tv NOTICE * :Improperly formatted auth"))
             {
                 HandleError(new Exception("Improperly formatted auth"));
             }
         }
 
-        private void HandlePing() 
+        private void HandlePing()
         {
             Debug.Log("[TwitchIrcClient] Handle Ping");
             SendMessage("PONG :tmi.twitch.tv");
         }
 
-        private void HandleError(Exception ex) 
+        private void HandleError(Exception ex)
         {
             _messageSubject.OnError(ex);
             _messageSubject.Dispose();
@@ -181,7 +176,7 @@ namespace UniTwitchClient.Chat
 
         public void SendMessage(string message)
         {
-            if (_writer != null) 
+            if (_writer != null)
             {
                 UniTask.Create(async () =>
                 {
@@ -191,7 +186,7 @@ namespace UniTwitchClient.Chat
             }
         }
 
-        private async UniTask SendMessageAsync(string message) 
+        private async UniTask SendMessageAsync(string message)
         {
             Debug.Log($"[TwitchIrcClient] Send Message:{message}");
 

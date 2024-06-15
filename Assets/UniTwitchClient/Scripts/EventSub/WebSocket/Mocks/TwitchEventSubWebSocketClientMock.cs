@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
+using UniTwitchClient.Common;
 using UniTwitchClient.EventSub.WebSocket;
 using Notification = UniTwitchClient.EventSub.WebSocket.Notification;
-using UnityEngine;
-using UniTwitchClient.Common;
 
 namespace UniTwitchClient.EventSub.Mocks
 {
@@ -62,7 +59,7 @@ namespace UniTwitchClient.EventSub.Mocks
             _welcomeSubject.OnNext(welcomeMessage);
         }
 
-        public void ReceiveNotification(Notification notification) 
+        public void ReceiveNotification(Notification notification)
         {
             _notificationSubject.OnNext(notification);
         }

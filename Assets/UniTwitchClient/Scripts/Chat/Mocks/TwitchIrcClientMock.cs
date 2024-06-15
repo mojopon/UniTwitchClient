@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
-using UnityEngine;
 
 namespace UniTwitchClient.Chat.Mocks
 {
@@ -33,7 +30,7 @@ namespace UniTwitchClient.Chat.Mocks
             throw new NotImplementedException();
         }
 
-        public void ReceiveMessage(string message) 
+        public void ReceiveMessage(string message)
         {
             _messageSubject.OnNext(message);
         }

@@ -1,11 +1,7 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using static PlasticGui.WorkspaceWindow.CodeReview.Summary.CommentSummaryData;
 
 namespace UniTwitchClient.EventSub
 {

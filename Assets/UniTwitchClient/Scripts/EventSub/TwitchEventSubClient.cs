@@ -1,12 +1,11 @@
-using UnityEngine;
-using UniRx;
-using System;
-using UniTwitchClient.EventSub.Api;
-using UniTwitchClient.EventSub.WebSocket;
 using Cysharp.Threading.Tasks;
+using System;
 using System.Threading;
-using UniTwitchClient.EventSub.Converters;
+using UniRx;
 using UniTwitchClient.Common;
+using UniTwitchClient.EventSub.Api;
+using UniTwitchClient.EventSub.Converters;
+using UniTwitchClient.EventSub.WebSocket;
 
 namespace UniTwitchClient.EventSub
 {
@@ -19,10 +18,10 @@ namespace UniTwitchClient.EventSub
         public IObservable<ChannelPointsCustomRewardRedemptionAdd> OnChannelPointsCustomRewardRedemptionAddAsObservable { get; private set; }
         public IObservable<Exception> OnErrorAsObservable { get; private set; }
 
-        public bool OutputLogOnUnity 
+        public bool OutputLogOnUnity
         {
             get { return _outputLogOnUnity; }
-            set 
+            set
             {
                 _outputLogOnUnity = value;
                 if (_outputLogOnUnity)
@@ -31,7 +30,7 @@ namespace UniTwitchClient.EventSub
                     _wsClient.Logger = new UnityLogger();
                     _apiClient.Logger = new UnityLogger();
                 }
-                else 
+                else
                 {
                     _logger = new UniTwitchProductionLogger();
                     _wsClient.Logger = new UniTwitchProductionLogger();
@@ -56,7 +55,7 @@ namespace UniTwitchClient.EventSub
         private SubjectComposition _subjectComposition = new SubjectComposition();
         private NotificationConverter _notificationConverter = new NotificationConverter();
 
-        public TwitchEventSubClient(TwitchApiCredentials apiCredentials) 
+        public TwitchEventSubClient(TwitchApiCredentials apiCredentials)
         {
             var wsClient = new TwitchEventSubWebsocketClient();
             var apiClient = new TwitchEventSubApiClient(apiCredentials);
@@ -64,12 +63,12 @@ namespace UniTwitchClient.EventSub
             Initialize(wsClient, apiClient);
         }
 
-        public TwitchEventSubClient(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
+        public TwitchEventSubClient(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient)
         {
             Initialize(wsClient, apiClient);
         }
 
-        private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient) 
+        private void Initialize(ITwitchEventSubWebsocketClient wsClient, ITwitchEventSubApiClient apiClient)
         {
             InitializeObservables();
             InitializeWebSocketClient(wsClient);
@@ -78,7 +77,7 @@ namespace UniTwitchClient.EventSub
             OutputLogOnUnity = false;
         }
 
-        public async UniTask ConnectChannelAsync(string broadcasterUserId) 
+        public async UniTask ConnectChannelAsync(string broadcasterUserId)
         {
             if (!string.IsNullOrEmpty(_broadcasterUserId)) { return; }
 
@@ -88,10 +87,10 @@ namespace UniTwitchClient.EventSub
             _wsClient.Connect();
 
             Welcome welcomeMessage = null;
-            try 
+            try
             {
                 welcomeMessage = await getWelcomeMessageTask.Timeout(TimeSpan.FromSeconds(timeoutSeconds));
-                if (welcomeMessage != null) 
+                if (welcomeMessage != null)
                 {
                     _sessionId = welcomeMessage.SessionId;
                     await _apiClient.CreateEventSubSubscriptionsAsync(_broadcasterUserId, _sessionId).Timeout(TimeSpan.FromSeconds(timeoutSeconds));
@@ -104,7 +103,7 @@ namespace UniTwitchClient.EventSub
             }
         }
 
-        public async UniTask DisconnectChannelAsync() 
+        public async UniTask DisconnectChannelAsync()
         {
             await _apiClient.DeleteEventSubSubscriptionsAsync(_sessionId);
 
@@ -160,7 +159,7 @@ namespace UniTwitchClient.EventSub
             _subjectComposition.OnNext(notification.SubscriptionType.ToString(), _notificationConverter.Convert(notification));
         }
 
-        private void HandleError(Exception exception) 
+        private void HandleError(Exception exception)
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();

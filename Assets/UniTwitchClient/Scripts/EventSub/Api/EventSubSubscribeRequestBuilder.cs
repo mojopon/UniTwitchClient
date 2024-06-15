@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UniTwitchClient.EventSub.Api.Models;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api
 {
@@ -9,7 +7,7 @@ namespace UniTwitchClient.EventSub.Api
     {
         private List<EventSubSubscribeRequest> _requests = new List<EventSubSubscribeRequest>();
 
-        public void CreateAllRequests(string broadcasterUserId, string moderatorUserId) 
+        public void CreateAllRequests(string broadcasterUserId, string moderatorUserId)
         {
             CreateChannelFollowRequest(broadcasterUserId, moderatorUserId);
             CreateChannelSubscribeRequest(broadcasterUserId);
@@ -37,14 +35,14 @@ namespace UniTwitchClient.EventSub.Api
             _requests.Add(subscription);
         }
 
-        public void CreateChannelSubscriptionMessage(string broadcasterUserId) 
+        public void CreateChannelSubscriptionMessage(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelSubscriptionMessage, condition);
             _requests.Add(subscription);
         }
 
-        public void CreateChannelCheerRequest(string broadcasterUserId) 
+        public void CreateChannelCheerRequest(string broadcasterUserId)
         {
             var condition = CreateCondition(broadcasterUserId, "", "", "", "");
             var subscription = new EventSubSubscribeRequest(SubscriptionType.ChannelCheer, condition);

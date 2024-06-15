@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UniTwitchClient.Chat.Models
 {
@@ -22,7 +20,7 @@ namespace UniTwitchClient.Chat.Models
 
         public string UserNickname { get; }
         public string UserHost { get; }
-        
+
         public TwitchIrcCommand Command { get; }
         public string CommandRaw { get; }
         public string Channel { get; }

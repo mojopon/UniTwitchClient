@@ -1,10 +1,8 @@
 using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UniTwitchClient.Common;
 using UniTwitchClient.EventSub.Api.Models;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api.Mocks
 {
@@ -51,9 +49,9 @@ namespace UniTwitchClient.EventSub.Api.Mocks
         }
     }
 
-    public class TwitchEventSubApiCalledMethodLog 
+    public class TwitchEventSubApiCalledMethodLog
     {
-        public enum MethodType 
+        public enum MethodType
         {
             None,
             Create,
@@ -64,7 +62,7 @@ namespace UniTwitchClient.EventSub.Api.Mocks
         public MethodType Type { get; private set; }
         public Dictionary<string, string> Parameters { get; private set; }
 
-        public TwitchEventSubApiCalledMethodLog(MethodType methodType, Dictionary<string,string> parameters) 
+        public TwitchEventSubApiCalledMethodLog(MethodType methodType, Dictionary<string, string> parameters)
         {
             Type = methodType;
             Parameters = parameters;

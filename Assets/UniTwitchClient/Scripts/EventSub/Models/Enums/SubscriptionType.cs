@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UniTwitchClient.EventSub;
-using UnityEngine;
-
 public enum SubscriptionType
 {
     None,
@@ -16,9 +10,9 @@ public enum SubscriptionType
     ChannelPointsCustomRewardRedemptionAdd,
 }
 
-public static class SubscriptionTypeConverter 
+public static class SubscriptionTypeConverter
 {
-    public static SubscriptionType ToSubscriptionType(string name) 
+    public static SubscriptionType ToSubscriptionType(string name)
     {
         switch (name)
         {

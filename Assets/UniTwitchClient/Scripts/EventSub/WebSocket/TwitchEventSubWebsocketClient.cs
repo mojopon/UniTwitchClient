@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using UniRx;
 using UniTwitchClient.Common;
+using WebSocketSharp;
 
 namespace UniTwitchClient.EventSub.WebSocket
 {
@@ -43,7 +40,7 @@ namespace UniTwitchClient.EventSub.WebSocket
 
             AddHandlers();
 
-            Task.Run(()=> _ws.Connect());
+            Task.Run(() => _ws.Connect());
         }
 
         public void Disconnect()

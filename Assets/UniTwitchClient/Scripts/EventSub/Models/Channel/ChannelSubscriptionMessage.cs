@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UniTwitchClient.EventSub.WebSocket;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub
 {
-    public class ChannelSubscriptionMessage 
+    public class ChannelSubscriptionMessage
     {
         public string UserId { get; private set; }
         public string UserName { get; private set; }
@@ -19,7 +16,7 @@ namespace UniTwitchClient.EventSub
         public int StreakMonths { get; private set; }
         public int DurationMonths { get; private set; }
 
-        public ChannelSubscriptionMessage(string userId, string userName, string userLogin, string broadcasterUserId, string broadcasterUserName, string broadcasterUserLogin, string tier, Message message, int cumulative_months, int streak_months, int duration_months) 
+        public ChannelSubscriptionMessage(string userId, string userName, string userLogin, string broadcasterUserId, string broadcasterUserName, string broadcasterUserLogin, string tier, Message message, int cumulative_months, int streak_months, int duration_months)
         {
             UserId = userId;
             UserName = userName;

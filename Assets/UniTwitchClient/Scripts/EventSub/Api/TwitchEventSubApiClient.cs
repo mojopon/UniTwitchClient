@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Networking;
 using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
-using UniTwitchClient.EventSub.Api.Models;
-using System.Linq;
-using System;
-using UniTwitchClient.Common;
 using UniRx;
+using UniTwitchClient.Common;
+using UniTwitchClient.EventSub.Api.Models;
+using UnityEngine.Networking;
 
 namespace UniTwitchClient.EventSub.Api
 {
@@ -42,7 +40,7 @@ namespace UniTwitchClient.EventSub.Api
             var requests = _eventSubSubscribeRequestBuilder.BuildRequestsWithSessionId(sessionId);
 
             List<UniTask<bool>> tasks = new List<UniTask<bool>>();
-            foreach (var request in requests) 
+            foreach (var request in requests)
             {
                 tasks.Add(CreateEventSubSubscriptionAsync(request, cancellationToken));
             }
@@ -51,13 +49,13 @@ namespace UniTwitchClient.EventSub.Api
             {
                 await UniTask.WhenAll(tasks);
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 throw ex;
             }
         }
 
-        private UniTask<bool> CreateEventSubSubscriptionAsync(EventSubSubscribeRequest request, CancellationToken cancellationToken) 
+        private UniTask<bool> CreateEventSubSubscriptionAsync(EventSubSubscribeRequest request, CancellationToken cancellationToken)
         {
             var uwp = CreateEventSubSubscriptionRequest(request);
             uwp.timeout = 7;
@@ -65,18 +63,18 @@ namespace UniTwitchClient.EventSub.Api
             var disposables = new CompositeDisposable();
             disposables.Add(uwp);
 
-            uwp.SendWebRequest().ToUniTask(cancellationToken: cancellationToken).ToObservable().Subscribe(x => 
+            uwp.SendWebRequest().ToUniTask(cancellationToken: cancellationToken).ToObservable().Subscribe(x =>
             {
                 Logger.Log($"Successfully subscribe {request.SubscriptionType.ToString()}");
                 utcs.TrySetResult(true);
-            }, ex => 
+            }, ex =>
             {
                 Logger.LogError($"Failed to subscribe {request.SubscriptionType.ToString()}");
                 Logger.LogError(ex.Message);
                 // Ž¸”s‚µ‚Ä‚àƒ^ƒXƒN‚ÍŠ®—¹‚³‚¹‚é
                 utcs.TrySetResult(true);
                 disposables.Dispose();
-            }, () => 
+            }, () =>
             {
                 disposables.Dispose();
             }).AddTo(disposables);
@@ -114,7 +112,7 @@ namespace UniTwitchClient.EventSub.Api
             var url = ConnectToLocalCLIServer == true ? API_DEBUG_URL : API_URL;
             List<UnityWebRequest> unityWebRequests = new List<UnityWebRequest>();
 
-            foreach(var subscription in subscriptions.Subscriptions) 
+            foreach (var subscription in subscriptions.Subscriptions)
             {
                 unityWebRequests.Add(CreateUnityWebRequest(url + $"?id={subscription.Id}", UnityWebRequest.kHttpVerbDELETE));
             }
@@ -134,7 +132,7 @@ namespace UniTwitchClient.EventSub.Api
             }
         }
 
-        public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId) 
+        public async UniTask DeleteEventSubSubscriptionsAsync(string sessionId)
         {
             if (string.IsNullOrEmpty(sessionId)) return;
 
@@ -142,10 +140,10 @@ namespace UniTwitchClient.EventSub.Api
             await DeleteEventSubSubscriptionsAsync(eventSubSubscriptionData.GetSubscriptionsBySessionId(sessionId));
         }
 
-        private UnityWebRequest CreateUnityWebRequest(string url, string method, string postData = null) 
+        private UnityWebRequest CreateUnityWebRequest(string url, string method, string postData = null)
         {
             byte[] data = null;
-            if (method == UnityWebRequest.kHttpVerbPOST) 
+            if (method == UnityWebRequest.kHttpVerbPOST)
             {
                 data = Encoding.UTF8.GetBytes(postData);
             }

@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniTwitchClient.Common;
-using UniTwitchClient.EventSub.WebSocket;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.WebSocket
 {

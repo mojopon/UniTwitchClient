@@ -1,16 +1,7 @@
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Threading;
-using System.Threading.Tasks;
 using UniRx;
 using UniTwitchClient.Chat.Models;
-using UnityEditor.PackageManager;
-using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
 
 namespace UniTwitchClient.Chat
 {
@@ -22,10 +13,10 @@ namespace UniTwitchClient.Chat
         public IObservable<string> MessageRawAsObservable => _onMessageRawSubject.AsObservable();
         private Subject<string> _onMessageRawSubject = new Subject<string>();
 
-        public ConnectionState State 
+        public ConnectionState State
         {
             get { return _state; }
-            private set 
+            private set
             {
                 _state = value;
             }
@@ -49,28 +40,28 @@ namespace UniTwitchClient.Chat
             InitializeIrcClient(client);
         }
 
-        public void Connect(string channelName) 
+        public void Connect(string channelName)
         {
             State = ConnectionState.Connecting;
             _client.Connect(channelName);
         }
 
-        public void Close() 
+        public void Close()
         {
             _client.Close();
             State = ConnectionState.Disconnected;
         }
 
-        private void InitializeIrcClient(ITwitchIrcClient ircClient = null) 
+        private void InitializeIrcClient(ITwitchIrcClient ircClient = null)
         {
-            if (ircClient == null) 
+            if (ircClient == null)
             {
                 ircClient = new TwitchIrcClient(_ircCredentials);
             }
 
             _client = ircClient;
             _disposables.Add(_client);
-            _client.OnMessageAsObservable.Subscribe(x => HandleMessage(x),ex => HandleError(ex),() => HandleComplete()).AddTo(_disposables);
+            _client.OnMessageAsObservable.Subscribe(x => HandleMessage(x), ex => HandleError(ex), () => HandleComplete()).AddTo(_disposables);
         }
 
         public void Dispose()
@@ -78,38 +69,38 @@ namespace UniTwitchClient.Chat
             _disposables?.Dispose();
         }
 
-        private void HandleMessage(string messageRaw) 
+        private void HandleMessage(string messageRaw)
         {
             _onMessageRawSubject.OnNext(messageRaw);
 
             TwitchChatMessage message = null;
-            try 
+            try
             {
                 message = IrcMessageParser.ParseMessage(messageRaw);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 HandleError(ex);
                 return;
             }
 
-            if (message.Command == TwitchIrcCommand.Numeric001) 
+            if (message.Command == TwitchIrcCommand.Numeric001)
             {
                 HandleLoginSucceeded();
             }
 
-            if (message != null) 
+            if (message != null)
             {
                 _onTwitchChatMessageSubject.OnNext(message);
             }
         }
 
-        private void HandleLoginSucceeded() 
+        private void HandleLoginSucceeded()
         {
             State = ConnectionState.Connected;
         }
 
-        private void HandleError(Exception ex) 
+        private void HandleError(Exception ex)
         {
             _onTwitchChatMessageSubject.OnError(ex);
         }

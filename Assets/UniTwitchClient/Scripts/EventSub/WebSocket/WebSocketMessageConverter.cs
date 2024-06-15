@@ -1,5 +1,3 @@
-using UniTwitchClient.EventSub;
-using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
 
 namespace UniTwitchClient.EventSub.WebSocket

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -18,7 +16,7 @@ namespace UniTwitchClient.Common
             WriteToFile(message);
         }
 
-        private void WriteToFile(string messageRaw) 
+        private void WriteToFile(string messageRaw)
         {
             var time = DateTime.Now;
             var fileName = string.Format("UniTwitchClient_errorlog{0}{1}{2}.txt", time.ToString("yyyy"), time.ToString("MM"), time.ToString("dd"));
@@ -42,7 +40,7 @@ namespace UniTwitchClient.Common
                     File.WriteAllText(path, data + Environment.NewLine + message);
                 }
             }
-            else 
+            else
             {
                 Directory.CreateDirectory(directoryPath);
                 File.WriteAllText(path, message);

@@ -1,15 +1,12 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api.Models.Raws
 {
     [Serializable]
     public class condition
     {
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string broadcaster_user_id;
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string user_id;

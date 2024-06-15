@@ -1,12 +1,7 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.Tracing;
 using System.Xml;
-using UniTwitchClient.EventSub.WebSocket;
 using UniTwitchClient.EventSub.WebSocket.Models.Raws;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.WebSocket
 {
@@ -92,7 +87,7 @@ namespace UniTwitchClient.EventSub.WebSocket
                     notification.RewardCost = eventSource.reward.cost;
                 }
 
-                if (eventSource.message != null) 
+                if (eventSource.message != null)
                 {
                     notification.Message = new Message()
                     {
@@ -125,14 +120,15 @@ namespace UniTwitchClient.EventSub.WebSocket
             return notification;
         }
 
-        private static DateTime ParseDateTime(string dateTimeRaw) 
+        private static DateTime ParseDateTime(string dateTimeRaw)
         {
             DateTime dateTime = new DateTime();
 
             try
             {
                 dateTime = XmlConvert.ToDateTime(dateTimeRaw, XmlDateTimeSerializationMode.Utc);
-            }catch (Exception ex) { }
+            }
+            catch (Exception ex) { }
 
             return dateTime;
         }

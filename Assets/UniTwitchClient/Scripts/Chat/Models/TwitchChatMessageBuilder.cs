@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UniTwitchClient.Chat.Models
 {
@@ -157,7 +155,7 @@ namespace UniTwitchClient.Chat.Models
             return this;
         }
 
-        public TwitchChatMessageBuilder WithBotCommand(string botCommand) 
+        public TwitchChatMessageBuilder WithBotCommand(string botCommand)
         {
             _botCommand = botCommand;
             return this;

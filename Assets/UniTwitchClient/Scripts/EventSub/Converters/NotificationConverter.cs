@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UniTwitchClient.EventSub.WebSocket;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Converters
 {
@@ -10,7 +7,7 @@ namespace UniTwitchClient.EventSub.Converters
     {
         private Dictionary<SubscriptionType, INotificationConverter> converterDictionary = new Dictionary<SubscriptionType, INotificationConverter>();
 
-        public NotificationConverter() 
+        public NotificationConverter()
         {
             converterDictionary.Add(SubscriptionType.ChannelFollow, new ChannelFollowConverter());
             converterDictionary.Add(SubscriptionType.ChannelSubscribe, new ChannelSubscribeConverter());

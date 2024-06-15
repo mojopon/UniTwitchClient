@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace UniTwitchClient.EventSub
 {
-    public class ChannelSubscribe 
+    public class ChannelSubscribe
     {
         public string UserId { get; private set; }
         public string UserName { get; private set; }

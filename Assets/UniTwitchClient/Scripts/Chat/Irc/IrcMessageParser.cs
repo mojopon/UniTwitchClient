@@ -1,7 +1,4 @@
-using PlasticGui.WorkspaceWindow;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniTwitchClient.Chat.Models;
 using UnityEngine;
 
@@ -29,7 +26,7 @@ namespace UniTwitchClient.Chat
                 idx = endIdx + 1;
             }
 
-            if (message[idx] == ':') 
+            if (message[idx] == ':')
             {
                 idx += 1;
                 endIdx = message.IndexOf(' ', idx);
@@ -38,14 +35,14 @@ namespace UniTwitchClient.Chat
             }
 
             endIdx = endIdx = message.IndexOf(':', idx);
-            if (endIdx == -1) 
+            if (endIdx == -1)
             {
                 endIdx = message.Length;
             }
 
             rawCommandComponent = message.Substring(idx, endIdx - idx).Trim();
 
-            if (endIdx != message.Length) 
+            if (endIdx != message.Length)
             {
                 idx = endIdx + 1;
                 rawParametersComponent = message.Substring(idx);
@@ -56,9 +53,9 @@ namespace UniTwitchClient.Chat
             {
                 return null;
             }
-            else 
+            else
             {
-                if (!string.IsNullOrEmpty(rawTagsComponent)) 
+                if (!string.IsNullOrEmpty(rawTagsComponent))
                 {
                     ParseTags(builder, rawTagsComponent, rawParametersComponent);
                 }
@@ -84,13 +81,13 @@ namespace UniTwitchClient.Chat
                 case "NOTICE":
                 case "CLEARCHAT":
                 case "HOSTTARGET":
-                case "PRIVMSG": 
+                case "PRIVMSG":
                     {
                         builder.WithCommand(commandParts[0])
                                .WithChannel(commandParts[1]);
                         break;
                     }
-                case "PING": 
+                case "PING":
                     {
                         builder.WithCommand(commandParts[0]);
                         break;
@@ -101,7 +98,7 @@ namespace UniTwitchClient.Chat
                         builder.WithCapRequestEnabled(commandParts[2] == "ACK" ? true : false);
                         break;
                     }
-                case "GLOBALUSERSTATE": 
+                case "GLOBALUSERSTATE":
                     {
                         builder.WithCommand(commandParts[0]);
                         break;
@@ -113,7 +110,7 @@ namespace UniTwitchClient.Chat
                                .WithChannel(commandParts[1]);
                         break;
                     }
-                case "RECONNECT": 
+                case "RECONNECT":
                     {
                         builder.WithCommand(commandParts[0]);
                         break;
@@ -123,8 +120,8 @@ namespace UniTwitchClient.Chat
                         builder.WithCommand(commandParts[0]);
                         break;
                     }
-                case "002": 
-                case "003": 
+                case "002":
+                case "003":
                 case "004":
                 case "353":
                 case "366":
@@ -134,7 +131,7 @@ namespace UniTwitchClient.Chat
                     {
                         break;
                     }
-                default: 
+                default:
                     {
                         Debug.Log($"Unexpected command : {commandParts[0]}");
                         break;
@@ -144,11 +141,11 @@ namespace UniTwitchClient.Chat
             return commandParts[0];
         }
 
-        private static void ParseTags(TwitchChatMessageBuilder builder, string rawTagsComponent, string rawParametersComponent) 
+        private static void ParseTags(TwitchChatMessageBuilder builder, string rawTagsComponent, string rawParametersComponent)
         {
             var parsedTags = rawTagsComponent.Split(';');
 
-            foreach (var tag in parsedTags) 
+            foreach (var tag in parsedTags)
             {
                 var parsedTag = tag.Split('=');
                 var tagValue = (string.IsNullOrEmpty(parsedTag[1])) ? null : parsedTag[1];
@@ -243,16 +240,16 @@ namespace UniTwitchClient.Chat
             }
         }
 
-        private static void ParseSource(TwitchChatMessageBuilder builder, string rawSourceComponent) 
+        private static void ParseSource(TwitchChatMessageBuilder builder, string rawSourceComponent)
         {
             if (string.IsNullOrEmpty(rawSourceComponent))
             {
                 return;
             }
-            else 
+            else
             {
                 var sourceParts = rawSourceComponent.Split('!');
-                if (sourceParts.Length == 2) 
+                if (sourceParts.Length == 2)
                 {
                     builder.WithUserNickName(sourceParts[0]);
                     builder.WithUserHost(sourceParts[1]);
@@ -260,9 +257,9 @@ namespace UniTwitchClient.Chat
             }
         }
 
-        private static void ParseParameters(TwitchChatMessageBuilder builder, string rawParametersComponent) 
+        private static void ParseParameters(TwitchChatMessageBuilder builder, string rawParametersComponent)
         {
-            if (string.IsNullOrEmpty(rawParametersComponent)) 
+            if (string.IsNullOrEmpty(rawParametersComponent))
             {
                 return;
             }
@@ -279,7 +276,7 @@ namespace UniTwitchClient.Chat
                 {
                     builder.WithBotCommand(commandParts.Substring(0));
                 }
-                else 
+                else
                 {
                     builder.WithBotCommand(commandParts.Substring(0, paramsIdx));
                     builder.WithBotCommandParams(commandParts.Substring(paramsIdx).Trim());

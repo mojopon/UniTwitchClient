@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UniTwitchClient.EventSub.Api.Models.Raws;
-using UnityEngine;
 
 namespace UniTwitchClient.EventSub.Api.Models
 {
