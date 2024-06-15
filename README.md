@@ -6,6 +6,10 @@
  - Twitch IRC（チャットコメント）のメッセージ取得
  - Twitch EventSubによるフォローやサブスクライブ、チアーといったイベント通知の取得
 
+# 導入手順
+1. UniRx, UniTask, Newtonsoft.Json-for-UnityをUPMでインストールする。
+2. UniTwitchClientをadd package from git URLでインストール(https://github.com/mojopon/UniTwitchClient.git?path=Assets/UniTwitchClient)
+
 # 依存ライブラリ
 UniTwitchClient使用にあたって、次のライブラリの別途導入が必要です。
  - UniRx(https://github.com/neuecc/UniRx)
