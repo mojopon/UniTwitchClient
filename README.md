@@ -38,6 +38,7 @@ twitchChatClient.TwitchChatMessageAsObservable
 // TwitchChatMessageAsObservableにメッセージが流れる。
 twitchChatClient.Connect(channelName);
 ```
+使い終わったらClose()してDispose()してください。
 
 # 権利表記
 UniRx Copyright (c) 2014 Yoshifumi Kawai https://github.com/neuecc/UniRx/blob/master/LICENSE
