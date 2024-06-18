@@ -28,8 +28,8 @@ string channelName = "コメントを取得するチャンネル名を入力";
 var twitchChatClient = new TwitchChatClient(new TwitchIrcCredentials(accessToken, userName));
 
 // TwitchChatMessageAsObservableでメッセージが通知される。
-// WhereオペレーターでCommand==TwitchIrcCommand.PrivMsgのみのフィルターをかけて
-// ユーザーからのメッセージのみ取得（入室時等のシステムメッセージをフィルタする）
+// ユーザーからのメッセージはCommandがPrivMsgとなる。
+// Where句でフィルタリングしてユーザーからのメッセージのみ取得（入室時等のシステムメッセージを除外する）
 twitchChatClient.TwitchChatMessageAsObservable
                 .Where(x => x.Command == TwitchIrcCommand.PrivMsg)
                 .Subscribe(x => Debug.Log($"Name:{x.DisplayName}({x.UserNickname}), Message:{x.Message}"));
