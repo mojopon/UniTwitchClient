@@ -4,7 +4,6 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using UniRx;
-using UnityEngine;
 
 namespace UniTwitchClient.Chat
 {
@@ -163,7 +162,6 @@ namespace UniTwitchClient.Chat
 
         private void HandlePing()
         {
-            Debug.Log("[TwitchIrcClient] Handle Ping");
             SendMessage("PONG :tmi.twitch.tv");
         }
 
@@ -188,8 +186,6 @@ namespace UniTwitchClient.Chat
 
         private async UniTask SendMessageAsync(string message)
         {
-            Debug.Log($"[TwitchIrcClient] Send Message:{message}");
-
             await _writer.WriteLineAsync(message);
             await _writer.FlushAsync();
         }
