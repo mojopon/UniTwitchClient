@@ -3428,8 +3428,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1921154423}
-        m_TargetAssemblyTypeName: TwitchChatClientPanel, Assembly-CSharp
-        m_MethodName: Connect
+        m_TargetAssemblyTypeName: UniTwitchClient.Examples.TwitchChatClientPanel,
+          Assembly-CSharp
+        m_MethodName: Disconnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
