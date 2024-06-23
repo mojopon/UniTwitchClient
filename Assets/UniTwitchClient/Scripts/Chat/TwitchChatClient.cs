@@ -103,6 +103,7 @@ namespace UniTwitchClient.Chat
         private void HandleError(Exception ex)
         {
             _onTwitchChatMessageSubject.OnError(ex);
+            _onMessageRawSubject.OnError(ex);
         }
 
         private void HandleComplete()
