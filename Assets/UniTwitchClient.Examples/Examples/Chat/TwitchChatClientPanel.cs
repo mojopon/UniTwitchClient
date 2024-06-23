@@ -26,6 +26,7 @@ namespace UniTwitchClient.Examples
         {
             if (_client != null)
             {
+                _client.Close();
                 _client.Dispose();
                 _client = null;
             }
@@ -39,9 +40,29 @@ namespace UniTwitchClient.Examples
             _client.MessageRawAsObservable.Subscribe(x =>
             {
                 Debug.Log(x);
-            });
+            }, 
+            ex => 
+            {
+                Debug.LogError(ex);
+            },
+            () => { });
 
             _client.Connect(channelName);
+        }
+
+        public void Disconnect() 
+        {
+            if (_client != null)
+            {
+                _client.Close();
+                _client.Dispose();
+                _client = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            Disconnect();
         }
 
         private void Output(string text)
