@@ -49,7 +49,10 @@ namespace UniTwitchClient.Chat
 
             _tcpClient.Close();
 
+            _reader?.Dispose();
             _reader = null;
+
+            _writer?.Dispose();
             _writer = null;
 
             _receiveNullMessageCount = 0;
@@ -136,7 +139,7 @@ namespace UniTwitchClient.Chat
                     return;
                 }
 
-                await UniTask.Delay(5);
+                await UniTask.Yield();
             }
         }
 
