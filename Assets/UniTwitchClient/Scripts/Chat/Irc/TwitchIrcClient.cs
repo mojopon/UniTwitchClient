@@ -33,6 +33,13 @@ namespace UniTwitchClient.Chat
 
         public void Connect(string channelName)
         {
+            if (_connecting || _connected)
+            {
+                return;
+            }
+
+            _connecting = true;
+
             _cts = new CancellationTokenSource();
             _ct = _cts.Token;
 
@@ -54,19 +61,10 @@ namespace UniTwitchClient.Chat
 
             _writer?.Dispose();
             _writer = null;
-
-            _receiveNullMessageCount = 0;
         }
 
         public async UniTask ConnectAsync(string channelName)
         {
-            if (_connecting || _connected)
-            {
-                return;
-            }
-
-            _connecting = true;
-
             try
             {
                 await _tcpClient.ConnectAsync(TWITCH_IRC_URL, TWITCH_IRC_PORT);
@@ -76,7 +74,6 @@ namespace UniTwitchClient.Chat
                 _messageSubject.OnError(ex);
                 return;
             }
-
 
             if (_tcpClient.Connected)
             {
@@ -108,7 +105,6 @@ namespace UniTwitchClient.Chat
             .Forget();
         }
 
-        private int _receiveNullMessageCount = 0;
         private async UniTask ListenAsync()
         {
             while (_tcpClient.Connected)
@@ -116,22 +112,16 @@ namespace UniTwitchClient.Chat
                 try
                 {
                     var message = await _reader.ReadLineAsync();
-                    if (message != null)
+                    if (!string.IsNullOrEmpty(message))
                     {
                         HandleReceivedMessage(message);
                     }
+                    // message‚ªnull‚Ìê‡‚ÍTcpClient‚ªØ’f‚³‚ê‚½ê‡‚È‚Ì‚ÅƒGƒ‰[‚ÅI—¹
                     else
                     {
-                        _receiveNullMessageCount++;
-                    }
-
-                    if (_receiveNullMessageCount > 10)
-                    {
-                        Close();
-                        HandleError(new Exception("An error occurred in the TwitchIrcClient connection."));
+                        HandleError(new Exception("Twitch IRC Client has been disconnected."));
                         return;
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -145,21 +135,22 @@ namespace UniTwitchClient.Chat
 
         private void HandleReceivedMessage(string message)
         {
-            _messageSubject.OnNext(message);
-
             if (message.Contains("PING :tmi.twitch.tv"))
             {
                 HandlePing();
+                _messageSubject.OnNext(message);
             }
-
-            if (message.Contains(":tmi.twitch.tv NOTICE * :Login authentication failed"))
+            else if (message.Contains(":tmi.twitch.tv NOTICE * :Login authentication failed"))
             {
                 HandleError(new Exception("Login authentication failed."));
             }
-
-            if (message.Contains(":tmi.twitch.tv NOTICE * :Improperly formatted auth"))
+            else if (message.Contains(":tmi.twitch.tv NOTICE * :Improperly formatted auth"))
             {
                 HandleError(new Exception("Improperly formatted auth"));
+            }
+            else 
+            {
+                _messageSubject.OnNext(message);
             }
         }
 
@@ -171,8 +162,7 @@ namespace UniTwitchClient.Chat
         private void HandleError(Exception ex)
         {
             _messageSubject.OnError(ex);
-            _messageSubject.Dispose();
-            _messageSubject = new Subject<string>();
+            Close();
         }
 
         public void SendMessage(string message)
@@ -187,7 +177,7 @@ namespace UniTwitchClient.Chat
             }
         }
 
-        private async UniTask SendMessageAsync(string message)
+        public async UniTask SendMessageAsync(string message)
         {
             await _writer.WriteLineAsync(message);
             await _writer.FlushAsync();
