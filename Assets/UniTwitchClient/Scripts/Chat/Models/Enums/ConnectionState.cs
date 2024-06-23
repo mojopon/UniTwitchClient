@@ -6,5 +6,6 @@ namespace UniTwitchClient.Chat.Models
         Connecting,
         Connected,
         Disconnected,
+        Error,
     }
 }

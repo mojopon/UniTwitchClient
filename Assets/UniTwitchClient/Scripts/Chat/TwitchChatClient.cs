@@ -27,6 +27,7 @@ namespace UniTwitchClient.Chat
         private TwitchIrcCredentials _ircCredentials;
 
         private CompositeDisposable _disposables = new CompositeDisposable();
+        private bool _disposed = false;
 
         public TwitchChatClient(TwitchIrcCredentials credentials) : this(credentials, null) { }
 
@@ -42,12 +43,16 @@ namespace UniTwitchClient.Chat
 
         public void Connect(string channelName)
         {
+            if (_disposed || State == ConnectionState.Error) { return; }
+
             State = ConnectionState.Connecting;
             _client.Connect(channelName);
         }
 
         public void Close()
         {
+            if (_disposed || State == ConnectionState.Error) { return; }
+
             _client.Close();
             State = ConnectionState.Disconnected;
         }
@@ -67,6 +72,7 @@ namespace UniTwitchClient.Chat
         public void Dispose()
         {
             _disposables?.Dispose();
+            _disposed = true;
         }
 
         private void HandleMessage(string messageRaw)
@@ -104,6 +110,8 @@ namespace UniTwitchClient.Chat
         {
             _onTwitchChatMessageSubject.OnError(ex);
             _onMessageRawSubject.OnError(ex);
+
+            State = ConnectionState.Error;
         }
 
         private void HandleComplete()
