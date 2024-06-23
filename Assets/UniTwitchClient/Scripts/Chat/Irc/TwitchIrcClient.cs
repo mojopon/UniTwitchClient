@@ -196,10 +196,14 @@ namespace UniTwitchClient.Chat
         public void Dispose()
         {
             _cts.Cancel();
+            _cts.Dispose();
             _cts = null;
 
             _reader?.Dispose();
+            _reader = null;
+
             _writer?.Dispose();
+            _writer = null;
 
             _tcpClient.Close();
             _tcpClient.Dispose();
